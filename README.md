@@ -6,7 +6,7 @@
 [![Issues](https://img.shields.io/github/issues/open-template-hub/payment-server-template?color=2F7488&style=plastic)]()
 [![PRCLosed](https://img.shields.io/github/issues-pr-closed-raw/open-template-hub/payment-server-template?color=2F7488&style=plastic)]()
 [![LAstCommit](https://img.shields.io/github/last-commit/open-template-hub/payment-server-template?color=2F7488&style=plastic)]()
-[![Release](https://img.shields.io/github/release/open-template-hub/payment-server-template?color=2F7488&style=plastic)]()
+[![Release](https://img.shields.io/github/release/open-template-hub/payment-server-template?include_prereleases&color=2F7488&style=plastic)]()
 
 Payment Server Template in Angular
 
