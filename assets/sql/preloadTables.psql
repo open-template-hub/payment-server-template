@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS transactions
+(
+  id SERIAL PRIMARY KEY,
+  payment_key text NOT NULL,
+  username text NOT NULL,
+  external_transaction_id text NOT NULL,
+  product_id text NOT NULL,
+  status text NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS product_mappings
+(
+  id SERIAL PRIMARY KEY,
+  product_id text NOT NULL,
+  external_product_id text NOT NULL
+);

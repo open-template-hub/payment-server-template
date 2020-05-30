@@ -16,6 +16,7 @@
   "express-promise-router": "^3.0.3",
   "jsonwebtoken": "^8.5.1",
   "mongoose": "^5.8.2",
+  "pg": "^8.2.1",
   "request": "^2.88.2",
   "ts-node": "^8.1.0",
   "typescript": "^3.4.5"

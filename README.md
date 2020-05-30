@@ -15,6 +15,7 @@ Payment Server Template in Angular
 ```sh
 PORT={Server Port}
 MONGODB_URI={MongoDB Connection String}
+POSTGRESQL_URI={PostgreSQL Connection String}
 ACCESS_TOKEN_SECRET={Access Token Secret}
 ```
 
