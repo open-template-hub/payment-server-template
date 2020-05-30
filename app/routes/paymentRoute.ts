@@ -15,8 +15,8 @@ const router = Router();
 
 router.post(subRoutes.root, async (req: Request, res: Response) => {
   // Create new payment session
-   let paymentSession = await initPayment(res.locals.ctx.dbProviders, 
-    res.locals.ctx.currentUser.username, req.body.paymentKey, req.body.productId, req.body.quantity);
+   let paymentSession = await initPayment(res.locals.ctx.dbProviders,
+    res.locals.ctx.currentUser.username, req.body.paymentConfigKey, req.body.productId, req.body.quantity);
    res.status(ResponseCode.CREATED).send(paymentSession);
  });
 

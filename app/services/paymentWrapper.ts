@@ -3,12 +3,14 @@ import { PaymentMethod } from "../models/paymentMethod";
 import { StripePayment } from "./stripePayment";
 
 export class PaymentWrapper implements PaymentMethod {
-  constructor(paymentKey) {
-    switch(paymentKey) {
+  constructor(paymentConfigKey) {
+    switch(paymentConfigKey) {
       case "GOOGLE":
+      case "GOOGLE_LOCAL":
         this.paymentMethod = new GooglePayment();
         break;
       case "STRIPE":
+      case "STRIPE_LOCAL":
         this.paymentMethod = new StripePayment();
         break;
       default:

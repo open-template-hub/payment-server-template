@@ -7,12 +7,12 @@ import { createTransaction } from "../dao/transactionDao";
 import { PaymentWrapper } from "../services/paymentWrapper";
 import productModel from "../models/productModel";
 
-export const initPayment = async(dbProviders, username, paymentKey, productId, quantity) => {
+export const initPayment = async(dbProviders, username, paymentConfigKey, productId, quantity) => {
   let paymentSession = null;
-  const paymentWrapper = new PaymentWrapper(paymentKey);
+  const paymentWrapper = new PaymentWrapper(paymentConfigKey);
 
   try {
-    let paymentConfig: any = await paymentConfigModel(dbProviders.mongoDbProvider.conn).findOne({key: paymentKey});
+    let paymentConfig: any = await paymentConfigModel(dbProviders.mongoDbProvider.conn).findOne({key: paymentConfigKey});
     if (paymentConfig === null) throw new Error("Payment method can not be found");
 
     let product: any = await productModel(dbProviders.mongoDbProvider.conn).findOne({productId: productId});
@@ -21,7 +21,7 @@ export const initPayment = async(dbProviders, username, paymentKey, productId, q
     let external_transaction_id = await paymentWrapper.init(dbProviders.mongoDbProvider.conn, paymentConfig, product, quantity);
     if (external_transaction_id === null) throw new Error("Payment can not be initiated");
 
-    createTransaction(dbProviders.postgreSqlProvider, paymentKey, username, productId, external_transaction_id);
+    createTransaction(dbProviders.postgreSqlProvider, paymentConfigKey, username, productId, external_transaction_id);
 
     /** build method is important because other providers might have special build
     * rather than returning session from init
