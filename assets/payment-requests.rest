@@ -1,0 +1,10 @@
+###
+POST http://localhost:4002/payment
+Content-Type: application/json
+Authorization: Bearer token
+
+{
+	"paymentKey": "STRIPE",
+	"productId": "Football Matches New",
+	"quantity": 4
+}

@@ -7,33 +7,33 @@ export class StripePayment implements PaymentMethod {
   getPriceId = async(dbConn, payment, product) => {
     let stripe = new Stripe(payment.payload.secret, payment.payload.config);
     const stripeProductId = await this.getProductId(payment, product);
-    if (!product.payload.external_price_id) {
+    if (!product.payload.stripe.external_price_id) {
       let price = await stripe.prices.create({
         product: stripeProductId,
-        unit_amount: product.payload.amount,
-        currency: product.payload.currency,
+        unit_amount: product.payload.stripe.amount,
+        currency: product.payload.stripe.currency,
       });
-      product.payload.external_price_id = price.id;
-      product.payload.external_product_id = stripeProductId;
+      product.payload.stripe.external_price_id = price.id;
+      product.payload.stripe.external_product_id = stripeProductId;
       await productModel(dbConn).findOneAndUpdate({productId: product.productId},
         {
-         payload: product.payload
+         payload: product.payload.stripe
         }, {new: true});
       return price.id;
     } else {
-      return product.payload.external_price_id;
+      return product.payload.stripe.external_price_id;
     }
   }
 
   getProductId = async(payment, product) => {
     let stripe = new Stripe(payment.payload.secret, payment.payload.config);
-    if(!product.payload.external_product_id) {
+    if(!product.payload.stripe.external_product_id) {
       let stripeProduct = await stripe.products.create({
         name: product.productId
       });
       return stripeProduct.id;
     } else {
-      return product.external_product_id;
+      return product.payload.stripe.external_product_id;
     }
   }
   
@@ -53,7 +53,7 @@ export class StripePayment implements PaymentMethod {
     return session.id;
   }
 
-  build = async(payment, product, external_transaction_id) => {
+  build = async(payment, external_transaction_id) => {
     let stripe = new Stripe(payment.payload.secret, payment.payload.config);
     const session = await stripe.checkout.sessions.retrieve(external_transaction_id);
     return session;

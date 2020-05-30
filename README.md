@@ -26,8 +26,10 @@ ACCESS_TOKEN_SECRET={Access Token Secret}
   {
       "productId": "FootballMatches",
       "payload": {
-          "amount": "2000",
-          "currency": "usd"
+          "stripe": {
+            "amount": "2000",
+            "currency": "usd"
+          }
       }
   }
 ```
