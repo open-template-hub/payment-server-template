@@ -14,9 +14,9 @@ const subRoutes = {
 const router = Router();
 
 router.post(subRoutes.root, async (req: Request, res: Response) => {
-  // Create new Payment
-   let payment = await initPayment(res.locals.ctx.dbProviders, res.locals.ctx.currentUser.username, req.body.paymentKey, req.body.productId);
-   res.status(ResponseCode.CREATED).send(payment);
+  // Create new payment session
+   let paymentSession = await initPayment(res.locals.ctx.dbProviders, res.locals.ctx.currentUser.username, req.body.paymentKey, req.body.productId);
+   res.status(ResponseCode.CREATED).send(paymentSession);
  });
 
 export = router;
