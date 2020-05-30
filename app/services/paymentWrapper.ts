@@ -2,15 +2,19 @@ import { GooglePayment } from "./googlePayment";
 import { PaymentMethod } from "../models/paymentMethod";
 import { StripePayment } from "./stripePayment";
 
+enum PaymentMethodEnum {
+  Stripe = "stripe",
+  Google = "google"
+}
+
 export class PaymentWrapper implements PaymentMethod {
-  constructor(paymentConfigKey) {
-    switch(paymentConfigKey) {
-      case "GOOGLE":
-      case "GOOGLE_LOCAL":
+
+  constructor(paymentMethod) {
+    switch(paymentMethod) {
+      case PaymentMethodEnum.Google:
         this.paymentMethod = new GooglePayment();
         break;
-      case "STRIPE":
-      case "STRIPE_LOCAL":
+      case PaymentMethodEnum.Stripe:
         this.paymentMethod = new StripePayment();
         break;
       default:

@@ -9,11 +9,12 @@ import productModel from "../models/productModel";
 
 export const initPayment = async(dbProviders, username, paymentConfigKey, productId, quantity) => {
   let paymentSession = null;
-  const paymentWrapper = new PaymentWrapper(paymentConfigKey);
 
   try {
     let paymentConfig: any = await paymentConfigModel(dbProviders.mongoDbProvider.conn).findOne({key: paymentConfigKey});
     if (paymentConfig === null) throw new Error("Payment method can not be found");
+
+   const paymentWrapper = new PaymentWrapper(paymentConfig.payload.method);
 
     let product: any = await productModel(dbProviders.mongoDbProvider.conn).findOne({productId: productId});
     if (product === null) throw new Error("Product can not be found");

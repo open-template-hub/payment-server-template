@@ -15,7 +15,7 @@ Payment Server Template in Angular
 ```sh
 PORT={Server Port}
 MONGODB_URI={MongoDB Connection String}
-POSTGRESQL_URI={PostgreSQL Connection String}
+DATABASE_URL={PostgreSQL Connection String}
 ACCESS_TOKEN_SECRET={Access Token Secret}
 ```
 
@@ -39,13 +39,14 @@ ACCESS_TOKEN_SECRET={Access Token Secret}
   {
     "key": "STRIPE",
     "payload": {
+        "method": "stripe",
         "secret": "{Your Payment Secret on Stripe}",
         "payment_method_types": [
             "card"
         ],
         "mode": "payment",
-        "success_url": "https://localhost.com/success?session_id={CHECKOUT_SESSION_ID}",
-        "cancel_url": "https://localhost.com/cancel"
+        "success_url": "https://localhost:4000/success?session_id={CHECKOUT_SESSION_ID}",
+        "cancel_url": "https://localhost:4000/cancel"
     }
   }
 ```
