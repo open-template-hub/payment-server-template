@@ -19,6 +19,34 @@ POSTGRESQL_URI={PostgreSQL Connection String}
 ACCESS_TOKEN_SECRET={Access Token Secret}
 ```
 
+### Stripe
+
+* Example Product:
+```sh
+  {
+      "productId": "FootballMatches",
+      "payload": {
+          "amount": "2000",
+          "currency": "usd"
+      }
+  }
+```
+
+* Example Payment:
+```sh
+  {
+    "key": "STRIPE",
+    "payload": {
+        "secret": "{Your Payment Secret on Stripe}",
+        "payment_method_types": [
+            "card"
+        ],
+        "mode": "payment",
+        "success_url": "https://localhost.com/success?session_id={CHECKOUT_SESSION_ID}",
+        "cancel_url": "https://localhost.com/cancel"
+    }
+  }
+```
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
