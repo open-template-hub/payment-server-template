@@ -1,6 +1,7 @@
 import { PaymentMethod } from '../models/paymentMethod';
 import Stripe from 'stripe';
 import productModel from '../models/productModel';
+import { PaymentMethodEnum } from './paymentWrapper';
 
 export class StripePayment implements PaymentMethod {
 
@@ -17,7 +18,9 @@ export class StripePayment implements PaymentMethod {
    product.payload.stripe.external_product_id = stripeProductId;
    await productModel(dbConn).findOneAndUpdate({productId: product.productId},
     {
-     payload: product.payload.stripe
+     payload: {
+      stripe: product.payload.stripe
+     }
     }, {new: true});
    return price.id;
   } else {
@@ -56,7 +59,6 @@ export class StripePayment implements PaymentMethod {
  build = async (paymentConfig, external_transaction_id) => {
   let stripe = new Stripe(paymentConfig.payload.secret, paymentConfig.payload.config);
   const session = await stripe.checkout.sessions.retrieve(external_transaction_id);
-  return session;
+  return {method: PaymentMethodEnum.Stripe, payload: session};
  }
-
 }
