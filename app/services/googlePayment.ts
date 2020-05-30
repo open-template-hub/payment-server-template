@@ -1,10 +1,11 @@
 import { PaymentMethod } from "../models/paymentMethod";
 
 export class GooglePayment implements PaymentMethod {
-  init = async(payload) => {
-    
+  init = async(dbConn, payment, product, quantity) => {
+    return null;
   }
-  build = async(payload, external_transaction_id) => {
 
+  build = async(payment, product, external_transaction_id) => {
+    return null;
   }
 }

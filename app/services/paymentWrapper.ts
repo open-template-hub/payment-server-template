@@ -7,8 +7,10 @@ export class PaymentWrapper implements PaymentMethod {
     switch(paymentKey) {
       case "GOOGLE":
         this.paymentMethod = new GooglePayment();
+        break;
       case "STRIPE":
         this.paymentMethod = new StripePayment();
+        break;
       default:
         this.paymentMethod = undefined;
     }
@@ -16,13 +18,13 @@ export class PaymentWrapper implements PaymentMethod {
 
   paymentMethod: PaymentMethod | undefined;
 
-  init = async(payload) => {
+  init = async(dbConn, payment, product, quantity) => {
     if (this.paymentMethod === undefined) return null;
-    return this.paymentMethod.init(payload);
+    return await this.paymentMethod.init(dbConn, payment, product, quantity);
   }
 
-  build = (payload, external_transaction_id) => {
+  build = async(payment, product, external_transaction_id) => {
     if (this.paymentMethod === undefined) return null;
-    return this.paymentMethod.build(payload, external_transaction_id);
+    return await this.paymentMethod.build(payment, product, external_transaction_id);
   }
 }

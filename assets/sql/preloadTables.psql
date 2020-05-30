@@ -7,10 +7,3 @@ CREATE TABLE IF NOT EXISTS transactions
   product_id text NOT NULL,
   status text NOT NULL
 );
-
-CREATE TABLE IF NOT EXISTS product_mappings
-(
-  id SERIAL PRIMARY KEY,
-  product_id text NOT NULL,
-  external_product_id text NOT NULL
-);
