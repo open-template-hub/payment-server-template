@@ -1,28 +1,28 @@
 /**
- * @description holds payment model
+ * @description holds payment config model
  */
 
 import mongoose from 'mongoose';
 
 /**
- * payment schema
+ * payment config schema
  */
 const schema: mongoose.SchemaDefinition = {
  key: {type: String, unique: true, required: true, dropDups: true},
  payload: {type: Object}
 };
 
-// payment collection name
-const collectionName: string = 'payment';
+// payment config collection name
+const collectionName: string = 'payment-config';
 
 const paymentSchema: mongoose.Schema = new mongoose.Schema(schema);
 
 /**
- * creates payment model
+ * creates payment config model
  * @param conn database connection
- * @returns payment model
+ * @returns payment config model
  */
-const paymentModel = (conn: mongoose.Connection) =>
+const paymentConfigModel = (conn: mongoose.Connection) =>
  conn.model(collectionName, paymentSchema);
 
-export default paymentModel;
+export default paymentConfigModel;

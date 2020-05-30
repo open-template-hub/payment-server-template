@@ -18,13 +18,13 @@ export class PaymentWrapper implements PaymentMethod {
 
   paymentMethod: PaymentMethod | undefined;
 
-  init = async(dbConn, payment, product, quantity) => {
+  init = async(dbConn, paymentConfig, product, quantity) => {
     if (this.paymentMethod === undefined) return null;
-    return await this.paymentMethod.init(dbConn, payment, product, quantity);
+    return await this.paymentMethod.init(dbConn, paymentConfig, product, quantity);
   }
 
-  build = async(payment, external_transaction_id) => {
+  build = async(paymentConfig, external_transaction_id) => {
     if (this.paymentMethod === undefined) return null;
-    return await this.paymentMethod.build(payment, external_transaction_id);
+    return await this.paymentMethod.build(paymentConfig, external_transaction_id);
   }
 }

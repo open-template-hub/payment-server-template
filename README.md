@@ -34,7 +34,7 @@ ACCESS_TOKEN_SECRET={Access Token Secret}
   }
 ```
 
-* Example Payment:
+* Example Payment Config:
 ```sh
   {
     "key": "STRIPE",
