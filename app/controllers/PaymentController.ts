@@ -22,7 +22,11 @@ export const initPayment = async(dbProviders, username, paymentKey, productId, q
     if (external_transaction_id === null) throw new Error("Payment can not be initiated");
 
     createTransaction(dbProviders.postgreSqlProvider, paymentKey, username, productId, external_transaction_id);
-    
+
+    /** build method is important because other providers might have special build
+    * rather than returning session from init
+    * that's why build is attached
+    */
     paymentSession = await paymentWrapper.build(payment, external_transaction_id);
    } catch (error) {
     console.error('> initPayment error: ', error);
