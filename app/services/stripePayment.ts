@@ -18,9 +18,7 @@ export class StripePayment implements PaymentMethod {
    product.payload.stripe.external_product_id = stripeProductId;
    await productModel(dbConn).findOneAndUpdate({productId: product.productId},
     {
-     payload: {
-      stripe: product.payload.stripe
-     }
+     "payload.stripe": product.payload.stripe 
     }, {new: true});
    return price.id;
   } else {
