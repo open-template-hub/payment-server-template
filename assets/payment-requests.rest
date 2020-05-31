@@ -10,7 +10,7 @@ Authorization: Bearer token
 }
 
 ###
-GET http://localhost:4003/verify
+GET http://localhost:4003/payment/verify
 Content-Type: application/json
 Authorization: Bearer token
 
