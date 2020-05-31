@@ -23,7 +23,7 @@ export const initPayment = async (dbProviders, username, paymentConfigKey, produ
   let external_transaction_id = await paymentWrapper.init(dbProviders.mongoDbProvider.conn, paymentConfig, product, quantity);
   if (external_transaction_id === null) throw new Error('Payment can not be initiated');
 
-  createTransaction(dbProviders.postgreSqlProvider, paymentConfigKey, username, productId, external_transaction_id);
+  await createTransaction(dbProviders.postgreSqlProvider, paymentConfigKey, username, productId, external_transaction_id);
 
   /** build method is important because other providers might have special build
    * rather than returning session from init
@@ -38,11 +38,29 @@ export const initPayment = async (dbProviders, username, paymentConfigKey, produ
  return paymentSession;
 }
 
+export const initPaymentWithExternalTransactionId = async (dbProviders, username, paymentConfigKey, productId, external_transaction_id) => {
+  let paymentSession = {
+    external_transaction_id: null
+  };
+ 
+  try {
+   await createTransaction(dbProviders.postgreSqlProvider, paymentConfigKey, username, productId, external_transaction_id);
+   paymentSession = {
+     external_transaction_id: external_transaction_id
+   };
+  } catch (error) {
+   console.error('> initPaymentWithExternalTransactionId error: ', error);
+   throw error;
+  }
+ 
+  return paymentSession;
+ } 
+
 export const verifyPayment = async (dbProviders, username, paymentConfigKey, external_transaction_id, verification_type) => {
   let verified = false;
  
   try {
-    let transaction = getTransaction(dbProviders.postgreSqlProvider, username, paymentConfigKey, external_transaction_id);
+    let transaction = await getTransaction(dbProviders.postgreSqlProvider, username, paymentConfigKey, external_transaction_id);
 
     if (transaction) {
       verified = true;

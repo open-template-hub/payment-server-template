@@ -19,3 +19,15 @@ Authorization: Bearer token
 	"external_transaction_id": "cs_test_qViwU3QBrNIZqY3yLBma0EjmZMNw767oYgJwDqjLLso0WxSOcXvUnQ4K",
 	"verification_type": "hard"
 }
+
+
+###
+POST http://localhost:4003/payment/init-with-external-transaction-id
+Content-Type: application/json
+Authorization: Bearer token
+
+{
+	"paymentConfigKey": "STRIPE",
+	"external_transaction_id": "cs_test_qViwU3QBrNIZqY3yLBma0EjmZMNw767oYgJwDqjLLso0WxSOcXvUnQ4K111",
+	"productId": "Football Matches New"
+}
