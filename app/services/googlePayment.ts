@@ -8,4 +8,8 @@ export class GooglePayment implements PaymentMethod {
  build = async (paymentConfig, external_transaction_id) => {
   return null;
  }
+
+ check = async (paymentConfig, external_transaction_id) => {
+  return false;
+ }
 }

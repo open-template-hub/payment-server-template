@@ -38,4 +38,9 @@ export class PaymentWrapper implements PaymentMethod {
   if (this.paymentMethod === undefined) return null;
   return await this.paymentMethod.build(paymentConfig, external_transaction_id);
  }
+
+ check = async (paymentConfig, external_transaction_id) => {
+  if (this.paymentMethod === undefined) return null;
+  return await this.paymentMethod.check(paymentConfig, external_transaction_id);
+ }
 }

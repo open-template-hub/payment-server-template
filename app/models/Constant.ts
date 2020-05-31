@@ -14,3 +14,8 @@ export const ResponseCode = {
  INTERNAL_SERVER_ERROR: 500,
  SERVICE_UNAVAILABLE: 503,
 }
+
+export const VerificationType = {
+  HARD: "hard",
+  SOFT: "soft"
+}

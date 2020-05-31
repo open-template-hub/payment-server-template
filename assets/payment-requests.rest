@@ -8,3 +8,14 @@ Authorization: Bearer token
  "productId": "Product Template",
  "quantity": 1
 }
+
+###
+GET http://localhost:4003/verify
+Content-Type: application/json
+Authorization: Bearer token
+
+{
+	"paymentConfigKey": "STRIPE",
+	"external_transaction_id": "cs_test_qViwU3QBrNIZqY3yLBma0EjmZMNw767oYgJwDqjLLso0WxSOcXvUnQ4K",
+	"verification_type": "hard"
+}

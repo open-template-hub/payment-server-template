@@ -35,4 +35,8 @@ export class CoinbasePayment implements PaymentMethod {
   return {method: PaymentMethodEnum.Coinbase, payload: {id : external_transaction_id}};
  }
 
+ check = async (paymentConfig, external_transaction_id) => {
+  return false;
+ }
+
 }

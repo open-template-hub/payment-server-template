@@ -59,4 +59,8 @@ export class StripePayment implements PaymentMethod {
   const session = await stripe.checkout.sessions.retrieve(external_transaction_id);
   return {method: PaymentMethodEnum.Stripe, payload: session};
  }
+
+ check = async (paymentConfig, external_transaction_id) => {
+  return false;
+ }
 }

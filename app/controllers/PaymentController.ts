@@ -3,9 +3,10 @@
  */
 
 import paymentConfigModel from '../models/paymentConfigModel';
-import { createTransaction } from '../dao/transactionDao';
+import { createTransaction, getTransaction } from '../dao/transactionDao';
 import { PaymentWrapper } from '../services/paymentWrapper';
 import productModel from '../models/productModel';
+import { VerificationType } from '../models/Constant';
 
 export const initPayment = async (dbProviders, username, paymentConfigKey, productId, quantity) => {
  let paymentSession = null;
@@ -36,3 +37,28 @@ export const initPayment = async (dbProviders, username, paymentConfigKey, produ
 
  return paymentSession;
 }
+
+export const verifyPayment = async (dbProviders, username, paymentConfigKey, external_transaction_id, verification_type) => {
+  let verified = false;
+ 
+  try {
+    let transaction = getTransaction(dbProviders.postgreSqlProvider, username, paymentConfigKey, external_transaction_id);
+
+    if (transaction) {
+      verified = true;
+    } 
+    
+    if (verification_type == VerificationType.HARD) {
+      let paymentConfig: any = await paymentConfigModel(dbProviders.mongoDbProvider.conn).findOne({key: paymentConfigKey});
+      if (paymentConfig === null) throw new Error('Payment method can not be found');
+      const paymentWrapper = new PaymentWrapper(paymentConfig.payload.method);
+      let hardCheck = await paymentWrapper.check(paymentConfig, external_transaction_id);
+      verified = verified && hardCheck;
+    } 
+  } catch (error) {
+   console.error('> verifyPayment error: ', error);
+   throw error;
+  }
+ 
+  return verified;
+ }
