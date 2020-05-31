@@ -16,7 +16,59 @@ Payment Server Template in Angular
 ```sh
 PORT={Server Port}
 MONGODB_URI={MongoDB Connection String}
+DATABASE_URL={PostgreSQL Connection String}
 ACCESS_TOKEN_SECRET={Access Token Secret}
+```
+
+### Stripe
+
+* Example Product:
+```sh
+    {
+        "productId" : "Product Template",
+        "payload" : {
+            "name" : "Product Name",
+            "description" : "Product Description",
+            "stripe" : {
+                "amount" : 100,
+                "currency" : "usd"
+            },
+            "coinbase" : {
+                "amount" : 1,
+                "currency" : "usd"
+            }
+        }
+    }
+```
+
+* Example Stripe Payment Config:
+```sh
+  {
+        "key": "STRIPE",
+        "payload": {
+            "method": "stripe",
+            "secret": "{Your Payment Secret on Stripe}",
+            "payment_method_types": [
+                "card"
+            ],
+            "mode": "payment",
+            "success_url": "https://localhost:4000/success?session_id={CHECKOUT_SESSION_ID}",
+            "cancel_url": "https://localhost:4000/cancel"
+        }
+  }
+```
+
+* Example Coinbase Payment Config:
+```sh
+    {
+        "key" : "COINBASE",
+        "payload" : {
+            "method" : "coinbase",
+            "secret" : "{Your Payment Secret on Coinbase}",
+            "success_url" : "https://localhost:4000/success",
+            "cancel_url" : "https://localhost:4000/cancel"
+        }
+    }
 ```
 
 ## Contributors

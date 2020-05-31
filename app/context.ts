@@ -2,11 +2,9 @@
  * @description holds context
  */
 
-import { getConnection } from './database/Provider';
 import { verifyAccessToken } from './services/TokenService';
 
-export const context = async (req) => {
- const dbConn = await getConnection();
+export const context = async (req, dbProviders) => {
  let authToken = null;
  let currentUser = null;
 
@@ -24,5 +22,5 @@ export const context = async (req) => {
   throw e;
  }
 
- return {dbConn, currentUser};
+ return {dbProviders, currentUser};
 }
