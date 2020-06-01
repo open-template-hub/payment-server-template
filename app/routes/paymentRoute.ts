@@ -6,6 +6,7 @@ import Router from 'express-promise-router';
 import { Request, Response } from 'express';
 import { ResponseCode } from '../models/Constant';
 import { initPayment, initPaymentWithExternalTransactionId } from '../controllers/PaymentController';
+import { getCurrentUser } from '../currentUser';
 
 const subRoutes = {
  root: '/',
@@ -14,6 +15,11 @@ const subRoutes = {
 }
 
 const router = Router();
+
+router.use('/*', async (req: Request, res: Response, next) => {
+ res.locals.ctx.currentUser = await getCurrentUser(req);
+ return next();
+});
 
 router.post(subRoutes.root, async (req: Request, res: Response) => {
  // Create new payment session

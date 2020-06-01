@@ -60,8 +60,13 @@ export class StripePayment implements PaymentMethod {
   return {method: PaymentMethodEnum.Stripe, payload: session};
  }
 
- getTransactionHistory = async (dbConn, paymentConfig, username, external_transaction_id) => {
+ getTransactionHistory = async (dbConn, paymentConfig, external_transaction_id) => {
 
   return {};
  }
+
+ receiptStatusUpdate(dbConn: any, paymentConfig: any, external_transaction_id: any, updated_transaction_history: any) {
+  throw new Error("Method not implemented.");
+ }
+
 }

@@ -56,13 +56,16 @@ export const initPaymentWithExternalTransactionId = async (dbProviders, username
 }
 
 // INFO: Refreshing transaction history only, do not update receipt here, do not call this function from routes directly since it always updates against payment methods!
-export const refreshTransactionHistory = async (dbProviders, username, paymentConfigKey, external_transaction_id) => {
+export const refreshTransactionHistory = async (dbProviders, paymentConfigKey, external_transaction_id) => {
  try {
   let paymentConfig: any = await paymentConfigModel(dbProviders.mongoDbProvider.conn).findOne({key: paymentConfigKey});
   if (paymentConfig === null) throw new Error('Payment method can not be found');
   const paymentWrapper = new PaymentWrapper(paymentConfig.payload.method);
-  const transaction_history = await paymentWrapper.getTransactionHistory(dbProviders.mongoDbProvider.conn, paymentConfig, username, external_transaction_id);
-  await updateTransactionHistory(dbProviders.mongoDbProvider.conn, paymentConfig, username, external_transaction_id, transaction_history);
+
+  const transaction_history = await paymentWrapper.getTransactionHistory(dbProviders.mongoDbProvider.conn, paymentConfig, external_transaction_id);
+  const updated_transaction_history = await updateTransactionHistory(dbProviders.mongoDbProvider.conn, paymentConfig, external_transaction_id, transaction_history);
+
+  await paymentWrapper.receiptStatusUpdate(dbProviders.mongoDbProvider.conn, paymentConfig, external_transaction_id, updated_transaction_history);
 
  } catch (error) {
   console.error('> refreshTransactionHistory error: ', error);
