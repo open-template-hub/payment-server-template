@@ -3,5 +3,5 @@ export interface PaymentMethod {
 
  build(paymentConfig, external_transaction_id);
 
- check(paymentConfig, external_transaction_id);
+ getTransactionHistory(dbConn, paymentConfig, username, external_transaction_id);
 }

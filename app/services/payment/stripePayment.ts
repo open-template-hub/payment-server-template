@@ -1,6 +1,6 @@
-import { PaymentMethod } from '../models/paymentMethod';
+import { PaymentMethod } from '../../models/paymentMethod';
 import Stripe from 'stripe';
-import productModel from '../models/productModel';
+import productModel from '../../models/productModel';
 import { PaymentMethodEnum } from './paymentWrapper';
 
 export class StripePayment implements PaymentMethod {
@@ -18,7 +18,7 @@ export class StripePayment implements PaymentMethod {
    product.payload.stripe.external_product_id = stripeProductId;
    await productModel(dbConn).findOneAndUpdate({productId: product.productId},
     {
-     "payload.stripe": product.payload.stripe 
+     'payload.stripe': product.payload.stripe
     }, {new: true});
    return price.id;
   } else {
@@ -51,7 +51,7 @@ export class StripePayment implements PaymentMethod {
    success_url: paymentConfig.payload.success_url,
    cancel_url: paymentConfig.payload.cancel_url,
   });
-  return session.id;
+  return {transaction_history: session, external_transaction_id: session.id};
  }
 
  build = async (paymentConfig, external_transaction_id) => {
@@ -60,7 +60,8 @@ export class StripePayment implements PaymentMethod {
   return {method: PaymentMethodEnum.Stripe, payload: session};
  }
 
- check = async (paymentConfig, external_transaction_id) => {
-  return false;
+ getTransactionHistory = async (dbConn, paymentConfig, username, external_transaction_id) => {
+
+  return {};
  }
 }

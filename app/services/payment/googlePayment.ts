@@ -1,4 +1,4 @@
-import { PaymentMethod } from '../models/paymentMethod';
+import { PaymentMethod } from '../../models/paymentMethod';
 
 export class GooglePayment implements PaymentMethod {
  init = async (dbConn, paymentConfig, product, quantity) => {
@@ -9,7 +9,8 @@ export class GooglePayment implements PaymentMethod {
   return null;
  }
 
- check = async (paymentConfig, external_transaction_id) => {
-  return false;
+ getTransactionHistory = async (dbConn, paymentConfig, username, external_transaction_id) => {
+
+  return {};
  }
 }
