@@ -51,12 +51,12 @@ export class StripePayment implements PaymentMethod {
    success_url: paymentConfig.payload.success_url,
    cancel_url: paymentConfig.payload.cancel_url,
   });
-  return {transaction_history: session, external_transaction_id: session.id};
+  return {history: session, id: session.id};
  }
 
- build = async (paymentConfig, external_transaction_id) => {
+ build = async (paymentConfig, external_transaction) => {
   let stripe = new Stripe(paymentConfig.payload.secret, paymentConfig.payload.config);
-  const session = await stripe.checkout.sessions.retrieve(external_transaction_id);
+  const session = await stripe.checkout.sessions.retrieve(external_transaction.id);
   return {method: PaymentMethodEnum.Stripe, payload: session};
  }
 

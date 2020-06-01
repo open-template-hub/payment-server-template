@@ -26,11 +26,11 @@ export class CoinbasePayment implements PaymentMethod {
 
   const response = await axios.post<any>(paymentConfig.payload.charge_url, charge, {headers: headers});
 
-  return {transaction_history: response.data.data, external_transaction_id: response.data.data.code};
+  return {history: response.data.data, id: response.data.data.id};
  }
 
- build = async (paymentConfig, external_transaction_id) => {
-  return {method: PaymentMethodEnum.Coinbase, payload: {id: external_transaction_id}};
+ build = async (paymentConfig, external_transaction) => {
+  return {method: PaymentMethodEnum.Coinbase, payload: {id: external_transaction.history.code}};
  }
 
  getTransactionHistory = async (dbConn, paymentConfig, external_transaction_id) => {

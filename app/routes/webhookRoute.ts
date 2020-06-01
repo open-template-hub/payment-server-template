@@ -16,7 +16,7 @@ const router = Router();
 
 router.post(subRoutes.coinbase, async (req: Request, res: Response) => {
 
- const external_transaction_id = req.body.event.data.code;
+ const external_transaction_id = req.body.event.data.id;
 
  await refreshTransactionHistory(res.locals.ctx.dbProviders, req.query.key, external_transaction_id);
 

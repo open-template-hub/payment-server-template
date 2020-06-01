@@ -1,7 +1,7 @@
 export interface PaymentMethod {
  init(dbConn, paymentConfig, product, quantity);
 
- build(paymentConfig, external_transaction_id);
+ build(paymentConfig, external_transaction);
 
  getTransactionHistory(dbConn, paymentConfig, external_transaction_id);
 

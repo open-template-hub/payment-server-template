@@ -19,16 +19,16 @@ export const initPayment = async (dbProviders, username, paymentConfigKey, produ
   let product: any = await productModel(dbProviders.mongoDbProvider.conn).findOne({productId: productId});
   if (product === null) throw new Error('Product can not be found');
 
-  let {transaction_history, external_transaction_id} = await paymentWrapper.init(dbProviders.mongoDbProvider.conn, paymentConfig, product, quantity);
-  if (external_transaction_id === null) throw new Error('Payment can not be initiated');
+  let external_transaction = await paymentWrapper.init(dbProviders.mongoDbProvider.conn, paymentConfig, product, quantity);
+  if (external_transaction === null) throw new Error('Payment can not be initiated');
 
-  await createTransactionHistory(dbProviders.mongoDbProvider, paymentConfigKey, username, productId, external_transaction_id, transaction_history);
+  await createTransactionHistory(dbProviders.mongoDbProvider, paymentConfigKey, username, productId, external_transaction.id, external_transaction.history);
 
   /** build method is important because other providers might have special build
    * rather than returning session from init
    * that's why build is attached
    */
-  paymentSession = await paymentWrapper.build(paymentConfig, external_transaction_id);
+  paymentSession = await paymentWrapper.build(paymentConfig, external_transaction);
  } catch (error) {
   console.error('> initPayment error: ', error);
   throw error;
