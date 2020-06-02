@@ -16,6 +16,11 @@ export class PayPalPayment implements PaymentMethod {
   request.requestBody(
   {
    intent: "CAPTURE",
+   application_context: {
+    return_url: paymentConfig.payload.success_url,
+    cancel_url: paymentConfig.payload.cancel_url,
+    locale: 'en-US'
+   },
    purchase_units: [{
     amount: {
      currency_code: product.payload.paypal.currency,
@@ -39,15 +44,7 @@ export class PayPalPayment implements PaymentMethod {
  }
 
  getTransactionHistory = async (paymentConfig, external_transaction_id) => {
-
-  const headers = {
-   'X-CC-Api-Key': paymentConfig.payload.secret,
-   'X-CC-Version': '2018-03-22'
-  };
-
-  const response = await axios.get<any>(`${paymentConfig.payload.charge_url}/${external_transaction_id}`, {headers: headers});
-
-  return response.data.data;
+  return null;
  }
 
  receiptStatusUpdate = async (dbConn, paymentConfig, external_transaction_id, updated_transaction_history) => {
