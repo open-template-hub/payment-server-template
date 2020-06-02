@@ -5,6 +5,7 @@
  "main": "paymentServer.ts",
  "license": "MIT",
  "dependencies": {
+  "@paypal/checkout-server-sdk": "^1.0.2",
   "@types/dotenv": "^8.2.0",
   "@types/express": "^4.17.6",
   "@types/mongoose": "^5.5.34",
