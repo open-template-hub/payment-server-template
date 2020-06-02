@@ -38,7 +38,7 @@ export class PayPalPayment implements PaymentMethod {
   return {method: PaymentMethodEnum.PayPal, payload: {id: external_transaction.id}};
  }
 
- getTransactionHistory = async (dbConn, paymentConfig, external_transaction_id) => {
+ getTransactionHistory = async (paymentConfig, external_transaction_id) => {
 
   const headers = {
    'X-CC-Api-Key': paymentConfig.payload.secret,
