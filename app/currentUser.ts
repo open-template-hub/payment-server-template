@@ -4,7 +4,7 @@
 
 import { verifyAccessToken } from './services/TokenService';
 
-export const context = async (req, dbProviders) => {
+export const getCurrentUser = async (req) => {
  let authToken = null;
  let currentUser = null;
 
@@ -22,5 +22,5 @@ export const context = async (req, dbProviders) => {
   throw e;
  }
 
- return {dbProviders, currentUser};
+ return currentUser;
 }

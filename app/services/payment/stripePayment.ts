@@ -1,6 +1,6 @@
-import { PaymentMethod } from '../models/paymentMethod';
+import { PaymentMethod } from '../../models/paymentMethod';
 import Stripe from 'stripe';
-import productModel from '../models/productModel';
+import productModel from '../../models/productModel';
 import { PaymentMethodEnum } from './paymentWrapper';
 
 export class StripePayment implements PaymentMethod {
@@ -18,7 +18,7 @@ export class StripePayment implements PaymentMethod {
    product.payload.stripe.external_product_id = stripeProductId;
    await productModel(dbConn).findOneAndUpdate({productId: product.productId},
     {
-     "payload.stripe": product.payload.stripe 
+     'payload.stripe': product.payload.stripe
     }, {new: true});
    return price.id;
   } else {
@@ -51,16 +51,22 @@ export class StripePayment implements PaymentMethod {
    success_url: paymentConfig.payload.success_url,
    cancel_url: paymentConfig.payload.cancel_url,
   });
-  return session.id;
+  return {history: session, id: session.id};
  }
 
- build = async (paymentConfig, external_transaction_id) => {
+ build = async (paymentConfig, external_transaction) => {
   let stripe = new Stripe(paymentConfig.payload.secret, paymentConfig.payload.config);
-  const session = await stripe.checkout.sessions.retrieve(external_transaction_id);
+  const session = await stripe.checkout.sessions.retrieve(external_transaction.id);
   return {method: PaymentMethodEnum.Stripe, payload: session};
  }
 
- check = async (paymentConfig, external_transaction_id) => {
-  return false;
+ getTransactionHistory = async (dbConn, paymentConfig, external_transaction_id) => {
+
+  return {};
  }
+
+ receiptStatusUpdate(dbConn: any, paymentConfig: any, external_transaction_id: any, updated_transaction_history: any) {
+  throw new Error("Method not implemented.");
+ }
+
 }

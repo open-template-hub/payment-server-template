@@ -65,6 +65,7 @@ ACCESS_TOKEN_SECRET={Access Token Secret}
         "payload" : {
             "method" : "coinbase",
             "secret" : "{Your Payment Secret on Coinbase}",
+            "charge_url" : "https://api.commerce.coinbase.com/charges",
             "success_url" : "https://localhost:4000/success",
             "cancel_url" : "https://localhost:4000/cancel"
         }

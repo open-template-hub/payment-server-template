@@ -1,6 +1,6 @@
 import paymentRouter from './paymentRoute';
+import webhookRouter from './webhookRoute';
 import { Request, Response } from 'express';
-import { context } from '../context';
 import { handle } from '../services/errorHandler';
 import { MongoDbProvider } from '../database/mongoDbProvider';
 import { PostgreSqlProvider } from '../database/postgreSqlProvider';
@@ -21,7 +21,7 @@ export module Routes {
      mongoDbProvider: mongoDbProvider,
      postgreSqlProvider: postgreSqlProvider
     }
-    res.locals.ctx = await context(req, dbProviders);
+    res.locals.ctx = {dbProviders};
 
     next();
    } catch (e) {
@@ -32,6 +32,7 @@ export module Routes {
 
   // TODO: Add your routes here
   app.use('/payment', paymentRouter);
+  app.use('/webhook', webhookRouter);
 
   // Use for error handling
   app.use(function (err, req, res, next) {
@@ -39,7 +40,6 @@ export module Routes {
    console.log(err);
    res.status(error.code).send({message: error.message});
   });
-
  }
 }
 

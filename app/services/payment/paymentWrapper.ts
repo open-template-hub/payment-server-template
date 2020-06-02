@@ -1,5 +1,5 @@
 import { GooglePayment } from './googlePayment';
-import { PaymentMethod } from '../models/paymentMethod';
+import { PaymentMethod } from '../../models/paymentMethod';
 import { StripePayment } from './stripePayment';
 import { CoinbasePayment } from './coinbasePayment';
 
@@ -34,13 +34,18 @@ export class PaymentWrapper implements PaymentMethod {
   return await this.paymentMethod.init(dbConn, paymentConfig, product, quantity);
  }
 
- build = async (paymentConfig, external_transaction_id) => {
+ build = async (paymentConfig, external_transaction) => {
   if (this.paymentMethod === undefined) return null;
-  return await this.paymentMethod.build(paymentConfig, external_transaction_id);
+  return await this.paymentMethod.build(paymentConfig, external_transaction);
  }
 
- check = async (paymentConfig, external_transaction_id) => {
+ getTransactionHistory = async (dbConn, paymentConfig, external_transaction_id) => {
   if (this.paymentMethod === undefined) return null;
-  return await this.paymentMethod.check(paymentConfig, external_transaction_id);
+  return await this.paymentMethod.getTransactionHistory(dbConn, paymentConfig, external_transaction_id);
+ }
+
+ receiptStatusUpdate = async (dbConn, paymentConfig, external_transaction_id, updated_transaction_history) => {
+  if (this.paymentMethod === undefined) return null;
+  return await this.paymentMethod.receiptStatusUpdate(dbConn, paymentConfig, external_transaction_id, updated_transaction_history);
  }
 }

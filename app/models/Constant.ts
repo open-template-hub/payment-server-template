@@ -16,6 +16,6 @@ export const ResponseCode = {
 }
 
 export const VerificationType = {
-  HARD: "hard",
-  SOFT: "soft"
+ HARD: 'hard',
+ SOFT: 'soft'
 }
