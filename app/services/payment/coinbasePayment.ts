@@ -33,7 +33,7 @@ export class CoinbasePayment implements PaymentMethod {
   return {method: PaymentMethodEnum.Coinbase, payload: {id: external_transaction.history.code}};
  }
 
- getTransactionHistory = async (dbConn, paymentConfig, external_transaction_id) => {
+ getTransactionHistory = async (paymentConfig, external_transaction_id) => {
 
   const headers = {
    'X-CC-Api-Key': paymentConfig.payload.secret,

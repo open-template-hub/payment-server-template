@@ -51,22 +51,25 @@ export class StripePayment implements PaymentMethod {
    success_url: paymentConfig.payload.success_url,
    cancel_url: paymentConfig.payload.cancel_url,
   });
-  return {history: session, id: session.id};
+
+  const history = await this.getTransactionHistory(paymentConfig, session.payment_intent);
+  return {history: history, id: session.payment_intent, session_id: session.id};
  }
 
  build = async (paymentConfig, external_transaction) => {
   let stripe = new Stripe(paymentConfig.payload.secret, paymentConfig.payload.config);
-  const session = await stripe.checkout.sessions.retrieve(external_transaction.id);
+  const session = await stripe.checkout.sessions.retrieve(external_transaction.session_id);
   return {method: PaymentMethodEnum.Stripe, payload: session};
  }
 
- getTransactionHistory = async (dbConn, paymentConfig, external_transaction_id) => {
-
-  return {};
+ getTransactionHistory = async (paymentConfig, external_transaction_id) => {
+  let stripe = new Stripe(paymentConfig.payload.secret, paymentConfig.payload.config);
+  const intent = await stripe.paymentIntents.retrieve(external_transaction_id);
+  return intent;
  }
 
  receiptStatusUpdate(dbConn: any, paymentConfig: any, external_transaction_id: any, updated_transaction_history: any) {
-  throw new Error("Method not implemented.");
+  return null;
  }
 
 }

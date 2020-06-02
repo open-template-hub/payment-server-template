@@ -9,7 +9,7 @@ export class GooglePayment implements PaymentMethod {
   return null;
  }
 
- getTransactionHistory = async (dbConn, paymentConfig, external_transaction_id) => {
+ getTransactionHistory = async (paymentConfig, external_transaction_id) => {
 
   return {};
  }

@@ -62,7 +62,7 @@ export const refreshTransactionHistory = async (dbProviders, paymentConfigKey, e
   if (paymentConfig === null) throw new Error('Payment method can not be found');
   const paymentWrapper = new PaymentWrapper(paymentConfig.payload.method);
 
-  const transaction_history = await paymentWrapper.getTransactionHistory(dbProviders.mongoDbProvider.conn, paymentConfig, external_transaction_id);
+  const transaction_history = await paymentWrapper.getTransactionHistory(paymentConfig, external_transaction_id);
   const updated_transaction_history = await updateTransactionHistory(dbProviders.mongoDbProvider.conn, paymentConfig, external_transaction_id, transaction_history);
 
   await paymentWrapper.receiptStatusUpdate(dbProviders.mongoDbProvider.conn, paymentConfig, external_transaction_id, updated_transaction_history);
