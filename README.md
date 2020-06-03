@@ -80,7 +80,7 @@ ACCESS_TOKEN_SECRET={Access Token Secret}
             "method" : "paypal",
             "env" : "sandbox",
             "secret" : "{Your Payment Secret on PayPal}",
-            "client_id" : "AaDQuYKANOGNrd12ms49cLK-KQeGQ4vjZClGzjeIYyYpUsOL6hq0PJUTAAYY3VA244IkWDhZiFwvEWp9",
+            "client_id" : "{Your Client Id on PayPal}",
             "success_url" : "https://basic-angular-ui-template-st.herokuapp.com/success",
             "cancel_url" : "https://basic-angular-ui-template-st.herokuapp.com/cancel"
         }
