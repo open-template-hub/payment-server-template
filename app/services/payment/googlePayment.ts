@@ -11,7 +11,6 @@ export class GooglePayment implements PaymentMethod {
  }
 
  getTransactionHistory = async (paymentConfig, external_transaction_id) => {
-
   return {};
  }
 
@@ -19,4 +18,7 @@ export class GooglePayment implements PaymentMethod {
   throw new Error('Method not implemented.');
  }
 
+ createProduct(amount: number, currency) {
+  return {};
+ }
 }

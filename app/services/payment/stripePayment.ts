@@ -39,6 +39,10 @@ export class StripePayment implements PaymentMethod {
   return null;
  }
 
+ createProduct(amount: number, currency) {
+  return {amount: Math.floor(amount * 100), currency};
+ }
+
  getPriceId = async (dbConn, paymentConfig, product) => {
   let stripe = new Stripe(paymentConfig.payload.secret, paymentConfig.payload.config);
   const stripeProductId = await this.getProductId(paymentConfig, product);
@@ -64,7 +68,7 @@ export class StripePayment implements PaymentMethod {
   let stripe = new Stripe(paymentConfig.payload.secret, paymentConfig.payload.config);
   if (!product.payload.stripe.external_product_id) {
    let stripeProduct = await stripe.products.create({
-    name: product.productId
+    name: product.name
    });
    return stripeProduct.id;
   } else {

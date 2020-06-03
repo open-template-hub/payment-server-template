@@ -31,7 +31,7 @@ router.post(subRoutes.root, async (req: Request, res: Response) => {
 router.post(subRoutes.initWithExternalTransactionId, async (req: Request, res: Response) => {
  // Init payment with external transaction id
  let paymentSession = await initPaymentWithExternalTransactionId(res.locals.ctx.dbProviders,
-  res.locals.ctx.currentUser.username, req.body.paymentConfigKey, req.body.productId, req.body.external_transaction_id);
+  res.locals.ctx.currentUser.username, req.body.paymentConfigKey, req.body.product_id, req.body.external_transaction_id);
  res.status(ResponseCode.CREATED).send(paymentSession);
 });
 

@@ -1,0 +1,11 @@
+###
+POST http://localhost:4003/product
+Content-Type: application/json
+Authorization: Bearer token
+
+{
+ "name": "Product 1",
+ "description": "product description",
+ "amount": 1.10,
+ "currency": "usd"
+}
