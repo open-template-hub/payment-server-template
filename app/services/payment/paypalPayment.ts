@@ -9,22 +9,22 @@ export class PayPalPayment implements PaymentMethod {
   const paypalClient = this.getPayPalClient(paymentConfig);
 
   const request = new paypal.orders.OrdersCreateRequest();
-  request.prefer("return=representation");
+  request.prefer('return=representation');
   request.requestBody(
-  {
-   intent: "CAPTURE",
-   application_context: {
-    return_url: paymentConfig.payload.success_url,
-    cancel_url: paymentConfig.payload.cancel_url,
-    locale: 'en-US'
-   },
-   purchase_units: [{
-    amount: {
-     currency_code: product.payload.paypal.currency,
-     value: (product.payload.paypal.amount * quantity).toString()
-    }
-   }]
-  });
+   {
+    intent: 'CAPTURE',
+    application_context: {
+     return_url: paymentConfig.payload.success_url,
+     cancel_url: paymentConfig.payload.cancel_url,
+     locale: 'en-US'
+    },
+    purchase_units: [{
+     amount: {
+      currency_code: product.payload.paypal.currency,
+      value: (product.payload.paypal.amount * quantity).toString()
+     }
+    }]
+   });
 
   let order;
   try {
@@ -60,7 +60,7 @@ export class PayPalPayment implements PaymentMethod {
   return null;
  }
 
- getPayPalClient (paymentConfig) {
+ getPayPalClient(paymentConfig) {
   let paypalClient;
 
   if (paymentConfig.payload.env === 'sandbox') {
