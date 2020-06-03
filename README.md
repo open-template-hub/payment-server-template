@@ -72,6 +72,21 @@ ACCESS_TOKEN_SECRET={Access Token Secret}
     }
 ```
 
+* Example PayPal Payment Config:
+```sh
+    {
+        "key" : "PAYPAL",
+        "payload" : {
+            "method" : "paypal",
+            "env" : "sandbox",
+            "secret" : "{Your Payment Secret on PayPal}",
+            "client_id" : "{Your Client Id on PayPal}",
+            "success_url" : "https://basic-angular-ui-template-st.herokuapp.com/success",
+            "cancel_url" : "https://basic-angular-ui-template-st.herokuapp.com/cancel"
+        }
+    }
+```
+
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->

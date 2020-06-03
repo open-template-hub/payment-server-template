@@ -2,11 +2,13 @@ import { GooglePayment } from './googlePayment';
 import { PaymentMethod } from '../../models/paymentMethod';
 import { StripePayment } from './stripePayment';
 import { CoinbasePayment } from './coinbasePayment';
+import { PayPalPayment } from './paypalPayment';
 
 export enum PaymentMethodEnum {
  Stripe = 'stripe',
  Coinbase = 'coinbase',
- Google = 'google'
+ Google = 'google',
+ PayPal = 'paypal'
 }
 
 export class PaymentWrapper implements PaymentMethod {
@@ -21,6 +23,9 @@ export class PaymentWrapper implements PaymentMethod {
     break;
    case PaymentMethodEnum.Coinbase:
     this.paymentMethod = new CoinbasePayment();
+    break;
+   case PaymentMethodEnum.PayPal:
+    this.paymentMethod = new PayPalPayment();
     break;
    default:
     this.paymentMethod = undefined;
