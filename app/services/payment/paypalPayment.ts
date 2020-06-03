@@ -75,4 +75,8 @@ export class PayPalPayment implements PaymentMethod {
 
   return paypalClient;
  }
+
+ createProduct(amount: number, currency) {
+  return {amount, currency};
+ }
 }

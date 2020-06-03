@@ -7,8 +7,8 @@ export class CoinbasePayment implements PaymentMethod {
  init = async (dbConn, paymentConfig, product, quantity) => {
 
   const charge = {
-   name: product.payload.name,
-   description: product.payload.description,
+   name: product.name,
+   description: product.description,
    local_price: {
     amount: product.payload.coinbase.amount * quantity,
     currency: product.payload.coinbase.currency
@@ -47,5 +47,9 @@ export class CoinbasePayment implements PaymentMethod {
 
  receiptStatusUpdate = async (dbConn, paymentConfig, external_transaction_id, updated_transaction_history) => {
   return null;
+ }
+
+ createProduct(amount: number, currency) {
+  return {amount, currency};
  }
 }

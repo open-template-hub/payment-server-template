@@ -7,7 +7,7 @@ import { createTransactionHistory, updateTransactionHistory } from '../dao/trans
 import { PaymentWrapper } from '../services/payment/paymentWrapper';
 import productModel from '../models/productModel';
 
-export const initPayment = async (dbProviders, username, paymentConfigKey, productId, quantity) => {
+export const initPayment = async (dbProviders, username, paymentConfigKey, product_id, quantity) => {
  let paymentSession = null;
 
  try {
@@ -16,13 +16,13 @@ export const initPayment = async (dbProviders, username, paymentConfigKey, produ
 
   const paymentWrapper = new PaymentWrapper(paymentConfig.payload.method);
 
-  let product: any = await productModel(dbProviders.mongoDbProvider.conn).findOne({productId: productId});
+  let product: any = await productModel(dbProviders.mongoDbProvider.conn).findOne({product_id});
   if (product === null) throw new Error('Product can not be found');
 
   let external_transaction = await paymentWrapper.init(dbProviders.mongoDbProvider.conn, paymentConfig, product, quantity);
   if (external_transaction === null) throw new Error('Payment can not be initiated');
 
-  await createTransactionHistory(dbProviders.mongoDbProvider, paymentConfigKey, username, productId, external_transaction.id, external_transaction.history);
+  await createTransactionHistory(dbProviders.mongoDbProvider, paymentConfigKey, username, product_id, external_transaction.id, external_transaction.history);
 
   /** build method is important because other providers might have special build
    * rather than returning session from init
@@ -37,13 +37,13 @@ export const initPayment = async (dbProviders, username, paymentConfigKey, produ
  return paymentSession;
 }
 
-export const initPaymentWithExternalTransactionId = async (dbProviders, username, paymentConfigKey, productId, external_transaction_id) => {
+export const initPaymentWithExternalTransactionId = async (dbProviders, username, paymentConfigKey, product_id, external_transaction_id) => {
  let paymentSession = {
   external_transaction_id: null
  };
 
  try {
-  await createTransactionHistory(dbProviders.postgreSqlProvider, paymentConfigKey, username, productId, external_transaction_id, {});
+  await createTransactionHistory(dbProviders.postgreSqlProvider, paymentConfigKey, username, product_id, external_transaction_id, {});
   paymentSession = {
    external_transaction_id: external_transaction_id
   };

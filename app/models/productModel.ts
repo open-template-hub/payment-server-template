@@ -8,7 +8,9 @@ import mongoose from 'mongoose';
  * product schema
  */
 const schema: mongoose.SchemaDefinition = {
- productId: {type: String, unique: true, required: true, dropDups: true},
+ product_id: {type: String, unique: true, required: true, dropDups: true},
+ name: {type: String, required: true},
+ description: {type: String, required: true},
  payload: {type: Object}
 };
 

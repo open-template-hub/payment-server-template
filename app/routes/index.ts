@@ -1,4 +1,5 @@
 import paymentRouter from './paymentRoute';
+import productRouter from './productRoute';
 import webhookRouter from './webhookRoute';
 import { Request, Response } from 'express';
 import { handle } from '../services/errorHandler';
@@ -32,6 +33,7 @@ export module Routes {
 
   // TODO: Add your routes here
   app.use('/payment', paymentRouter);
+  app.use('/product', productRouter);
   app.use('/webhook', webhookRouter);
 
   // Use for error handling

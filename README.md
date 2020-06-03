@@ -25,16 +25,20 @@ ACCESS_TOKEN_SECRET={Access Token Secret}
 * Example Product:
 ```sh
     {
-        "productId" : "Product Template",
+        "product_id" : "0276d8d1-0945-412b-92d1-084a6e3f7554",
+        "name" : "Premium",
+        "description" : "full access to premium features!",
         "payload" : {
-            "name" : "Product Name",
-            "description" : "Product Description",
             "stripe" : {
-                "amount" : 100,
+                "amount" : 1999,
                 "currency" : "usd"
             },
             "coinbase" : {
-                "amount" : 1,
+                "amount" : 19.99,
+                "currency" : "usd"
+            },
+            "paypal" : {
+                "amount" : 19.99,
                 "currency" : "usd"
             }
         }

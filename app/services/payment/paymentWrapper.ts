@@ -53,4 +53,9 @@ export class PaymentWrapper implements PaymentMethod {
   if (this.paymentMethod === undefined) return null;
   return await this.paymentMethod.receiptStatusUpdate(dbConn, paymentConfig, external_transaction_id, updated_transaction_history);
  }
+
+ createProduct(amount: number, currency) {
+  if (this.paymentMethod === undefined) return null;
+  return this.paymentMethod.createProduct(amount, currency);
+ }
 }
