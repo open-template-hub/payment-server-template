@@ -101,7 +101,6 @@ Content-Type: application/json
  "scheduled_for": "2020-06-01T19:43:19Z"
 }
 
-
 ###
 POST http://localhost:4003/webhook/stripe?key=STRIPE_LOCAL
 Content-Type: application/json
@@ -264,4 +263,89 @@ Content-Type: application/json
     "idempotency_key": null
   },
   "type": "payment_intent.succeeded"
+}
+
+###
+POST http://localhost:4003/webhook/paypal?key=PAYPAL
+Content-Type: application/json
+
+{
+ "id": "WH-7EJ96441K1110272N-59895742AK7079143",
+ "event_version": "1.0",
+ "create_time": "2020-06-03T12:37:03.696Z",
+ "resource_type": "checkout-order",
+ "resource_version": "2.0",
+ "event_type": "CHECKOUT.ORDER.APPROVED",
+ "summary": "An order has been approved by buyer",
+ "resource": {
+  "create_time": "2020-06-03T12:36:28Z",
+  "purchase_units": [
+   {
+    "reference_id": "default",
+    "amount": {
+     "currency_code": "USD",
+     "value": "2.00"
+    },
+    "payee": {
+     "email_address": "sb-nlx1y1717487@business.example.com",
+     "merchant_id": "MFZ2X4BDN42NG"
+    },
+    "shipping": {
+     "name": {
+      "full_name": "Furkan Yavuz"
+     },
+     "address": {
+      "address_line_1": "PO Box 4668 New York, NY 10163 NEW YORK, NY 10163",
+      "admin_area_2": "New York",
+      "admin_area_1": "NY",
+      "postal_code": "10163",
+      "country_code": "US"
+     }
+    }
+   }
+  ],
+  "links": [
+   {
+    "href": "https://api.sandbox.paypal.com/v2/checkout/orders/2P1869875K633350G",
+    "rel": "self",
+    "method": "GET"
+   },
+   {
+    "href": "https://api.sandbox.paypal.com/v2/checkout/orders/2P1869875K633350G",
+    "rel": "update",
+    "method": "PATCH"
+   },
+   {
+    "href": "https://api.sandbox.paypal.com/v2/checkout/orders/2P1869875K633350G/capture",
+    "rel": "capture",
+    "method": "POST"
+   }
+  ],
+  "id": "2P1869875K633350G",
+  "intent": "CAPTURE",
+  "payer": {
+   "name": {
+    "given_name": "Furkan",
+    "surname": "Yavuz"
+   },
+   "email_address": "furkanyavuz.spambox@gmail.com",
+   "payer_id": "D2P2HDVA2Z6H8",
+   "address": {
+    "country_code": "US"
+   }
+  },
+  "status": "APPROVED"
+ },
+ "links": [
+  {
+   "href": "https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-7EJ96441K1110272N-59895742AK7079143",
+   "rel": "self",
+   "method": "GET"
+  },
+  {
+   "href": "https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-7EJ96441K1110272N-59895742AK7079143/resend",
+   "rel": "resend",
+   "method": "POST"
+  }
+ ]
 }

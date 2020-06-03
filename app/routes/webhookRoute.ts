@@ -37,9 +37,7 @@ router.post(subRoutes.stripe, async (req: Request, res: Response) => {
 
 router.post(subRoutes.paypal, async (req: Request, res: Response) => {
 
- console.log(req.body);
-
- if (req.body.resource?.id) {
+ if (req.body.resource_type === 'checkout-order') {
   const external_transaction_id = req.body.resource.id;
   await refreshTransactionHistory(res.locals.ctx.dbProviders, req.query.key, external_transaction_id);
  }

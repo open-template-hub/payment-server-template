@@ -1,15 +1,12 @@
 import { PaymentMethod } from '../../models/paymentMethod';
 import { PaymentMethodEnum } from './paymentWrapper';
-import axios from 'axios';
 import paypal from '@paypal/checkout-server-sdk';
 
 export class PayPalPayment implements PaymentMethod {
 
  init = async (dbConn, paymentConfig, product, quantity) => {
 
-  let paypalClient = new paypal.core.PayPalHttpClient(new paypal.core.SandboxEnvironment(
-   paymentConfig.payload.client_id, paymentConfig.payload.secret
-  ));
+  const paypalClient = this.getPayPalClient(paymentConfig);
 
   const request = new paypal.orders.OrdersCreateRequest();
   request.prefer("return=representation");
@@ -44,10 +41,38 @@ export class PayPalPayment implements PaymentMethod {
  }
 
  getTransactionHistory = async (paymentConfig, external_transaction_id) => {
-  return null;
+
+  const paypalClient = this.getPayPalClient(paymentConfig);
+
+  let request = new paypal.orders.OrdersGetRequest(external_transaction_id);
+
+  let order;
+  try {
+   order = await paypalClient.execute(request);
+  } catch (e) {
+   throw e;
+  }
+
+  return order.result;
  }
 
  receiptStatusUpdate = async (dbConn, paymentConfig, external_transaction_id, updated_transaction_history) => {
   return null;
+ }
+
+ getPayPalClient (paymentConfig) {
+  let paypalClient;
+
+  if (paymentConfig.payload.env === 'sandbox') {
+   paypalClient = new paypal.core.PayPalHttpClient(new paypal.core.SandboxEnvironment(
+    paymentConfig.payload.client_id, paymentConfig.payload.secret
+   ));
+  } else if (paymentConfig.payload.env === 'live') {
+   paypalClient = new paypal.core.PayPalHttpClient(new paypal.core.LiveEnvironment(
+    paymentConfig.payload.client_id, paymentConfig.payload.secret
+   ));
+  }
+
+  return paypalClient;
  }
 }
