@@ -65,7 +65,7 @@ export const refreshTransactionHistory = async (dbProviders, paymentConfigKey, e
   const transaction_history = await paymentWrapper.getTransactionHistory(paymentConfig, external_transaction_id);
   const updated_transaction_history = await updateTransactionHistory(dbProviders.mongoDbProvider.conn, paymentConfig, external_transaction_id, transaction_history);
 
-  await paymentWrapper.receiptStatusUpdate(dbProviders.mongoDbProvider.conn, paymentConfig, external_transaction_id, updated_transaction_history);
+  await paymentWrapper.receiptStatusUpdate(dbProviders.postgreSqlProvider, paymentConfig, external_transaction_id, updated_transaction_history);
 
  } catch (error) {
   console.error('> refreshTransactionHistory error: ', error);

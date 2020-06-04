@@ -1,0 +1,7 @@
+GET http://localhost:4003/receipt
+Content-Type: application/json
+Authorization: Bearer token
+
+{
+	"product_id": "Football Matches New"
+}

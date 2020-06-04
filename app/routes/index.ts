@@ -1,6 +1,7 @@
 import paymentRouter from './paymentRoute';
 import productRouter from './productRoute';
 import webhookRouter from './webhookRoute';
+import receiptRouter from './receiptRoute';
 import { Request, Response } from 'express';
 import { handle } from '../services/errorHandler';
 import { MongoDbProvider } from '../database/mongoDbProvider';
@@ -35,6 +36,7 @@ export module Routes {
   app.use('/payment', paymentRouter);
   app.use('/product', productRouter);
   app.use('/webhook', webhookRouter);
+  app.use('/receipt', receiptRouter);
 
   // Use for error handling
   app.use(function (err, req, res, next) {
