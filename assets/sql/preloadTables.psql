@@ -1,4 +1,4 @@
-CREATE TABLE receipts(
+CREATE TABLE IF NOT EXISTS receipts(
   id SERIAL PRIMARY KEY,
   username text NOT NULL,
   external_transaction_id text NOT NULL,
