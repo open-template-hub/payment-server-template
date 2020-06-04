@@ -23,7 +23,7 @@ router.use('/*', async (req: Request, res: Response, next) => {
 router.get(subRoutes.root, async (req: Request, res: Response) => {
  const successful_receipts = await getSuccesfulReceipts(res.locals.ctx.dbProviders, req.body.username, req.body.product_id);
 
- res.status(ResponseCode.CREATED).send({successful_receipts: successful_receipts});
+ res.status(ResponseCode.OK).send({successful_receipts: successful_receipts});
 });
 
 export = router;
