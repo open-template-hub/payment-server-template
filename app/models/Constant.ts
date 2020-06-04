@@ -15,7 +15,7 @@ export const ResponseCode = {
  SERVICE_UNAVAILABLE: 503,
 }
 
-export const VerificationType = {
- HARD: 'hard',
- SOFT: 'soft'
+export const ReceiptStatus = {
+  SUCCESS: "SUCCESS",
+  REFUND: "REFUND"
 }

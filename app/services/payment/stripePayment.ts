@@ -2,6 +2,8 @@ import { PaymentMethod } from '../../models/paymentMethod';
 import Stripe from 'stripe';
 import productModel from '../../models/productModel';
 import { PaymentMethodEnum } from './paymentWrapper';
+import { createReceipt, getReceiptWithExternalTransactionId } from '../../dao/receiptDao';
+import { ReceiptStatus } from '../../models/Constant';
 
 export class StripePayment implements PaymentMethod {
 
@@ -35,8 +37,17 @@ export class StripePayment implements PaymentMethod {
   return intent;
  }
 
- receiptStatusUpdate(dbConn: any, paymentConfig: any, external_transaction_id: any, updated_transaction_history: any) {
-  return null;
+ receiptStatusUpdate = async(dbConn: any, paymentConfig: any, external_transaction_id: any, updated_transaction_history: any) => {
+   if (updated_transaction_history && updated_transaction_history.transaction_history
+     && updated_transaction_history.transaction_history.status === "succeeded") {
+       let created = await getReceiptWithExternalTransactionId(dbConn, updated_transaction_history.username, 
+        external_transaction_id, updated_transaction_history.product_id, paymentConfig.key);
+        if (!created) {
+          await createReceipt(dbConn, updated_transaction_history.username, 
+            external_transaction_id, updated_transaction_history.product_id, 
+            paymentConfig.key, new Date(), ReceiptStatus.SUCCESS);
+        }
+     }
  }
 
  createProduct(amount: number, currency) {
