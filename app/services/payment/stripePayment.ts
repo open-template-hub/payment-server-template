@@ -38,8 +38,8 @@ export class StripePayment implements PaymentMethod {
  }
 
  receiptStatusUpdate = async(dbConn: any, paymentConfig: any, external_transaction_id: any, updated_transaction_history: any) => {
-   if (updated_transaction_history && updated_transaction_history.transaction_history
-     && updated_transaction_history.transaction_history.status === "succeeded") {
+   if (updated_transaction_history && updated_transaction_history.payload.transaction_history
+     && updated_transaction_history.payload.transaction_history.status === "succeeded") {
        let created = await getReceiptWithExternalTransactionId(dbConn, updated_transaction_history.username, 
         external_transaction_id, updated_transaction_history.product_id, paymentConfig.key);
         if (!created) {
