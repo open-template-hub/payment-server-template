@@ -1,7 +1,4 @@
-GET http://localhost:4003/receipt
-Content-Type: application/json
-Authorization: Bearer token
+##
 
-{
-	"product_id": "Football Matches New"
-}
+GET http://localhost:4003/receipt?product_id=product_id
+Authorization: Bearer token
