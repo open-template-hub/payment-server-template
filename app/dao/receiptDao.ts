@@ -31,4 +31,3 @@ export const createReceipt = async (db, username, external_transaction_id, produ
     throw e;
    }
 }
- 
