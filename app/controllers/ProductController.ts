@@ -1,12 +1,11 @@
 import { PaymentMethodEnum, PaymentWrapper } from '../services/payment/paymentWrapper';
-import { v4 } from 'uuid';
 import { createProductDocument } from '../dao/productDao';
 
 /**
  * @description holds crud operations for the product entity
  */
 
-export const createProduct = async (dbProviders, name, description, amount, currency) => {
+export const createProduct = async (dbProviders, product_id, name, description, amount, currency) => {
  const stripePaymentWrapper = new PaymentWrapper(PaymentMethodEnum.Stripe);
  const coinbasePaymentWrapper = new PaymentWrapper(PaymentMethodEnum.Coinbase);
  const googlePaymentWrapper = new PaymentWrapper(PaymentMethodEnum.Google);
@@ -19,5 +18,5 @@ export const createProduct = async (dbProviders, name, description, amount, curr
    paypal: paypalPaymentWrapper.createProduct(amount, currency)
  };
 
- return await createProductDocument(dbProviders.mongoDbProvider, await v4(), name, description, payload);
+ return await createProductDocument(dbProviders.mongoDbProvider, product_id, name, description, payload);
 }

@@ -4,7 +4,7 @@
 
 import Router from 'express-promise-router';
 import { Request, Response } from 'express';
-import { getAdmin } from '../currentUser';
+import { getAdmin } from '../services/authService';
 import { ResponseCode } from '../models/Constant';
 import { createProduct } from '../controllers/ProductController';
 
@@ -21,7 +21,7 @@ router.use('/*', async (req: Request, res: Response, next) => {
 
 router.post(subRoutes.root, async (req: Request, res: Response) => {
 
- const product = await createProduct(res.locals.ctx.dbProviders, req.body.name, req.body.description, req.body.amount, req.body.currency);
+ const product = await createProduct(res.locals.ctx.dbProviders, req.body.product_id, req.body.name, req.body.description, req.body.amount, req.body.currency);
 
  res.status(ResponseCode.CREATED).send(product);
 });

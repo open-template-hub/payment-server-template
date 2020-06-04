@@ -4,6 +4,7 @@ Content-Type: application/json
 Authorization: Bearer token
 
 {
+ "product_id": "1",
  "name": "Product 1",
  "description": "product description",
  "amount": 1.10,
