@@ -3,6 +3,5 @@ Content-Type: application/json
 Authorization: Bearer token
 
 {
-	"username": "40bbaa76-efa8-486e-a73b-5f174a74707b",
 	"product_id": "Football Matches New"
 }
