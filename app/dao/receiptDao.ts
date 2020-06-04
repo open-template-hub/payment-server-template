@@ -1,3 +1,5 @@
+import { ReceiptStatus } from "../models/Constant";
+
 export const getReceiptWithExternalTransactionId = async (db, username, external_transaction_id, product_id, payment_config_key) => {
   let res;
   try {
@@ -9,11 +11,11 @@ export const getReceiptWithExternalTransactionId = async (db, username, external
   return res.rows[0];
 }
 
-export const getReceiptsWithUsernameAndProductId = async (db, username, product_id) => {
+export const getSuccessfulReceiptsWithUsernameAndProductId = async (db, username, product_id) => {
   let res;
   try {
-    res = await db.query('SELECT * FROM receipts WHERE username = $1 and product_id = $2',
-     [username, product_id]);
+    res = await db.query('SELECT * FROM receipts WHERE username = $1 and product_id = $2 and status = $3',
+     [username, product_id, ReceiptStatus.SUCCESS]);
    } catch (e) {
     throw e;
    }
