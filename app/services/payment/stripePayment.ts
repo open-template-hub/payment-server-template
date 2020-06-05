@@ -40,14 +40,14 @@ export class StripePayment implements PaymentMethod {
  receiptStatusUpdate = async(dbConn: any, paymentConfig: any, external_transaction_id: any, updated_transaction_history: any) => {
    if (updated_transaction_history && updated_transaction_history.payload.transaction_history
      && updated_transaction_history.payload.transaction_history.status === "succeeded") {
-       let created = await getReceiptWithExternalTransactionId(dbConn, updated_transaction_history.username, 
+       let created = await getReceiptWithExternalTransactionId(dbConn, updated_transaction_history.username,
         external_transaction_id, updated_transaction_history.product_id, paymentConfig.key);
         if (!created) {
           let amount = await this.calculateAmount(updated_transaction_history.payload.transaction_history.amount_received);
           let currency_code = await this.currencyCodeMap(updated_transaction_history.payload.transaction_history.currency);
 
-          await createReceipt(dbConn, updated_transaction_history.username, 
-            external_transaction_id, updated_transaction_history.product_id, 
+          await createReceipt(dbConn, updated_transaction_history.username,
+            external_transaction_id, updated_transaction_history.product_id,
             paymentConfig.key, new Date(), amount, currency_code, ReceiptStatus.SUCCESS);
         }
      }
@@ -65,7 +65,7 @@ export class StripePayment implements PaymentMethod {
  }
 
  createProduct(amount: number, currency) {
-  return {amount: Math.floor(amount * 100), currency};
+  return {amount: Math.round(amount * 100), currency};
  }
 
  getPriceId = async (dbConn, paymentConfig, product) => {
