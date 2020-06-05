@@ -1,6 +1,8 @@
 import { PaymentMethod } from '../../models/paymentMethod';
 import { PaymentMethodEnum } from './paymentWrapper';
 import paypal from '@paypal/checkout-server-sdk';
+import { createReceipt, getReceiptWithExternalTransactionId } from '../../dao/receiptDao';
+import { CurrencyCode, ReceiptStatus } from '../../models/Constant';
 
 export class PayPalPayment implements PaymentMethod {
 
@@ -57,7 +59,38 @@ export class PayPalPayment implements PaymentMethod {
  }
 
  receiptStatusUpdate = async (dbConn, paymentConfig, external_transaction_id, updated_transaction_history) => {
-  return null;
+  if (updated_transaction_history && updated_transaction_history.payload.transaction_history
+   && updated_transaction_history.payload.transaction_history.status === "APPROVED") {
+   let created = await getReceiptWithExternalTransactionId(dbConn, updated_transaction_history.username,
+    external_transaction_id, updated_transaction_history.product_id, paymentConfig.key);
+   if (!created && updated_transaction_history.payload.transaction_history.purchase_units &&
+     updated_transaction_history.payload.transaction_history.purchase_units.length > 0) {
+     let amount: number = 0.00;
+     let currency_code = undefined;
+
+     await updated_transaction_history.payload.transaction_history.purchase_units.forEach(purchase_unit => {
+      if (purchase_unit.amount?.value) {
+       amount += purchase_unit.amount.value;
+
+       if (currency_code && currency_code !== purchase_unit.amount.currency_code) {
+        console.error("Two different currency codes in one transaction!");
+       }
+       currency_code = this.currencyCodeMap(purchase_unit.amount.currency_code);
+      }
+     });
+
+    await createReceipt(dbConn, updated_transaction_history.username,
+     external_transaction_id, updated_transaction_history.product_id,
+     paymentConfig.key, new Date(), amount, currency_code, ReceiptStatus.SUCCESS);
+   }
+  }
+ }
+
+ currencyCodeMap = (currency_code) => {
+  if (currency_code === "USD") {
+   return CurrencyCode.USD;
+  }
+  return currency_code;
  }
 
  getPayPalClient(paymentConfig) {

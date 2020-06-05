@@ -57,7 +57,7 @@ export class StripePayment implements PaymentMethod {
    return amount / 100;
  }
 
- currencyCodeMap = async(currency_code) => {
+ currencyCodeMap = (currency_code) => {
    if (currency_code === "usd") {
      return CurrencyCode.USD;
    }

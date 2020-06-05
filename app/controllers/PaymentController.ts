@@ -55,7 +55,6 @@ export const initPaymentWithExternalTransactionId = async (dbProviders, username
  return paymentSession;
 }
 
-// INFO: Refreshing transaction history only, do not update receipt here, do not call this function from routes directly since it always updates against payment methods!
 export const refreshTransactionHistory = async (dbProviders, paymentConfigKey, external_transaction_id) => {
  try {
   let paymentConfig: any = await paymentConfigModel(dbProviders.mongoDbProvider.conn).findOne({key: paymentConfigKey});
