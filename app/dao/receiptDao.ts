@@ -23,10 +23,10 @@ export const getSuccessfulReceiptsWithUsernameAndProductId = async (db, username
 }
 
 
-export const createReceipt = async (db, username, external_transaction_id, product_id, payment_config_key, created_time, status) => {
+export const createReceipt = async (db, username, external_transaction_id, product_id, payment_config_key, created_time, total_amount, currency_code, status) => {
   try {
-    await db.query('INSERT INTO receipts(username, external_transaction_id, product_id, payment_config_key, created_time, status) VALUES($1, $2, $3, $4, $5, $6)',
-     [username, external_transaction_id, product_id, payment_config_key, created_time, status]);
+    await db.query('INSERT INTO receipts(username, external_transaction_id, product_id, payment_config_key, created_time, total_amount, currency_code, status) VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
+     [username, external_transaction_id, product_id, payment_config_key, created_time, total_amount, currency_code, status]);
    } catch (e) {
     throw e;
    }
