@@ -18,7 +18,7 @@ router.get(subRoutes.root, async (req: Request, res: Response) => {
  const currentUser: any = await getCurrentUser(req);
  const successful_receipts = await getSuccesfulReceipts(res.locals.ctx.dbProviders, currentUser.username, req.query.product_id);
 
- res.status(ResponseCode.OK).send({successful_receipts: successful_receipts});
+ res.status(ResponseCode.OK).json({successful_receipts: successful_receipts});
 });
 
 export = router;

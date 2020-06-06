@@ -23,7 +23,7 @@ router.post(subRoutes.root, async (req: Request, res: Response) => {
 
  const product = await createProduct(res.locals.ctx.dbProviders, req.body.product_id, req.body.name, req.body.description, req.body.amount, req.body.currency);
 
- res.status(ResponseCode.CREATED).send(product);
+ res.status(ResponseCode.CREATED).json(product);
 });
 
 export = router;
