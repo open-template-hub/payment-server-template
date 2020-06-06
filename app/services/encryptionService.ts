@@ -7,8 +7,8 @@ export class EncryptionService {
       throw new Error("Encryption secret not found");
     }
     const secret: string = process.env.RESPONSE_ENCRYPTION_SECRET;
-    
-    for(let i = 0; i < args.length; i++) {
+
+    for (let i = 0; i < args.length; i++) {
       let encrypted = CryptoJS.RC4.encrypt(args[i].toString(), secret);
       args[i] = JSON.stringify(encrypted);
     }
