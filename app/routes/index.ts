@@ -16,23 +16,6 @@ export module Routes {
   postgreSqlProvider.preload();
   mongoDbProvider.preload();
 
-  // INFO: Keep this method at top at all times
-  app.all('/*', async (req: Request, res: Response, next) => {
-   try {
-    // create context
-    let dbProviders = {
-     mongoDbProvider: mongoDbProvider,
-     postgreSqlProvider: postgreSqlProvider
-    }
-    res.locals.ctx = {dbProviders};
-
-    next();
-   } catch (e) {
-    let error = handle(e);
-    res.status(error.code).send({message: error.message});
-   }
-  });
-
   const responseInterceptor = (req, res, next) => {
     var originalSend = res.send;
     const service = new EncryptionService();
@@ -49,6 +32,23 @@ export module Routes {
   
   // use this interceptor before routes
   app.use(responseInterceptor);
+
+  // INFO: Keep this method at top at all times
+  app.all('/*', async (req: Request, res: Response, next) => {
+   try {
+    // create context
+    let dbProviders = {
+     mongoDbProvider: mongoDbProvider,
+     postgreSqlProvider: postgreSqlProvider
+    }
+    res.locals.ctx = {dbProviders};
+
+    next();
+   } catch (e) {
+    let error = handle(e);
+    res.status(error.code).send({message: error.message});
+   }
+  });
 
   // TODO: Add your routes here
   app.use('/payment', paymentRouter);
