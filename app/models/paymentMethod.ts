@@ -3,7 +3,9 @@ export interface PaymentMethod {
 
  build(paymentConfig, external_transaction);
 
- getTransactionHistory(dbConn, paymentConfig, external_transaction_id);
+ getTransactionHistory(paymentConfig, external_transaction_id);
 
  receiptStatusUpdate(dbConn, paymentConfig, external_transaction_id, updated_transaction_history);
+
+ createProduct(amount: number, currency);
 }

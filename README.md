@@ -18,23 +18,30 @@ PORT={Server Port}
 MONGODB_URI={MongoDB Connection String}
 DATABASE_URL={PostgreSQL Connection String}
 ACCESS_TOKEN_SECRET={Access Token Secret}
+RESPONSE_ENCRYPTION_SECRET={Response Encryption Secret}
 ```
+
+* If you don't give **RESPONSE_ENCRYPTION_SECRET**, response encryption mechanism will be disabled automatically.
 
 ### Stripe
 
 * Example Product:
 ```sh
     {
-        "productId" : "Product Template",
+        "product_id" : "0276d8d1-0945-412b-92d1-084a6e3f7554",
+        "name" : "Premium",
+        "description" : "full access to premium features!",
         "payload" : {
-            "name" : "Product Name",
-            "description" : "Product Description",
             "stripe" : {
-                "amount" : 100,
+                "amount" : 1999,
                 "currency" : "usd"
             },
             "coinbase" : {
-                "amount" : 1,
+                "amount" : 19.99,
+                "currency" : "usd"
+            },
+            "paypal" : {
+                "amount" : 19.99,
                 "currency" : "usd"
             }
         }
@@ -68,6 +75,21 @@ ACCESS_TOKEN_SECRET={Access Token Secret}
             "charge_url" : "https://api.commerce.coinbase.com/charges",
             "success_url" : "https://localhost:4000/success",
             "cancel_url" : "https://localhost:4000/cancel"
+        }
+    }
+```
+
+* Example PayPal Payment Config:
+```sh
+    {
+        "key" : "PAYPAL",
+        "payload" : {
+            "method" : "paypal",
+            "env" : "sandbox",
+            "secret" : "{Your Payment Secret on PayPal}",
+            "client_id" : "{Your Client Id on PayPal}",
+            "success_url" : "https://basic-angular-ui-template-st.herokuapp.com/success",
+            "cancel_url" : "https://basic-angular-ui-template-st.herokuapp.com/cancel"
         }
     }
 ```

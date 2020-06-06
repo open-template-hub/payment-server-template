@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS receipts(
+  id SERIAL PRIMARY KEY,
+  username text NOT NULL,
+  external_transaction_id text NOT NULL,
+  payment_config_key text NOT NULL,
+  product_id text NOT NULL,
+  created_time timestamp NOT NULL,
+  total_amount NUMERIC(8,2) NOT NULL,
+  currency_code text NOT NULL,
+  status text NOT NULL
+);

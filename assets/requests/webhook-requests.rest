@@ -1,0 +1,348 @@
+###
+POST http://localhost:4003/webhook/coinbase?key=COINBASE
+Content-Type: application/json
+
+{
+ "attempt_number": 1,
+ "event": {
+  "api_version": "2018-03-22",
+  "created_at": "2020-06-01T19:43:19Z",
+  "data": {
+   "code": "AAAAAAAA",
+   "id": "f9810606-691e-418d-aef6-d23e3f004796",
+   "resource": "charge",
+   "name": "The Sovereign Individual",
+   "description": "Mastering the Transition to the Information Age",
+   "hosted_url": "https://commerce.coinbase.com/charges/AAAAAAAA",
+   "created_at": "2018-01-01T00:00:00Z",
+   "confirmed_at": "2018-01-01T00:40:00Z",
+   "expires_at": "2018-01-01T01:00:00Z",
+   "support_email": "test@test.test",
+   "timeline": [
+    {
+     "time": "2018-01-01T00:00:00Z",
+     "status": "NEW"
+    },
+    {
+     "status": "PENDING",
+     "payment": {
+      "network": "ethereum",
+      "transaction_id": "0x0000000000000000000000000000000000000000000000000000000000000000"
+     },
+     "time": "2018-01-01T00:30:00Z"
+    },
+    {
+     "status": "COMPLETED",
+     "payment": {
+      "network": "ethereum",
+      "transaction_id": "0x0000000000000000000000000000000000000000000000000000000000000000"
+     },
+     "time": "2018-01-01T00:40:00Z"
+    }
+   ],
+   "metadata": {},
+   "pricing": {
+    "local": {
+     "amount": "100.00",
+     "currency": "USD"
+    },
+    "bitcoin": {
+     "amount": "1.00000000",
+     "currency": "BTC"
+    },
+    "ethereum": {
+     "amount": "10.000000000",
+     "currency": "ETH"
+    },
+    "usdc": {
+     "amount": "10.000000",
+     "currency": "USDC"
+    }
+   },
+   "pricing_type": "fixed_price",
+   "payments": [
+    {
+     "network": "ethereum",
+     "transaction_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
+     "status": "CONFIRMED",
+     "detected_at": "2018-01-01T00:30:00Z",
+     "value": {
+      "local": {
+       "amount": "100.0",
+       "currency": "USD"
+      },
+      "crypto": {
+       "amount": "10.00",
+       "currency": "ETH"
+      }
+     },
+     "block": {
+      "height": 100,
+      "hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "confirmations_accumulated": 8,
+      "confirmations_required": 2
+     }
+    }
+   ],
+   "addresses": {
+    "bitcoin": "1000000000000000000000000000000000",
+    "ethereum": "0x0000000000000000000000000000000000000000",
+    "usdc": "0x0000000000000000000000000000000000000000"
+   }
+  },
+  "id": "677035f9-3b27-42c5-a98d-3629bf0c7465",
+  "resource": "event",
+  "type": "charge:failed"
+ },
+ "id": "7fe8e4e8-95ca-43b2-8c57-b0ae35efee8a",
+ "scheduled_for": "2020-06-01T19:43:19Z"
+}
+
+###
+POST http://localhost:4003/webhook/stripe?key=STRIPE
+Content-Type: application/json
+
+{
+ "id": "evt_1GpcquKyM2eqMlONaCwTXNpb",
+ "object": "event",
+ "api_version": "2020-03-02",
+ "created": 1591114836,
+ "data": {
+  "object": {
+   "id": "pi_1Gpcq3KyM2eqMlONy0sJaZTR",
+   "object": "payment_intent",
+   "amount": 8000,
+   "amount_capturable": 0,
+   "amount_received": 8000,
+   "application": null,
+   "application_fee_amount": null,
+   "canceled_at": null,
+   "cancellation_reason": null,
+   "capture_method": "automatic",
+   "charges": {
+    "object": "list",
+    "data": [
+     {
+      "id": "ch_1GpcquKyM2eqMlON2n9sEEAu",
+      "object": "charge",
+      "amount": 8000,
+      "amount_refunded": 0,
+      "application": null,
+      "application_fee": null,
+      "application_fee_amount": null,
+      "balance_transaction": "txn_1GpcquKyM2eqMlONVcZIfKXd",
+      "billing_details": {
+       "address": {
+        "city": null,
+        "country": "TR",
+        "line1": null,
+        "line2": null,
+        "postal_code": null,
+        "state": null
+       },
+       "email": "fatihturker35@gmail.com",
+       "name": "Fatih",
+       "phone": null
+      },
+      "calculated_statement_descriptor": "Stripe",
+      "captured": true,
+      "created": 1591114836,
+      "currency": "usd",
+      "customer": "cus_HOPgqTvzlQoCrp",
+      "description": null,
+      "destination": null,
+      "dispute": null,
+      "disputed": false,
+      "failure_code": null,
+      "failure_message": null,
+      "fraud_details": {},
+      "invoice": null,
+      "livemode": false,
+      "metadata": {},
+      "on_behalf_of": null,
+      "order": null,
+      "outcome": {
+       "network_status": "approved_by_network",
+       "reason": null,
+       "risk_level": "normal",
+       "risk_score": 34,
+       "seller_message": "Payment complete.",
+       "type": "authorized"
+      },
+      "paid": true,
+      "payment_intent": "pi_1Gpcq3KyM2eqMlONy0sJaZTR",
+      "payment_method": "pm_1GpcqsKyM2eqMlONu3jdXLgQ",
+      "payment_method_details": {
+       "card": {
+        "brand": "visa",
+        "checks": {
+         "address_line1_check": null,
+         "address_postal_code_check": null,
+         "cvc_check": "pass"
+        },
+        "country": "US",
+        "exp_month": 11,
+        "exp_year": 2025,
+        "fingerprint": "7OEdUncp5EmTqQkA",
+        "funding": "unknown",
+        "installments": null,
+        "last4": "1111",
+        "network": "visa",
+        "three_d_secure": null,
+        "wallet": null
+       },
+       "type": "card"
+      },
+      "receipt_email": null,
+      "receipt_number": null,
+      "receipt_url": "https://pay.stripe.com/receipts/acct_1GoRPbKyM2eqMlON/ch_1GpcquKyM2eqMlON2n9sEEAu/rcpt_HOPg54GEvXknAhL25eYdIPZxfyr12kK",
+      "refunded": false,
+      "refunds": {
+       "object": "list",
+       "data": [],
+       "has_more": false,
+       "total_count": 0,
+       "url": "/v1/charges/ch_1GpcquKyM2eqMlON2n9sEEAu/refunds"
+      },
+      "review": null,
+      "shipping": null,
+      "source": null,
+      "source_transfer": null,
+      "statement_descriptor": null,
+      "statement_descriptor_suffix": null,
+      "status": "succeeded",
+      "transfer_data": null,
+      "transfer_group": null
+     }
+    ],
+    "has_more": false,
+    "total_count": 1,
+    "url": "/v1/charges?payment_intent=pi_1Gpcq3KyM2eqMlONy0sJaZTR"
+   },
+   "client_secret": "pi_1Gpcq3KyM2eqMlONy0sJaZTR_secret_4IaP57Yp7PNTNIT6wdOGuqDoa",
+   "confirmation_method": "automatic",
+   "created": 1591114783,
+   "currency": "usd",
+   "customer": "cus_HOPgqTvzlQoCrp",
+   "description": null,
+   "invoice": null,
+   "last_payment_error": null,
+   "livemode": false,
+   "metadata": {},
+   "next_action": null,
+   "on_behalf_of": null,
+   "payment_method": "pm_1GpcqsKyM2eqMlONu3jdXLgQ",
+   "payment_method_options": {
+    "card": {
+     "installments": null,
+     "request_three_d_secure": "automatic"
+    }
+   },
+   "payment_method_types": [
+    "card"
+   ],
+   "receipt_email": null,
+   "review": null,
+   "setup_future_usage": null,
+   "shipping": null,
+   "source": null,
+   "statement_descriptor": null,
+   "statement_descriptor_suffix": null,
+   "status": "succeeded",
+   "transfer_data": null,
+   "transfer_group": null
+  }
+ },
+ "livemode": false,
+ "pending_webhooks": 1,
+ "request": {
+  "id": "req_wvAK99Lx7U63hI",
+  "idempotency_key": null
+ },
+ "type": "payment_intent.succeeded"
+}
+
+###
+POST http://localhost:4003/webhook/paypal?key=PAYPAL
+Content-Type: application/json
+
+{
+ "id": "WH-7EJ96441K1110272N-59895742AK7079143",
+ "event_version": "1.0",
+ "create_time": "2020-06-03T12:37:03.696Z",
+ "resource_type": "checkout-order",
+ "resource_version": "2.0",
+ "event_type": "CHECKOUT.ORDER.APPROVED",
+ "summary": "An order has been approved by buyer",
+ "resource": {
+  "create_time": "2020-06-03T12:36:28Z",
+  "purchase_units": [
+   {
+    "reference_id": "default",
+    "amount": {
+     "currency_code": "USD",
+     "value": "2.00"
+    },
+    "payee": {
+     "email_address": "sb-nlx1y1717487@business.example.com",
+     "merchant_id": "MFZ2X4BDN42NG"
+    },
+    "shipping": {
+     "name": {
+      "full_name": "Furkan Yavuz"
+     },
+     "address": {
+      "address_line_1": "PO Box 4668 New York, NY 10163 NEW YORK, NY 10163",
+      "admin_area_2": "New York",
+      "admin_area_1": "NY",
+      "postal_code": "10163",
+      "country_code": "US"
+     }
+    }
+   }
+  ],
+  "links": [
+   {
+    "href": "https://api.sandbox.paypal.com/v2/checkout/orders/2P1869875K633350G",
+    "rel": "self",
+    "method": "GET"
+   },
+   {
+    "href": "https://api.sandbox.paypal.com/v2/checkout/orders/2P1869875K633350G",
+    "rel": "update",
+    "method": "PATCH"
+   },
+   {
+    "href": "https://api.sandbox.paypal.com/v2/checkout/orders/2P1869875K633350G/capture",
+    "rel": "capture",
+    "method": "POST"
+   }
+  ],
+  "id": "7FL70342K0370561L",
+  "intent": "CAPTURE",
+  "payer": {
+   "name": {
+    "given_name": "Furkan",
+    "surname": "Yavuz"
+   },
+   "email_address": "furkanyavuz.spambox@gmail.com",
+   "payer_id": "D2P2HDVA2Z6H8",
+   "address": {
+    "country_code": "US"
+   }
+  },
+  "status": "APPROVED"
+ },
+ "links": [
+  {
+   "href": "https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-7EJ96441K1110272N-59895742AK7079143",
+   "rel": "self",
+   "method": "GET"
+  },
+  {
+   "href": "https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-7EJ96441K1110272N-59895742AK7079143/resend",
+   "rel": "resend",
+   "method": "POST"
+  }
+ ]
+}
