@@ -6,6 +6,7 @@ import { Request, Response } from 'express';
 import { handle } from '../services/errorHandler';
 import { MongoDbProvider } from '../database/mongoDbProvider';
 import { PostgreSqlProvider } from '../database/postgreSqlProvider';
+import { EncryptionService } from '../services/encryptionService';
 
 export module Routes {
  export function mount(app) {
@@ -31,6 +32,23 @@ export module Routes {
     res.status(error.code).send({message: error.message});
    }
   });
+
+  const responseInterceptor = (req, res, next) => {
+    var originalSend = res.send;
+    const service = new EncryptionService();
+    res.send = function(){
+      console.log("Starting Encryption: ", new Date());
+      let encrypted_arguments = service.encrypt(arguments);
+      console.log("Encryption Completed: ", new Date());
+
+      originalSend.apply(res, encrypted_arguments);
+    };
+
+    next();
+  }
+  
+  // use this interceptor before routes
+  app.use(responseInterceptor);
 
   // TODO: Add your routes here
   app.use('/payment', paymentRouter);
