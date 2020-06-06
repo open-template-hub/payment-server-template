@@ -21,7 +21,7 @@ ACCESS_TOKEN_SECRET={Access Token Secret}
 RESPONSE_ENCRYPTION_SECRET={Response Encryption Secret}
 ```
 
-* If you do give **RESPONSE_ENCRYPTION_SECRET**, response encryption mechanism will be disabled automatically.
+* If you don't give **RESPONSE_ENCRYPTION_SECRET**, response encryption mechanism will be disabled automatically.
 
 ### Stripe
 
