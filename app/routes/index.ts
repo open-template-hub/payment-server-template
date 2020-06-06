@@ -46,7 +46,7 @@ export module Routes {
         next();
       } catch (e) {
         let error = handle(e);
-        res.status(error.code).send({ message: error.message });
+        res.status(error.code).json({ message: error.message });
       }
     });
 
@@ -60,7 +60,7 @@ export module Routes {
     app.use(function (err, req, res, next) {
       let error = handle(err);
       console.log(err);
-      res.status(error.code).send({ message: error.message });
+      res.status(error.code).json({ message: error.message });
     });
   }
 }
