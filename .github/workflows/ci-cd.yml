@@ -27,6 +27,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          token : ${{ secrets.WORKFLOW_SECRET }}
       - run: cat ./package.json
       - uses: actions/setup-node@v1
         with:
@@ -35,6 +37,4 @@ jobs:
         with:
           tag-prefix: ''
           token: ${{ secrets.WORKFLOW_SECRET }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET }}
       - run: cat ./package.json
