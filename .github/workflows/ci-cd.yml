@@ -34,6 +34,7 @@ jobs:
       - uses: phips28/gh-action-bump-version@master
         with:
           tag-prefix: ''
+          token: ${{ secrets.WORKFLOW_SECRET }}
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_SECRET }}
       - run: cat ./package.json
