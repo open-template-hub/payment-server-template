@@ -3,7 +3,7 @@ import Stripe from 'stripe';
 import productModel from '../../models/productModel';
 import { PaymentMethodEnum } from './paymentWrapper';
 import { createReceipt, getReceiptWithExternalTransactionId } from '../../dao/receiptDao';
-import { ReceiptStatus, CurrencyCode } from '../../models/Constant';
+import { CurrencyCode, ReceiptStatus } from '../../models/Constant';
 
 export class StripePayment implements PaymentMethod {
 
@@ -37,31 +37,31 @@ export class StripePayment implements PaymentMethod {
   return intent;
  }
 
- receiptStatusUpdate = async(dbConn: any, paymentConfig: any, external_transaction_id: any, updated_transaction_history: any) => {
-   if (updated_transaction_history && updated_transaction_history.payload.transaction_history
-     && updated_transaction_history.payload.transaction_history.status === "succeeded") {
-       let created = await getReceiptWithExternalTransactionId(dbConn, updated_transaction_history.username,
-        external_transaction_id, updated_transaction_history.product_id, paymentConfig.key);
-        if (!created) {
-          let amount = await this.calculateAmount(updated_transaction_history.payload.transaction_history.amount_received);
-          let currency_code = await this.currencyCodeMap(updated_transaction_history.payload.transaction_history.currency);
+ receiptStatusUpdate = async (dbConn: any, paymentConfig: any, external_transaction_id: any, updated_transaction_history: any) => {
+  if (updated_transaction_history && updated_transaction_history.payload.transaction_history
+   && updated_transaction_history.payload.transaction_history.status === 'succeeded') {
+   let created = await getReceiptWithExternalTransactionId(dbConn, updated_transaction_history.username,
+    external_transaction_id, updated_transaction_history.product_id, paymentConfig.key);
+   if (!created) {
+    let amount = await this.calculateAmount(updated_transaction_history.payload.transaction_history.amount_received);
+    let currency_code = await this.currencyCodeMap(updated_transaction_history.payload.transaction_history.currency);
 
-          await createReceipt(dbConn, updated_transaction_history.username,
-            external_transaction_id, updated_transaction_history.product_id,
-            paymentConfig.key, new Date(), amount, currency_code, ReceiptStatus.SUCCESS);
-        }
-     }
+    await createReceipt(dbConn, updated_transaction_history.username,
+     external_transaction_id, updated_transaction_history.product_id,
+     paymentConfig.key, new Date(), amount, currency_code, ReceiptStatus.SUCCESS);
+   }
+  }
  }
 
- calculateAmount = async(amount) => {
-   return amount / 100;
+ calculateAmount = async (amount) => {
+  return amount / 100;
  }
 
  currencyCodeMap = (currency_code) => {
-   if (currency_code === "usd") {
-     return CurrencyCode.USD;
-   }
-   return currency_code;
+  if (currency_code === 'usd') {
+   return CurrencyCode.USD;
+  }
+  return currency_code;
  }
 
  createProduct(amount: number, currency) {

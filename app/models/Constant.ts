@@ -16,10 +16,10 @@ export const ResponseCode = {
 }
 
 export const ReceiptStatus = {
-  SUCCESS: "SUCCESS",
-  REFUND: "REFUND"
+ SUCCESS: 'SUCCESS',
+ REFUND: 'REFUND'
 }
 
 export const CurrencyCode = {
-  USD: "USD"
+ USD: 'USD'
 }

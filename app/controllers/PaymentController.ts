@@ -38,21 +38,16 @@ export const initPayment = async (dbProviders, username, paymentConfigKey, produ
 }
 
 export const initPaymentWithExternalTransactionId = async (dbProviders, username, paymentConfigKey, product_id, external_transaction_id) => {
- let paymentSession = {
-  external_transaction_id: null
- };
 
  try {
   await createTransactionHistory(dbProviders.postgreSqlProvider, paymentConfigKey, username, product_id, external_transaction_id, {});
-  paymentSession = {
+  return {
    external_transaction_id: external_transaction_id
   };
  } catch (error) {
   console.error('> initPaymentWithExternalTransactionId error: ', error);
   throw error;
  }
-
- return paymentSession;
 }
 
 export const refreshTransactionHistory = async (dbProviders, paymentConfigKey, external_transaction_id) => {
