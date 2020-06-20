@@ -76,7 +76,7 @@ If you don't give **RESPONSE_ENCRYPTION_SECRET**, response encryption mechanism 
 
 ### Payment Configurations
 
-#### Example Stripe Payment Config:
+#### Stripe Payment Config:
 ```sh
   {
         "key": "STRIPE",
@@ -93,7 +93,7 @@ If you don't give **RESPONSE_ENCRYPTION_SECRET**, response encryption mechanism 
   }
 ```
 
-#### Example Coinbase Payment Config:
+#### Coinbase Payment Config:
 ```sh
     {
         "key" : "COINBASE",
@@ -107,7 +107,7 @@ If you don't give **RESPONSE_ENCRYPTION_SECRET**, response encryption mechanism 
     }
 ```
 
-#### Example PayPal Payment Config:
+#### PayPal Payment Config:
 ```sh
     {
         "key" : "PAYPAL",
