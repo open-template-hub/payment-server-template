@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          token : ${{ secrets.WORKFLOW_SECRET }}
+          token : ${{ secrets.MASTER_BRANCH_ACCESS_TOKEN }}
       - run: cat ./package.json
       - uses: actions/setup-node@v1
         with:
@@ -36,5 +36,5 @@ jobs:
       - uses: phips28/gh-action-bump-version@master
         with:
           tag-prefix: ''
-          token: ${{ secrets.WORKFLOW_SECRET }}
+          token: ${{ secrets.MASTER_BRANCH_ACCESS_TOKEN }}
       - run: cat ./package.json
