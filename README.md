@@ -16,7 +16,7 @@ Payment Server Template in NodeJS Express.js
 
 Deploy this template to Heroku
 
-[![Deploy](https://img.shields.io/badge/↑_Deploy_to-Heroku-7056bf.svg?style=for-the-badge&logo=heroku)](https://heroku.com/deploy?template=https://github.com/open-template-hub/payment-server-template)
+[![Deploy](https://img.shields.io/badge/Deploy_to-Heroku-7056bf.svg?style=for-the-badge&logo=heroku)](https://heroku.com/deploy?template=https://github.com/open-template-hub/payment-server-template)
 
 ## Configurations
 
