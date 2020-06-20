@@ -29,11 +29,7 @@ export class PayPalPayment implements PaymentMethod {
    });
 
   let order;
-  try {
-   order = await paypalClient.execute(request);
-  } catch (e) {
-   throw e;
-  }
+  order = await paypalClient.execute(request);
 
   return {history: order.result, id: order.result.id};
  }
@@ -49,35 +45,31 @@ export class PayPalPayment implements PaymentMethod {
   let request = new paypal.orders.OrdersGetRequest(external_transaction_id);
 
   let order;
-  try {
-   order = await paypalClient.execute(request);
-  } catch (e) {
-   throw e;
-  }
+  order = await paypalClient.execute(request);
 
   return order.result;
  }
 
  receiptStatusUpdate = async (dbConn, paymentConfig, external_transaction_id, updated_transaction_history) => {
   if (updated_transaction_history && updated_transaction_history.payload.transaction_history
-   && updated_transaction_history.payload.transaction_history.status === "APPROVED") {
+   && updated_transaction_history.payload.transaction_history.status === 'APPROVED') {
    let created = await getReceiptWithExternalTransactionId(dbConn, updated_transaction_history.username,
     external_transaction_id, updated_transaction_history.product_id, paymentConfig.key);
    if (!created && updated_transaction_history.payload.transaction_history.purchase_units &&
-     updated_transaction_history.payload.transaction_history.purchase_units.length > 0) {
-     let amount: number = 0.00;
-     let currency_code = undefined;
+    updated_transaction_history.payload.transaction_history.purchase_units.length > 0) {
+    let amount: number = 0.00;
+    let currency_code = undefined;
 
-     await updated_transaction_history.payload.transaction_history.purchase_units.forEach(purchase_unit => {
-      if (purchase_unit.amount?.value) {
-       amount += purchase_unit.amount.value;
+    await updated_transaction_history.payload.transaction_history.purchase_units.forEach(purchase_unit => {
+     if (purchase_unit.amount?.value) {
+      amount += purchase_unit.amount.value;
 
-       if (currency_code && currency_code !== purchase_unit.amount.currency_code) {
-        console.error("Two different currency codes in one transaction!");
-       }
-       currency_code = this.currencyCodeMap(purchase_unit.amount.currency_code);
+      if (currency_code && currency_code !== purchase_unit.amount.currency_code) {
+       console.error('Two different currency codes in one transaction!');
       }
-     });
+      currency_code = this.currencyCodeMap(purchase_unit.amount.currency_code);
+     }
+    });
 
     await createReceipt(dbConn, updated_transaction_history.username,
      external_transaction_id, updated_transaction_history.product_id,
@@ -87,7 +79,7 @@ export class PayPalPayment implements PaymentMethod {
  }
 
  currencyCodeMap = (currency_code) => {
-  if (currency_code === "USD") {
+  if (currency_code === 'USD') {
    return CurrencyCode.USD;
   }
   return currency_code;

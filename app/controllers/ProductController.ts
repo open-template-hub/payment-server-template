@@ -12,10 +12,10 @@ export const createProduct = async (dbProviders, product_id, name, description, 
  const paypalPaymentWrapper = new PaymentWrapper(PaymentMethodEnum.PayPal);
 
  const payload = {
-   stripe: stripePaymentWrapper.createProduct(amount, currency),
-   coinbase: coinbasePaymentWrapper.createProduct(amount, currency),
-   google: googlePaymentWrapper.createProduct(amount, currency),
-   paypal: paypalPaymentWrapper.createProduct(amount, currency)
+  stripe: stripePaymentWrapper.createProduct(amount, currency),
+  coinbase: coinbasePaymentWrapper.createProduct(amount, currency),
+  google: googlePaymentWrapper.createProduct(amount, currency),
+  paypal: paypalPaymentWrapper.createProduct(amount, currency)
  };
 
  return await createProductDocument(dbProviders.mongoDbProvider, product_id, name, description, payload);

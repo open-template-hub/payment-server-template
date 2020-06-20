@@ -9,7 +9,8 @@ export const createProductDocument = async (db, product_id, name, description, p
     description,
     payload
    });
- } catch (e) {
-  throw e;
+ } catch (error) {
+  console.error('> createProductDocument error: ', error);
+  throw error;
  }
 }

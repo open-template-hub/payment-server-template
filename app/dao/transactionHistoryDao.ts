@@ -11,8 +11,9 @@ export const createTransactionHistory = async (db, payment_config_key, username,
     payload: {transaction_history}
    }
   );
- } catch (e) {
-  throw e;
+ } catch (error) {
+  console.error('> createTransactionHistory error: ', error);
+  throw error;
  }
 }
 
@@ -23,7 +24,8 @@ export const updateTransactionHistory = async (dbConn, paymentConfig, external_t
    {'payload.transaction_history': transaction_history},
    {new: true}
   );
- } catch (e) {
-  throw e;
+ } catch (error) {
+  console.error('> updateTransactionHistory error: ', error);
+  throw error;
  }
 }

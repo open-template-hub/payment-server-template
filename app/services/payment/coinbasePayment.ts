@@ -76,7 +76,7 @@ export class CoinbasePayment implements PaymentMethod {
  }
 
  currencyCodeMap = (currency_code) => {
-  if (currency_code === "USD") {
+  if (currency_code === 'USD') {
    return CurrencyCode.USD;
   }
   return currency_code;
