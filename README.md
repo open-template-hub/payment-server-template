@@ -1,6 +1,12 @@
-![Logo](https://avatars2.githubusercontent.com/u/65504426?s=200&v=4)
+<p align="center">
+  <a href="https://www.linkedin.com/company/open-template-hub">
+    <img src="https://avatars2.githubusercontent.com/u/65504426?s=200&v=4" alt="Logo">
+  </a>
+</p>
 
-# Payment Server Template
+<h1 align="center">
+Payment Server Template
+</h1>
 
 [![License](https://img.shields.io/github/license/open-template-hub/payment-server-template?color=2F7488&style=for-the-badge)](LICENSE)
 [![Issues](https://img.shields.io/github/issues/open-template-hub/payment-server-template?color=2F7488&style=for-the-badge)](https://github.com/open-template-hub/payment-server-template/issues)
