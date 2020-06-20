@@ -51,9 +51,7 @@ RESPONSE_ENCRYPTION_SECRET={Response Encryption Secret}
 
 If you don't give **RESPONSE_ENCRYPTION_SECRET**, response encryption mechanism will be disabled automatically.
 
-### Stripe
-
-* Example Product:
+### Example Product:
 ```sh
     {
         "product_id" : "0276d8d1-0945-412b-92d1-084a6e3f7554",
@@ -76,7 +74,9 @@ If you don't give **RESPONSE_ENCRYPTION_SECRET**, response encryption mechanism 
     }
 ```
 
-* Example Stripe Payment Config:
+### Payment Configurations
+
+#### Example Stripe Payment Config:
 ```sh
   {
         "key": "STRIPE",
@@ -93,7 +93,7 @@ If you don't give **RESPONSE_ENCRYPTION_SECRET**, response encryption mechanism 
   }
 ```
 
-* Example Coinbase Payment Config:
+#### Example Coinbase Payment Config:
 ```sh
     {
         "key" : "COINBASE",
@@ -107,7 +107,7 @@ If you don't give **RESPONSE_ENCRYPTION_SECRET**, response encryption mechanism 
     }
 ```
 
-* Example PayPal Payment Config:
+#### Example PayPal Payment Config:
 ```sh
     {
         "key" : "PAYPAL",
