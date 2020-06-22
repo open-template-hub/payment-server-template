@@ -18,11 +18,26 @@ Payment Server Template
 
 Payment Server Template in NodeJS, Express.js
 
-## Express Deploy
+## Ways to Begin
+
+### 1. Express Deploy
 
 Deploy this template to Heroku
 
 [![Deploy](https://img.shields.io/badge/Deploy_to-Heroku-7056bf.svg?style=for-the-badge&logo=heroku)](https://heroku.com/deploy?template=https://github.com/open-template-hub/payment-server-template)
+
+### 2. Start with Server Generator
+
+Create your server with Server Generator Package
+
+[![NPM](https://img.shields.io/badge/NPM-server_generator-cb3837.svg?style=for-the-badge&logo=npm)](https://www.npmjs.com/package/@open-template-hub/server-generator)
+
+### 3. GitHub Template
+
+Use this repository as a Template
+
+[![GitHubTemplate](https://img.shields.io/badge/GitHub-Template-24292e.svg?style=for-the-badge&logo=github)](https://github.com/open-template-hub/payment-server-template/generate)
+
 
 ## Configurations
 
@@ -36,9 +51,7 @@ RESPONSE_ENCRYPTION_SECRET={Response Encryption Secret}
 
 If you don't give **RESPONSE_ENCRYPTION_SECRET**, response encryption mechanism will be disabled automatically.
 
-### Stripe
-
-* Example Product:
+### Example Product:
 ```sh
     {
         "product_id" : "0276d8d1-0945-412b-92d1-084a6e3f7554",
@@ -61,7 +74,9 @@ If you don't give **RESPONSE_ENCRYPTION_SECRET**, response encryption mechanism 
     }
 ```
 
-* Example Stripe Payment Config:
+### Payment Configurations
+
+#### Stripe Payment Config:
 ```sh
   {
         "key": "STRIPE",
@@ -78,7 +93,7 @@ If you don't give **RESPONSE_ENCRYPTION_SECRET**, response encryption mechanism 
   }
 ```
 
-* Example Coinbase Payment Config:
+#### Coinbase Payment Config:
 ```sh
     {
         "key" : "COINBASE",
@@ -92,7 +107,7 @@ If you don't give **RESPONSE_ENCRYPTION_SECRET**, response encryption mechanism 
     }
 ```
 
-* Example PayPal Payment Config:
+#### PayPal Payment Config:
 ```sh
     {
         "key" : "PAYPAL",
