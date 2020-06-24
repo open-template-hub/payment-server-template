@@ -1,14 +1,12 @@
-name: Label Pull Request
-
+name: PR Labeler
 on:
   pull_request:
     types: [opened]
 
 jobs:
-  build:
+  pr-labeler:
     runs-on: ubuntu-latest
     steps:
-      - name: Label pull requests on master
-        uses: wirecard/pr-labeler-action@v3
+      - uses: TimonVS/pr-labeler-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
