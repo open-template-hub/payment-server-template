@@ -1,1 +1,4 @@
 enhancement: 'feature/*'
+bug: 'bugfix/*'
+documentation: 'document/*'
+quality: 'quality/*'
