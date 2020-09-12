@@ -3,7 +3,7 @@ import Stripe from 'stripe';
 import productModel from '../../models/productModel';
 import { PaymentMethodEnum } from './paymentWrapper';
 import { createReceipt, getReceiptWithExternalTransactionId } from '../../dao/receiptDao';
-import { CurrencyCode, ReceiptStatus } from '../../models/Constant';
+import { CurrencyCode, ReceiptStatus } from '../../util/constant';
 
 export class StripePayment implements PaymentMethod {
 
@@ -43,7 +43,7 @@ export class StripePayment implements PaymentMethod {
    let created = await getReceiptWithExternalTransactionId(dbConn, updated_transaction_history.username,
     external_transaction_id, updated_transaction_history.product_id, paymentConfig.key);
    if (!created) {
-    let amount = await this.calculateAmount(updated_transaction_history.payload.transaction_history.amount_received);
+    let amount = this.calculateAmount(updated_transaction_history.payload.transaction_history.amount_received);
     let currency_code = await this.currencyCodeMap(updated_transaction_history.payload.transaction_history.currency);
 
     await createReceipt(dbConn, updated_transaction_history.username,
@@ -53,7 +53,7 @@ export class StripePayment implements PaymentMethod {
   }
  }
 
- calculateAmount = async (amount) => {
+ calculateAmount = (amount) => {
   return amount / 100;
  }
 

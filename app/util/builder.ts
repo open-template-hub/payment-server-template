@@ -10,7 +10,7 @@ export class Builder {
    console.error('An error occurred while building template: ' + err);
   }
 
-  if (params != undefined && params != null) {
+  if (params != undefined) {
    for (var entry of params.entries()) {
     var key = entry[0],
      value = entry[1];

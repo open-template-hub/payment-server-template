@@ -4,7 +4,7 @@
 
 import Router from 'express-promise-router';
 import { Request, Response } from 'express';
-import { ResponseCode } from '../models/Constant';
+import { ResponseCode } from '../util/constant';
 import { initPayment, initPaymentWithExternalTransactionId } from '../controllers/PaymentController';
 import { getCurrentUser } from '../services/authService';
 

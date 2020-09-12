@@ -2,7 +2,7 @@ import { PaymentMethod } from '../../models/paymentMethod';
 import { PaymentMethodEnum } from './paymentWrapper';
 import paypal from '@paypal/checkout-server-sdk';
 import { createReceipt, getReceiptWithExternalTransactionId } from '../../dao/receiptDao';
-import { CurrencyCode, ReceiptStatus } from '../../models/Constant';
+import { CurrencyCode, ReceiptStatus } from '../../util/constant';
 
 export class PayPalPayment implements PaymentMethod {
 
