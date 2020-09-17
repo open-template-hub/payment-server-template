@@ -38,21 +38,37 @@ Use this repository as a Template
 
 [![GitHubTemplate](https://img.shields.io/badge/GitHub-Template-24292e.svg?style=for-the-badge&logo=github)](https://github.com/open-template-hub/payment-server-template/generate)
 
+## Installations
 
-## Configurations
+Install **nodejs** and **npm** via **[nodejs.org](https://nodejs.org)**.
 
-```sh
-PORT={Server Port}
-MONGODB_URI={MongoDB Connection String}
-DATABASE_URL={PostgreSQL Connection String}
-ACCESS_TOKEN_SECRET={Access Token Secret}
-RESPONSE_ENCRYPTION_SECRET={Response Encryption Secret}
+Check installed versions of **nodejs** and **npm** via running following commands:
+
 ```
+node -v
+npm -v
+```
+
+Check project's current **nodejs** and **npm** version from **[package.json](package.json)**.
+
+## Environment Variables
 
 If you don't give **RESPONSE_ENCRYPTION_SECRET**, response encryption mechanism will be disabled automatically.
 
+```applescript
+PORT={Server Port}
+
+ACCESS_TOKEN_SECRET={Access Token Secret}
+
+DATABASE_URL={PostgreSQL Connection String}
+
+MONGODB_URI={MongoDB Connection String}
+
+RESPONSE_ENCRYPTION_SECRET={Response Encryption Secret}
+```
+
 ### Example Product:
-```sh
+```json
     {
         "product_id" : "0276d8d1-0945-412b-92d1-084a6e3f7554",
         "name" : "Premium",
@@ -77,7 +93,7 @@ If you don't give **RESPONSE_ENCRYPTION_SECRET**, response encryption mechanism 
 ### Payment Configurations
 
 #### Stripe Payment Config:
-```sh
+```json
   {
         "key": "STRIPE",
         "payload": {
@@ -94,7 +110,7 @@ If you don't give **RESPONSE_ENCRYPTION_SECRET**, response encryption mechanism 
 ```
 
 #### Coinbase Payment Config:
-```sh
+```json
     {
         "key" : "COINBASE",
         "payload" : {
@@ -108,7 +124,7 @@ If you don't give **RESPONSE_ENCRYPTION_SECRET**, response encryption mechanism 
 ```
 
 #### PayPal Payment Config:
-```sh
+```json
     {
         "key" : "PAYPAL",
         "payload" : {
@@ -121,6 +137,10 @@ If you don't give **RESPONSE_ENCRYPTION_SECRET**, response encryption mechanism 
         }
     }
 ```
+
+## Http Requests
+
+You can find list of available http request in the [requests](assets/requests) directory. You can run http requests directly via **WebStorm**, for more information check out: [jetbrains.com/help/idea/http-client-in-product-code-editor.html](https://jetbrains.com/help/idea/http-client-in-product-code-editor.html)
 
 ## Contributors
 
