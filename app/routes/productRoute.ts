@@ -5,7 +5,7 @@
 import Router from 'express-promise-router';
 import { Request, Response } from 'express';
 import { getAdmin } from '../services/authService';
-import { ResponseCode } from '../models/Constant';
+import { ResponseCode } from '../util/constant';
 import { createProduct } from '../controllers/ProductController';
 
 const subRoutes = {

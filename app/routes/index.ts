@@ -13,8 +13,8 @@ export module Routes {
   const mongoDbProvider = new MongoDbProvider();
   const postgreSqlProvider = new PostgreSqlProvider();
 
-  postgreSqlProvider.preload();
-  mongoDbProvider.preload();
+  postgreSqlProvider.preload().then(() => console.log('PostgreSQL preload completed.'));
+  mongoDbProvider.preload().then(() => console.log('MongoDB preload completed.'));
 
   const responseInterceptor = (req, res, next) => {
    var originalSend = res.send;

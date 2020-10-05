@@ -19,7 +19,7 @@ app.use(cors());
 
 Routes.mount(app);
 
-const port: string = process.env.PORT || '3000' as string;
+const port: string = process.env.PORT || '4003' as string;
 
 app.listen(port, () => {
  console.log('Node app is running on port', port);

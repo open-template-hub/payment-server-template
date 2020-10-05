@@ -3,7 +3,7 @@
  */
 
 import { TokenExpiredError, verify } from 'jsonwebtoken';
-import { ResponseCode } from '../models/Constant';
+import { ResponseCode } from '../util/constant';
 
 export const verifyAccessToken = async (accessToken) => {
  try {
