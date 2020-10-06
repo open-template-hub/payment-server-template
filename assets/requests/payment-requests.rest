@@ -1,4 +1,4 @@
-###
+### Create Payment
 POST http://localhost:4003/payment
 Content-Type: application/json
 Authorization: Bearer token
@@ -9,18 +9,7 @@ Authorization: Bearer token
  "quantity": 1
 }
 
-###
-POST http://localhost:4003/payment/init-with-external-transaction-id
-Content-Type: application/json
-Authorization: Bearer token
-
-{
- "paymentConfigKey": "STRIPE",
- "external_transaction_id": "cs_test_transaction_id",
- "productId": "Product Id"
-}
-
-###
+### Init Payment With External Transaction Id
 POST http://localhost:4003/payment/init-with-external-transaction-id
 Content-Type: application/json
 Authorization: Bearer token

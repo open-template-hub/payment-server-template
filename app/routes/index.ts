@@ -1,3 +1,4 @@
+import monitorRouter from './monitorRoute';
 import paymentRouter from './paymentRoute';
 import productRouter from './productRoute';
 import webhookRouter from './webhookRoute';
@@ -7,6 +8,15 @@ import { handle } from '../services/errorHandler';
 import { MongoDbProvider } from '../database/mongoDbProvider';
 import { PostgreSqlProvider } from '../database/postgreSqlProvider';
 import { EncryptionService } from '../services/encryptionService';
+
+const subRoutes = {
+ root: '/',
+ monitor: '/monitor',
+ payment: '/payment',
+ product: '/product',
+ webhook: '/webhook',
+ receipt: '/receipt',
+}
 
 export module Routes {
  export function mount(app) {
@@ -30,8 +40,11 @@ export module Routes {
    next();
   }
 
-  // use this interceptor before routes
+  // Use this interceptor before routes
   app.use(responseInterceptor);
+
+  // Monitor router should be called before context creation
+  app.use(subRoutes.monitor, monitorRouter);
 
   // INFO: Keep this method at top at all times
   app.all('/*', async (req: Request, res: Response, next) => {
@@ -50,11 +63,11 @@ export module Routes {
    }
   });
 
-  // TODO: Add your routes here
-  app.use('/payment', paymentRouter);
-  app.use('/product', productRouter);
-  app.use('/webhook', webhookRouter);
-  app.use('/receipt', receiptRouter);
+  // INFO: Add your routes here
+  app.use(subRoutes.payment, paymentRouter);
+  app.use(subRoutes.product, productRouter);
+  app.use(subRoutes.webhook, webhookRouter);
+  app.use(subRoutes.receipt, receiptRouter);
 
   // Use for error handling
   app.use(function (err, req, res, next) {

@@ -1,4 +1,3 @@
-##
-
+## Get Receipt With Product Id
 GET http://localhost:4003/receipt?product_id=product_id
 Authorization: Bearer token
