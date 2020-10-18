@@ -4,6 +4,8 @@ import { Builder } from '../util/builder';
 export class PostgreSqlProvider {
  pool = new Pool({
   connectionString: process.env.DATABASE_URL,
+  max: 20,
+  application_name: 'PaymentServer',
   ssl: {
    rejectUnauthorized: false,
   }
