@@ -22,7 +22,7 @@ const paymentSchema: mongoose.Schema = new mongoose.Schema(schema);
  * @param conn database connection
  * @returns payment config model
  */
-const paymentConfigModel = (conn: mongoose.Connection) =>
+const PaymentConfigModel = (conn: mongoose.Connection) =>
  conn.model(collectionName, paymentSchema);
 
-export default paymentConfigModel;
+export default PaymentConfigModel;
