@@ -1,4 +1,4 @@
-import productModel from '../models/productModel';
+import productModel from '../models/product.model';
 
 export const createProductDocument = async (db, product_id, name, description, payload) => {
  try {

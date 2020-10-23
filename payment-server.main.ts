@@ -3,7 +3,7 @@
  */
 import dotenv from 'dotenv'
 import cors from 'cors';
-import { Routes } from './app/routes';
+import { Routes } from './app/routes/index.route';
 import express = require('express');
 import bodyParser = require('body-parser');
 

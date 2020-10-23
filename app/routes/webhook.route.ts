@@ -5,7 +5,7 @@
 import Router from 'express-promise-router';
 import { Request, Response } from 'express';
 import { ResponseCode } from '../util/constant';
-import { refreshTransactionHistory } from '../controllers/PaymentController';
+import { refreshTransactionHistory } from '../controllers/payment.controller';
 
 const subRoutes = {
  root: '/',

@@ -2,7 +2,7 @@
  "name": "payment-server",
  "version": "2.0.0",
  "description": "Payment Server Template",
- "main": "paymentServer.ts",
+ "main": "payment-server.main.ts",
  "license": "MIT",
  "homepage": "https://github.com/open-template-hub/payment-server-template#readme",
  "repository": {
@@ -10,8 +10,8 @@
   "url": "git+https://github.com/open-template-hub/payment-server-template.git"
  },
  "scripts": {
-  "start": "ts-node paymentServer.ts",
-  "devStart": "nodemon --exec ts-node paymentServer.ts"
+  "start": "ts-node payment-server.main.ts",
+  "devStart": "nodemon --exec ts-node payment-server.main.ts"
  },
  "dependencies": {
   "@paypal/checkout-server-sdk": "^1.0.2",

@@ -1,8 +1,8 @@
-import { PaymentMethod } from '../../models/paymentMethod';
-import { PaymentMethodEnum } from './paymentWrapper';
+import { PaymentMethod } from '../models/payment-method.model';
+import { PaymentMethodEnum } from '../wrappers/payment.wrapper';
 import paypal from '@paypal/checkout-server-sdk';
-import { createReceipt, getReceiptWithExternalTransactionId } from '../../dao/receiptDao';
-import { CurrencyCode, ReceiptStatus } from '../../util/constant';
+import { createReceipt, getReceiptWithExternalTransactionId } from '../repository/receipt.repository';
+import { CurrencyCode, ReceiptStatus } from '../util/constant';
 
 export class PayPalPayment implements PaymentMethod {
 

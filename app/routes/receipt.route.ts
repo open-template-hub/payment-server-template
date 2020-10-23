@@ -5,8 +5,8 @@
 import Router from 'express-promise-router';
 import { Request, Response } from 'express';
 import { ResponseCode } from '../util/constant';
-import { getSuccesfulReceipts } from '../controllers/ReceiptController';
-import { getCurrentUser } from '../services/authService';
+import { getSuccesfulReceipts } from '../controllers/receipt.controller';
+import { getCurrentUser } from '../services/auth.service';
 
 const subRoutes = {
  root: '/'

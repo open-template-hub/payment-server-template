@@ -1,5 +1,5 @@
-import { PaymentMethodEnum, PaymentWrapper } from '../services/payment/paymentWrapper';
-import { createProductDocument } from '../dao/productDao';
+import { PaymentMethodEnum, PaymentWrapper } from '../wrappers/payment.wrapper';
+import { createProductDocument } from '../repository/product.repository';
 
 /**
  * @description holds crud operations for the product entity

@@ -1,4 +1,4 @@
-import transactionHistoryModel from '../models/transactionHistoryModel';
+import transactionHistoryModel from '../models/transaction-history.model';
 
 export const createTransactionHistory = async (db, payment_config_key, username, product_id, external_transaction_id, transaction_history) => {
  try {

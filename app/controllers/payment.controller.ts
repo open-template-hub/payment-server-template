@@ -2,10 +2,10 @@
  * @description holds crud operations for the payment entity
  */
 
-import paymentConfigModel from '../models/paymentConfigModel';
-import { createTransactionHistory, updateTransactionHistory } from '../dao/transactionHistoryDao';
-import { PaymentWrapper } from '../services/payment/paymentWrapper';
-import productModel from '../models/productModel';
+import paymentConfigModel from '../models/payment-config.model';
+import { createTransactionHistory, updateTransactionHistory } from '../repository/transaction-history.repository';
+import { PaymentWrapper } from '../wrappers/payment.wrapper';
+import productModel from '../models/product.model';
 
 export const initPayment = async (dbProviders, username, paymentConfigKey, product_id, quantity) => {
  let paymentSession = null;
