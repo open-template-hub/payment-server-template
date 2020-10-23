@@ -25,7 +25,7 @@ const transactionHistorySchema: mongoose.Schema = new mongoose.Schema(schema);
  * @param conn database connection
  * @returns product model
  */
-const transactionHistoryModel = (conn: mongoose.Connection) =>
+const TransactionHistoryModel = (conn: mongoose.Connection) =>
  conn.model(collectionName, transactionHistorySchema);
 
-export default transactionHistoryModel;
+export default TransactionHistoryModel;

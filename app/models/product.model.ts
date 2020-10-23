@@ -24,7 +24,7 @@ const productSchema: mongoose.Schema = new mongoose.Schema(schema);
  * @param conn database connection
  * @returns product model
  */
-const productModel = (conn: mongoose.Connection) =>
+const ProductModel = (conn: mongoose.Connection) =>
  conn.model(collectionName, productSchema);
 
-export default productModel;
+export default ProductModel;
