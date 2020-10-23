@@ -2,7 +2,7 @@
  * @description holds context
  */
 
-import { verifyAccessToken } from './TokenService';
+import { verifyAccessToken } from './token.service';
 
 export const getCurrentUser = async (req) => {
  let authToken = null;

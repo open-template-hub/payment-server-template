@@ -1,4 +1,4 @@
-import { PaymentMethod } from '../../models/paymentMethod';
+import { PaymentMethod } from "../models/payment-method.model";
 
 export class GooglePayment implements PaymentMethod {
 

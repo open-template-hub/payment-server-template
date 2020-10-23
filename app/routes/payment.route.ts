@@ -5,8 +5,8 @@
 import Router from 'express-promise-router';
 import { Request, Response } from 'express';
 import { ResponseCode } from '../util/constant';
-import { initPayment, initPaymentWithExternalTransactionId } from '../controllers/PaymentController';
-import { getCurrentUser } from '../services/authService';
+import { initPayment, initPaymentWithExternalTransactionId } from '../controllers/payment.controller';
+import { getCurrentUser } from '../services/auth.service';
 
 const subRoutes = {
  root: '/',

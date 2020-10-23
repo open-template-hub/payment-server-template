@@ -1,9 +1,9 @@
-import { PaymentMethod } from '../../models/paymentMethod';
+import { PaymentMethod } from '../models/payment-method.model';
 import Stripe from 'stripe';
-import productModel from '../../models/productModel';
-import { PaymentMethodEnum } from './paymentWrapper';
-import { createReceipt, getReceiptWithExternalTransactionId } from '../../dao/receiptDao';
-import { CurrencyCode, ReceiptStatus } from '../../util/constant';
+import productModel from '../models/product.model';
+import { PaymentMethodEnum } from '../wrappers/payment.wrapper';
+import { createReceipt, getReceiptWithExternalTransactionId } from '../repository/receipt.repository';
+import { CurrencyCode, ReceiptStatus } from '../util/constant';
 
 export class StripePayment implements PaymentMethod {
 

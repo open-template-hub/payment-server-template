@@ -1,13 +1,13 @@
-import monitorRouter from './monitorRoute';
-import paymentRouter from './paymentRoute';
-import productRouter from './productRoute';
-import webhookRouter from './webhookRoute';
-import receiptRouter from './receiptRoute';
+import monitorRouter from './monitor.route';
+import paymentRouter from './payment.route';
+import productRouter from './product.route';
+import webhookRouter from './webhook.route';
+import receiptRouter from './receipt.route';
 import { Request, Response } from 'express';
-import { handle } from '../services/errorHandler';
-import { MongoDbProvider } from '../database/mongoDbProvider';
-import { PostgreSqlProvider } from '../database/postgreSqlProvider';
-import { EncryptionService } from '../services/encryptionService';
+import { handle } from '../services/error-handler.service';
+import { MongoDbProvider } from '../providers/mongo.provider';
+import { PostgreSqlProvider } from '../providers/postgre.provider';
+import { EncryptionService } from '../services/encryption.service';
 
 const subRoutes = {
  root: '/',
