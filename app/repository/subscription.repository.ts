@@ -35,7 +35,7 @@ export class SubscriptionRepository {
     try {
       return await this.dataModel.find({ username });
     } catch (error) {
-      console.error('> getSubscription error: ', error);
+      console.error('> getUserSubscriptions error: ', error);
       throw error;
     }
   }

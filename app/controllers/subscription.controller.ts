@@ -60,7 +60,7 @@ export const getUserSubscriptions = async (dbProviders, username) => {
 
     return await subscriptionRepository.getUserSubscriptions(username);
   } catch (error) {
-    console.error("> getSubscription error: ", error);
+    console.error("> getUserSubscriptions error: ", error);
     throw error;
   }
 }
