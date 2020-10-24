@@ -41,7 +41,7 @@ router.get(subRoutes.root, async (req: Request, res: Response) => {
     res.locals.ctx.dbProviders,
     req.query.subscription_id
   );
-  res.status(ResponseCode.CREATED).json(subscriptionSession);
+  res.status(ResponseCode.OK).json(subscriptionSession);
 });
 
 router.get(subRoutes.me, async (req: Request, res: Response) => {
@@ -50,7 +50,7 @@ router.get(subRoutes.me, async (req: Request, res: Response) => {
     res.locals.ctx.dbProviders,
     res.locals.ctx.currentUser.username
   );
-  res.status(ResponseCode.CREATED).json(subscriptionSession);
+  res.status(ResponseCode.OK).json(subscriptionSession);
 });
 
 export = router;
