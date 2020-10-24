@@ -1,28 +1,29 @@
 import fs from 'fs';
 
+// debug logger
+const debugLog = require('debug')('file-server:' + __filename.slice(__dirname.length + 1));
+
 export class Builder {
- buildTemplate = (filePath, params) => {
+ buildTemplateFromFile = (filePath: string, params?: Map<string, string>) => {
   var template = '';
 
   try {
    template = fs.readFileSync(filePath, 'utf-8');
   } catch (err) {
-   console.error('An error occurred while building template: ' + err);
+   console.error(err);
   }
 
-  if (params != undefined) {
-   for (var entry of params.entries()) {
-    var key = entry[0],
-     value = entry[1];
+  if (params) {
+   params.forEach((value: string, key: string) => {
     template = template.replace(key, value);
-   }
+   });
   }
-  console.log('Successfully build template: \n' + template);
+  debugLog('Successfully build template: \n' + template);
 
   return template;
  }
 
- buildUrl = (url, params) => {
+ buildUrl = (url: string, params: Array<string>) => {
   let generatedUrl = url;
   for (let i = 0; i < params.length; i++) {
    let param = params[i];
