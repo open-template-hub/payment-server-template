@@ -1,31 +1,59 @@
 /**
- * @description holds database connection provider
+ * @description holds providers connection provider
  */
 
-import mongoose from 'mongoose';
+import mongoose, { Connection } from "mongoose";
+import { Builder } from "../util/builder";
+
+// debug logger
+const debugLog = require("debug")(
+  "basic-server:" + __filename.slice(__dirname.length + 1)
+);
 
 export class MongoDbProvider {
- // mongoose connection
- conn: mongoose.Connection | null = null;
+  // mongoose connection
+  private connection: Connection = mongoose.createConnection();
+  private builder: Builder = new Builder();
+  private poolLimit: number = 1;
+  private readonly preloadDataTemplatePath = "./assets/sql/preload.data.json";
 
- /**
-  * creates database connection
-  * @returns mongodb connection
-  */
- preload = async () => {
-  // connection uri
-  const uri: string = process.env.MONGODB_URI as string;
+  preload = async () => {
+    this.poolLimit =
+      parseInt(<string>process.env.MONGODB_CONNECTION_LIMIT) || (1 as number);
 
-  if (this.conn == null) {
-   this.conn = await mongoose.createConnection(uri, {
-    bufferCommands: false,
-    bufferMaxEntries: 0,
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-   });
+    await this.createConnectionPool();
+  };
+
+  createConnectionPool = async () => {
+    // close open connections
+    await Promise.all(
+      mongoose.connections.map(async (connection) => {
+        if (connection) {
+          await connection.close();
+        }
+      })
+    );
+
+    // create connection pool
+    const uri: string = process.env.MONGODB_URI as string;
+    this.connection = await mongoose
+      .createConnection(uri, {
+        bufferCommands: false,
+        bufferMaxEntries: 0,
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+        useFindAndModify: false,
+        keepAlive: true,
+        poolSize: this.poolLimit,
+        socketTimeoutMS: 0,
+      })
+      .catch((error) => {
+        throw error;
+      });
+  };
+
+  getConnection() {
+    return this.connection;
   }
- };
-
 }

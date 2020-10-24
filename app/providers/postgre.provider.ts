@@ -1,43 +1,63 @@
-import { Pool } from 'pg';
-import { Builder } from '../util/builder';
+import { Pool, QueryResult } from "pg";
+import { Builder } from "../util/builder";
+
+// debug logger
+const debugLog = require("debug")(
+  "file-server:" + __filename.slice(__dirname.length + 1)
+);
 
 export class PostgreSqlProvider {
- pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  max: 20,
-  application_name: 'PaymentServer',
-  ssl: {
-   rejectUnauthorized: false,
-  }
- });
+  private connectionPool: Pool = new Pool();
+  private currentPoolLimit: number = 1;
 
- builder = new Builder();
+  builder = new Builder();
 
- preloadTablesTemplatePath = './assets/sql/preloadTables.psql';
+  preloadTablesTemplatePath = "./assets/sql/preload.tables.psql";
 
- preload = async () => {
-  let tables = this.builder.buildTemplate(this.preloadTablesTemplatePath, null);
-  return this.query(tables, null);
- }
+  preload = async () => {
+    this.currentPoolLimit = process.env.POSTGRESQL_CONNECTION_LIMIT
+      ? parseInt(process.env.POSTGRESQL_CONNECTION_LIMIT)
+      : 1;
 
- query = async (text, params) => {
-  const start = Date.now();
-  try {
-   return await this.pool.query(text, params);
-  } catch (e) {
-   console.error(e);
+    // Creating Connection Pool
+    this.connectionPool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      application_name: "PaymentServer",
+      max: this.currentPoolLimit,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    });
 
-   // https://www.postgresql.org/docs/10/errcodes-appendix.html
-   if (e.code && e.code.startsWith('23')) {
-    e.responseCode = 400;
-   } else {
-    e.responseCode = 500;
-   }
+    let queries = this.builder.buildTemplateFromFile(
+      this.preloadTablesTemplatePath
+    );
+    return await this.query(queries, []);
+  };
 
-   throw e;
-  } finally {
-   const duration = Date.now() - start;
-   console.log('executed query', {text, duration});
-  }
- }
+  query = async (text: string, params: Array<any>): Promise<any> => {
+    const start = Date.now();
+
+    const connectionPool = this.connectionPool;
+
+    return new Promise(function (resolve, reject) {
+      connectionPool.query(
+        text,
+        params,
+        (err: Error, res: QueryResult<any>) => {
+          if (err) {
+            console.error(err);
+            reject(err);
+          } else {
+            debugLog("executed query", {
+              sql: text,
+              duration: Date.now() - start,
+              result: res,
+            });
+            resolve(res);
+          }
+        }
+      );
+    });
+  };
 }
