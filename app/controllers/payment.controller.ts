@@ -116,7 +116,7 @@ export const refreshTransactionHistory = async (
       mongodb_provider.getConnection()
     );
 
-    let paymentConfig: any = paymentConfigRepository.getPaymentConfigByKey(
+    let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
       payment_config_key
     );
 

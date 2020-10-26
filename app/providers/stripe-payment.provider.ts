@@ -80,6 +80,7 @@ export class StripePayment implements PaymentMethod {
         updated_transaction_history.product_id,
         paymentConfig.key
       );
+      
       if (!created) {
         let amount = this.calculateAmount(
           updated_transaction_history.payload.transaction_history

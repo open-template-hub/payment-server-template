@@ -9,7 +9,7 @@ const subRoutes = {
 
 export const publicRoutes = [
   subRoutes.alive
- ];
+];
 
 export const router = Router();
 

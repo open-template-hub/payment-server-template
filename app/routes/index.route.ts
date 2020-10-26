@@ -1,5 +1,8 @@
 import { router as productRouter } from "./product.route";
-import { router as webhookRouter } from "./webhook.route";
+import {
+  router as webhookRouter,
+  publicRoutes as webhookPublicRoutes,
+} from "./webhook.route";
 import { router as receiptRouter } from "./receipt.route";
 import { router as paymentRouter } from "./payment.route";
 import {
@@ -37,6 +40,10 @@ export module Routes {
 
     for (const route of monitorPublicRoutes) {
       publicRoutes.push(subRoutes.monitor + route);
+    }
+
+    for (const route of webhookPublicRoutes) {
+      publicRoutes.push(subRoutes.webhook + route);
     }
 
     const responseInterceptor = (req, res, next) => {

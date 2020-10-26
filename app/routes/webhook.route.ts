@@ -15,6 +15,12 @@ const subRoutes = {
   paypal: "/paypal",
 };
 
+export const publicRoutes = [
+  subRoutes.coinbase,
+  subRoutes.stripe,
+  subRoutes.paypal
+];
+
 export const router = Router();
 
 router.post(subRoutes.coinbase, async (req: Request, res: Response) => {
@@ -41,7 +47,7 @@ router.post(subRoutes.stripe, async (req: Request, res: Response) => {
   ) {
     const external_transaction_id = req.body.data.object.id;
     const context = res.locals.ctx as Context;
-
+    
     await refreshTransactionHistory(
       context.mongodb_provider,
       context.postgresql_provider,
