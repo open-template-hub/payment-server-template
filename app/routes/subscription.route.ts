@@ -5,7 +5,6 @@
 import Router from "express-promise-router";
 import { Request, Response } from "express";
 import { ResponseCode } from "../util/constant";
-import { getCurrentUser } from "../services/auth.service";
 import {
   getSubscription,
   saveSubscription,
@@ -17,12 +16,7 @@ const subRoutes = {
   me: "/me",
 };
 
-const router = Router();
-
-router.use("/*", async (req: Request, res: Response, next) => {
-  res.locals.ctx.currentUser = await getCurrentUser(req);
-  return next();
-});
+export const router = Router();
 
 router.post(subRoutes.root, async (req: Request, res: Response) => {
   // Create new subscription session
@@ -52,5 +46,3 @@ router.get(subRoutes.me, async (req: Request, res: Response) => {
   );
   res.status(ResponseCode.OK).json(subscriptionSession);
 });
-
-export = router;

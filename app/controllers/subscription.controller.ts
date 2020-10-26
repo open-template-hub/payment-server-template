@@ -10,7 +10,7 @@ export const saveSubscription = async (
 ) => {
   try {
     const paymentConfigRepository = await new PaymentConfigRepository().initialize(
-      dbProviders.mongoDbProvider.conn
+      dbProviders.mongoDbProvider.getConnection()
     );
 
     let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
@@ -21,7 +21,7 @@ export const saveSubscription = async (
       throw new Error("Payment method can not be found");
 
     const subscriptionRepository = await new SubscriptionRepository().initialize(
-      dbProviders.mongoDbProvider.conn
+      dbProviders.mongoDbProvider.getConnection()
     );
 
     const subscription_id = uuidv4();
@@ -42,7 +42,7 @@ export const saveSubscription = async (
 export const getSubscription = async (dbProviders, subscription_id) => {
   try {
     const subscriptionRepository = await new SubscriptionRepository().initialize(
-      dbProviders.mongoDbProvider.conn
+      dbProviders.mongoDbProvider.getConnection()
     );
 
     return await subscriptionRepository.getSubscription(subscription_id);
@@ -55,7 +55,7 @@ export const getSubscription = async (dbProviders, subscription_id) => {
 export const getUserSubscriptions = async (dbProviders, username) => {
   try {
     const subscriptionRepository = await new SubscriptionRepository().initialize(
-      dbProviders.mongoDbProvider.conn
+      dbProviders.mongoDbProvider.getConnection()
     );
 
     return await subscriptionRepository.getUserSubscriptions(username);

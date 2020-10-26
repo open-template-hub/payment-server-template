@@ -6,7 +6,7 @@ import { ProductRepository } from "../repository/product.repository";
  */
 
 export const createProduct = async (
-  dbProviders,
+  mongoDbProvider,
   product_id,
   name,
   description,
@@ -27,7 +27,7 @@ export const createProduct = async (
 
   try {
     const productRepository = await new ProductRepository().initialize(
-      dbProviders.mongoDbProvider.conn
+      mongoDbProvider.getConnection()
     );
 
     return await productRepository.createProductDocument(

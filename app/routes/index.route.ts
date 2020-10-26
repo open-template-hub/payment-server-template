@@ -1,14 +1,19 @@
-import monitorRouter from "./monitor.route";
-import paymentRouter from "./payment.route";
-import productRouter from "./product.route";
-import webhookRouter from "./webhook.route";
-import receiptRouter from "./receipt.route";
-import subscriptionRouter from './subscription.route';
+import { router as productRouter } from "./product.route";
+import { router as webhookRouter } from "./webhook.route";
+import { router as receiptRouter } from "./receipt.route";
+import { router as paymentRouter } from "./payment.route";
+import {
+  router as monitorRouter,
+  publicRoutes as monitorPublicRoutes,
+} from "./monitor.route";
+import { preload } from "../services/preload.service";
+import { router as subscriptionRouter } from "./subscription.route";
 import { Request, Response } from "express";
 import { handle } from "../services/error-handler.service";
 import { MongoDbProvider } from "../providers/mongo.provider";
 import { PostgreSqlProvider } from "../providers/postgre.provider";
 import { EncryptionService } from "../services/encryption.service";
+import { context } from "../context";
 
 const subRoutes = {
   root: "/",
@@ -21,16 +26,18 @@ const subRoutes = {
 };
 
 export module Routes {
-  export function mount(app) {
-    const mongoDbProvider = new MongoDbProvider();
-    const postgreSqlProvider = new PostgreSqlProvider();
+  const mongoDbProvider = new MongoDbProvider();
+  const postgreSqlProvider = new PostgreSqlProvider();
+  const publicRoutes: string[] = [];
 
-    postgreSqlProvider
-      .preload()
-      .then(() => console.log("PostgreSQL preload completed."));
-    mongoDbProvider
-      .preload()
-      .then(() => console.log("MongoDB preload completed."));
+  export function mount(app) {
+    preload(mongoDbProvider, postgreSqlProvider).then(() =>
+      console.log("DB preloads are completed.")
+    );
+
+    for (const route of monitorPublicRoutes) {
+      publicRoutes.push(subRoutes.monitor + route);
+    }
 
     const responseInterceptor = (req, res, next) => {
       var originalSend = res.send;
@@ -56,11 +63,12 @@ export module Routes {
     app.all("/*", async (req: Request, res: Response, next) => {
       try {
         // create context
-        let dbProviders = {
-          mongoDbProvider: mongoDbProvider,
-          postgreSqlProvider: postgreSqlProvider,
-        };
-        res.locals.ctx = { dbProviders };
+        res.locals.ctx = await context(
+          req,
+          mongoDbProvider,
+          postgreSqlProvider,
+          publicRoutes
+        );
 
         next();
       } catch (e) {

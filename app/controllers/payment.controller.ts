@@ -18,7 +18,7 @@ export const initPayment = async (
 
   try {
     const paymentConfigRepository = await new PaymentConfigRepository().initialize(
-      dbProviders.mongoDbProvider.conn
+      dbProviders.mongoDbProvider.getConnection()
     );
 
     let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
@@ -31,7 +31,7 @@ export const initPayment = async (
     const paymentWrapper = new PaymentWrapper(paymentConfig.payload.method);
 
     const productRepository = await new ProductRepository().initialize(
-      dbProviders.mongoDbProvider.conn
+      dbProviders.mongoDbProvider.getConnection()
     );
 
     let product: any = await productRepository.getProductByProductId(
@@ -40,7 +40,7 @@ export const initPayment = async (
     if (product === null) throw new Error("Product can not be found");
 
     let external_transaction = await paymentWrapper.init(
-      dbProviders.mongoDbProvider.conn,
+      dbProviders.mongoDbProvider.getConnection(),
       paymentConfig,
       product,
       quantity
@@ -49,7 +49,7 @@ export const initPayment = async (
       throw new Error("Payment can not be initiated");
 
     const transactionHistoryRepository = await new TransactionHistoryRepository().initialize(
-      dbProviders.mongoDbProvider.conn
+      dbProviders.mongoDbProvider.getConnection()
     );
 
     await transactionHistoryRepository.createTransactionHistory(
@@ -85,7 +85,7 @@ export const initPaymentWithExternalTransactionId = async (
 ) => {
   try {
     const transactionHistoryRepository = await new TransactionHistoryRepository().initialize(
-      dbProviders.mongoDbProvider.conn
+      dbProviders.mongoDbProvider.getConnection()
     );
     await transactionHistoryRepository.createTransactionHistory(
       paymentConfigKey,
@@ -110,7 +110,7 @@ export const refreshTransactionHistory = async (
 ) => {
   try {
     const paymentConfigRepository = await new PaymentConfigRepository().initialize(
-      dbProviders.mongoDbProvider.conn
+      dbProviders.mongoDbProvider.getConnection()
     );
 
     let paymentConfig: any = paymentConfigRepository.getPaymentConfigByKey(
@@ -127,7 +127,7 @@ export const refreshTransactionHistory = async (
     );
 
     const transactionHistoryRepository = await new TransactionHistoryRepository().initialize(
-      dbProviders.mongoDbProvider.conn
+      dbProviders.mongoDbProvider.getConnection()
     );
 
     const updated_transaction_history = await transactionHistoryRepository.updateTransactionHistory(

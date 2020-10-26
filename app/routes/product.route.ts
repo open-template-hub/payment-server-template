@@ -2,28 +2,26 @@
  * @description holds product routes
  */
 
-import Router from 'express-promise-router';
-import { Request, Response } from 'express';
-import { getAdmin } from '../services/auth.service';
-import { ResponseCode } from '../util/constant';
-import { createProduct } from '../controllers/product.controller';
+import Router from "express-promise-router";
+import { Request, Response } from "express";
+import { ResponseCode } from "../util/constant";
+import { createProduct } from "../controllers/product.controller";
 
 const subRoutes = {
- root: '/'
-}
+  root: "/",
+};
 
-const router = Router();
-
-router.use('/*', async (req: Request, res: Response, next) => {
- res.locals.ctx.currentUser = await getAdmin(req);
- return next();
-});
+export const router = Router();
 
 router.post(subRoutes.root, async (req: Request, res: Response) => {
+  const product = await createProduct(
+    res.locals.ctx.mongoDbProvider,
+    req.body.product_id,
+    req.body.name,
+    req.body.description,
+    req.body.amount,
+    req.body.currency
+  );
 
- const product = await createProduct(res.locals.ctx.dbProviders, req.body.product_id, req.body.name, req.body.description, req.body.amount, req.body.currency);
-
- res.status(ResponseCode.CREATED).json(product);
+  res.status(ResponseCode.CREATED).json(product);
 });
-
-export = router;
