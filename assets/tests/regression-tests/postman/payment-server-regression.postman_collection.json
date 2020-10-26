@@ -1,0 +1,151 @@
+{
+	"info": {
+		"_postman_id": "0a717fb6-5389-4e5e-b47a-95136f014420",
+		"name": "payment-server-regression",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "Create Product Success [201]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3e974391-d166-404f-ab65-d3378769f81a",
+								"exec": [
+									"pm.test(\"response is ok\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin-auth-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"product_id\": \"{{product-id}}\",\r\n \"name\": \"Product 1\",\r\n \"description\": \"product description\",\r\n \"amount\": {{product-amount}},\r\n \"currency\": \"usd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{uri}}/product",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "One Time Payment",
+			"item": [
+				{
+					"name": "Stripe",
+					"item": [
+						{
+							"name": "Init Payment Success [201]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "897a91d0-42bc-41cd-957a-bd6b3c2cef07",
+										"exec": [
+											"pm.test(\"Response code is CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Checkout Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include('payload');\r",
+											"    pm.expect(pm.response.text()).to.include('id');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{public-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"paymentConfigKey\": \"STRIPE\",\r\n \"productId\": \"{{product-id}}\",\r\n \"quantity\": {{product-quantity}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/payment",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"payment"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Paypal",
+					"item": [],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Coinbase",
+					"item": [],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Subscription",
+			"item": [],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
