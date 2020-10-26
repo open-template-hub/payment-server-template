@@ -10,6 +10,7 @@ import {
   saveSubscription,
   getUserSubscriptions,
 } from "../controllers/subscription.controller";
+import { Context } from "../models/context.model";
 
 const subRoutes = {
   root: "/",
@@ -20,9 +21,11 @@ export const router = Router();
 
 router.post(subRoutes.root, async (req: Request, res: Response) => {
   // Create new subscription session
+  const context = res.locals.ctx as Context;
+
   let subscriptionSession = await saveSubscription(
-    res.locals.ctx.dbProviders,
-    res.locals.ctx.currentUser.username,
+    context.mongoDbProvider,
+    context.username,
     req.body.paymentConfigKey,
     req.body.payload
   );
@@ -31,18 +34,22 @@ router.post(subRoutes.root, async (req: Request, res: Response) => {
 
 router.get(subRoutes.root, async (req: Request, res: Response) => {
   // Get subscription with subscription id
+  const context = res.locals.ctx as Context;
+
   let subscriptionSession = await getSubscription(
-    res.locals.ctx.dbProviders,
-    req.query.subscription_id
+    context.mongoDbProvider,
+    req.query.subscription_id as string
   );
   res.status(ResponseCode.OK).json(subscriptionSession);
 });
 
 router.get(subRoutes.me, async (req: Request, res: Response) => {
   // Get subscription with username
+  const context = res.locals.ctx as Context;
+  
   let subscriptionSession = await getUserSubscriptions(
-    res.locals.ctx.dbProviders,
-    res.locals.ctx.currentUser.username
+    context.mongoDbProvider,
+    context.username
   );
   res.status(ResponseCode.OK).json(subscriptionSession);
 });

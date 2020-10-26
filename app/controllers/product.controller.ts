@@ -1,17 +1,18 @@
 import { PaymentMethodEnum, PaymentWrapper } from "../wrappers/payment.wrapper";
 import { ProductRepository } from "../repository/product.repository";
+import { MongoDbProvider } from "../providers/mongo.provider";
 
 /**
  * @description holds crud operations for the product entity
  */
 
 export const createProduct = async (
-  mongoDbProvider,
-  product_id,
-  name,
-  description,
-  amount,
-  currency
+  mongoDbProvider: MongoDbProvider,
+  product_id: string,
+  name: string,
+  description: string,
+  amount: number,
+  currency: string
 ) => {
   const stripePaymentWrapper = new PaymentWrapper(PaymentMethodEnum.Stripe);
   const coinbasePaymentWrapper = new PaymentWrapper(PaymentMethodEnum.Coinbase);

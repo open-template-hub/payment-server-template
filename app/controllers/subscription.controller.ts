@@ -1,16 +1,17 @@
 import { PaymentConfigRepository } from "../repository/payment-config.repository";
 import { SubscriptionRepository } from "../repository/subscription.repository";
 import { v4 as uuidv4 } from "uuid";
+import { MongoDbProvider } from "../providers/mongo.provider";
 
 export const saveSubscription = async (
-  dbProviders,
-  username,
-  paymentConfigKey,
-  payload
+  mongoDbProvider: MongoDbProvider,
+  username: string,
+  paymentConfigKey: string,
+  payload: object
 ) => {
   try {
     const paymentConfigRepository = await new PaymentConfigRepository().initialize(
-      dbProviders.mongoDbProvider.getConnection()
+      mongoDbProvider.getConnection()
     );
 
     let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
@@ -21,7 +22,7 @@ export const saveSubscription = async (
       throw new Error("Payment method can not be found");
 
     const subscriptionRepository = await new SubscriptionRepository().initialize(
-      dbProviders.mongoDbProvider.getConnection()
+      mongoDbProvider.getConnection()
     );
 
     const subscription_id = uuidv4();
@@ -39,10 +40,13 @@ export const saveSubscription = async (
   }
 };
 
-export const getSubscription = async (dbProviders, subscription_id) => {
+export const getSubscription = async (
+  mongoDbProvider: MongoDbProvider,
+  subscription_id: string
+) => {
   try {
     const subscriptionRepository = await new SubscriptionRepository().initialize(
-      dbProviders.mongoDbProvider.getConnection()
+      mongoDbProvider.getConnection()
     );
 
     return await subscriptionRepository.getSubscription(subscription_id);
@@ -50,12 +54,15 @@ export const getSubscription = async (dbProviders, subscription_id) => {
     console.error("> getSubscription error: ", error);
     throw error;
   }
-}
+};
 
-export const getUserSubscriptions = async (dbProviders, username) => {
+export const getUserSubscriptions = async (
+  mongoDbProvider: MongoDbProvider,
+  username: string
+) => {
   try {
     const subscriptionRepository = await new SubscriptionRepository().initialize(
-      dbProviders.mongoDbProvider.getConnection()
+      mongoDbProvider.getConnection()
     );
 
     return await subscriptionRepository.getUserSubscriptions(username);
@@ -63,4 +70,4 @@ export const getUserSubscriptions = async (dbProviders, username) => {
     console.error("> getUserSubscriptions error: ", error);
     throw error;
   }
-}
+};
