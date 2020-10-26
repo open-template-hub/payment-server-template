@@ -4,32 +4,32 @@ import { v4 as uuidv4 } from "uuid";
 import { MongoDbProvider } from "../providers/mongo.provider";
 
 export const saveSubscription = async (
-  mongoDbProvider: MongoDbProvider,
+  mongodb_provider: MongoDbProvider,
   username: string,
-  paymentConfigKey: string,
+  payment_config_key: string,
   payload: object
 ) => {
   try {
     const paymentConfigRepository = await new PaymentConfigRepository().initialize(
-      mongoDbProvider.getConnection()
+      mongodb_provider.getConnection()
     );
 
     let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
-      paymentConfigKey
+      payment_config_key
     );
 
     if (paymentConfig === null)
       throw new Error("Payment method can not be found");
 
     const subscriptionRepository = await new SubscriptionRepository().initialize(
-      mongoDbProvider.getConnection()
+      mongodb_provider.getConnection()
     );
 
     const subscription_id = uuidv4();
 
     await subscriptionRepository.createSubscription(
       subscription_id,
-      paymentConfigKey,
+      payment_config_key,
       username,
       payload
     );
@@ -41,12 +41,12 @@ export const saveSubscription = async (
 };
 
 export const getSubscription = async (
-  mongoDbProvider: MongoDbProvider,
+  mongodb_provider: MongoDbProvider,
   subscription_id: string
 ) => {
   try {
     const subscriptionRepository = await new SubscriptionRepository().initialize(
-      mongoDbProvider.getConnection()
+      mongodb_provider.getConnection()
     );
 
     return await subscriptionRepository.getSubscription(subscription_id);
@@ -57,12 +57,12 @@ export const getSubscription = async (
 };
 
 export const getUserSubscriptions = async (
-  mongoDbProvider: MongoDbProvider,
+  mongodb_provider: MongoDbProvider,
   username: string
 ) => {
   try {
     const subscriptionRepository = await new SubscriptionRepository().initialize(
-      mongoDbProvider.getConnection()
+      mongodb_provider.getConnection()
     );
 
     return await subscriptionRepository.getUserSubscriptions(username);

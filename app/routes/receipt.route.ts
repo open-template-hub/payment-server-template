@@ -18,7 +18,7 @@ router.get(subRoutes.root, async (req: Request, res: Response) => {
   const context = res.locals.ctx as Context;
   
   const successful_receipts = await getSuccesfulReceipts(
-    context.postgreSqlProvider,
+    context.postgresql_provider,
     context.username,
     req.query.product_id as string
   );

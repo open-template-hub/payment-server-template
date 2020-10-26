@@ -22,6 +22,15 @@ export class ProductRepository {
     }
   }
 
+  deleteProductDocument = async(product_id) => {
+    try {
+      return await this.dataModel.findOneAndRemove({ product_id });
+    } catch (error) {
+      console.error('> getProductByProductId error: ', error);
+      throw error;
+    }
+  }
+
   getProductByProductId = async(product_id) => {
     try {
       return await this.dataModel.findOne({ product_id });

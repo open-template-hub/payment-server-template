@@ -24,10 +24,10 @@ router.post(subRoutes.root, async (req: Request, res: Response) => {
   const context = res.locals.ctx as Context;
 
   let paymentSession = await initPayment(
-    context.mongoDbProvider,
+    context.mongodb_provider,
     context.username,
-    req.body.paymentConfigKey,
-    req.body.productId,
+    req.body.payment_config_key,
+    req.body.product_id,
     req.body.quantity
   );
   res.status(ResponseCode.CREATED).json(paymentSession);
@@ -40,9 +40,9 @@ router.post(
     const context = res.locals.ctx as Context;
 
     let paymentSession = await initPaymentWithExternalTransactionId(
-      context.mongoDbProvider,
+      context.mongodb_provider,
       context.username,
-      req.body.paymentConfigKey,
+      req.body.payment_config_key,
       req.body.product_id,
       req.body.external_transaction_id
     );

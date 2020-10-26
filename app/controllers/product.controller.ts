@@ -7,7 +7,7 @@ import { MongoDbProvider } from "../providers/mongo.provider";
  */
 
 export const createProduct = async (
-  mongoDbProvider: MongoDbProvider,
+  mongodb_provider: MongoDbProvider,
   product_id: string,
   name: string,
   description: string,
@@ -28,7 +28,7 @@ export const createProduct = async (
 
   try {
     const productRepository = await new ProductRepository().initialize(
-      mongoDbProvider.getConnection()
+      mongodb_provider.getConnection()
     );
 
     return await productRepository.createProductDocument(
@@ -41,4 +41,23 @@ export const createProduct = async (
     console.error("> createProductDocument error: ", error);
     throw error;
   }
-};
+}
+
+export const deleteProduct = async (
+  mongodb_provider: MongoDbProvider,
+  product_id: string
+) => {
+  try {
+    const productRepository = await new ProductRepository().initialize(
+      mongodb_provider.getConnection()
+    );
+
+    return await productRepository.deleteProductDocument(
+      product_id
+    );
+  } catch (error) {
+    console.error("> createProductDocument error: ", error);
+    throw error;
+  }
+}
+

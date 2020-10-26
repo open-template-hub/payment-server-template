@@ -14,11 +14,15 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "3e974391-d166-404f-ab65-d3378769f81a",
+								"id": "4e9832da-c961-4490-9896-7c3bc280ccda",
 								"exec": [
-									"pm.test(\"response is ok\", function () {\r",
+									"pm.test(\"Response code is CREATED\", function () {\r",
 									"    pm.response.to.have.status(201);\r",
-									"});"
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains Created Product Id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include('product_id');\r",
+									"})"
 								],
 								"type": "text/javascript"
 							}
@@ -39,7 +43,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n \"product_id\": \"{{product-id}}\",\r\n \"name\": \"Product 1\",\r\n \"description\": \"product description\",\r\n \"amount\": {{product-amount}},\r\n \"currency\": \"usd\"\r\n}",
+							"raw": "{\r\n    \"product_id\": \"{{product-id}}\",\r\n    \"name\": \"Product 1\",\r\n    \"description\": \"product description\",\r\n    \"amount\": {{product-amount}},\r\n    \"currency\": \"usd\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -57,6 +61,162 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Delete Product Success [200]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "81e996a9-8229-4f1e-b06f-3f14f178a897",
+								"exec": [
+									"pm.test(\"Response code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains Deleted Product Id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include('product_id');\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin-auth-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{uri}}/product?product_id={{product-id}}",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "product_id",
+									"value": "{{product-id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product Failed [403]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7751fce8-b4ae-49e3-811a-fb96e6a3eb80",
+								"exec": [
+									"pm.test(\"Response code is FORBIDDEN\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains Error Message\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include('message');\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{public-auth-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_id\": \"{{product-id}}\",\r\n    \"name\": \"Product 1\",\r\n    \"description\": \"product description\",\r\n    \"amount\": {{product-amount}},\r\n    \"currency\": \"usd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{uri}}/product",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product Failed [403]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4bd7af60-a7fb-4c5b-a203-ffa768db725d",
+								"exec": [
+									"pm.test(\"Response code is FORBIDDEN\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains Error Message\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include('message');\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{public-auth-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{uri}}/product?product_id={{product-id}}",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "product_id",
+									"value": "{{product-id}}"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -67,6 +227,60 @@
 				{
 					"name": "Stripe",
 					"item": [
+						{
+							"name": "Create Product Success [201]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3e974391-d166-404f-ab65-d3378769f81a",
+										"exec": [
+											"pm.test(\"Response code is CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Created Product Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include('product_id');\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"product_id\": \"{{product-id}}\",\r\n    \"name\": \"Product 1\",\r\n    \"description\": \"product description\",\r\n    \"amount\": {{product-amount}},\r\n    \"currency\": \"usd\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/product",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"product"
+									]
+								}
+							},
+							"response": []
+						},
 						{
 							"name": "Init Payment Success [201]",
 							"event": [
@@ -83,6 +297,16 @@
 											"    pm.expect(pm.response.text()).to.include('payload');\r",
 											"    pm.expect(pm.response.text()).to.include('id');\r",
 											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "65b7af77-6c12-4b51-aeb6-76eebed25804",
+										"exec": [
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -103,7 +327,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n \"paymentConfigKey\": \"STRIPE\",\r\n \"productId\": \"{{product-id}}\",\r\n \"quantity\": {{product-quantity}}\r\n}",
+									"raw": "{\r\n    \"payment_config_key\": \"STRIPE\",\r\n    \"product_id\": \"{{product-id}}\",\r\n    \"quantity\": {{product-quantity}}\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -117,6 +341,122 @@
 									],
 									"path": [
 										"payment"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Init Payment With External Transaction Id Success [201]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "8ce03452-359a-4c88-8ab4-038457e94833",
+										"exec": [
+											"pm.test(\"Response code is CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Checkout Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include('external_transaction_id');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "c484ad02-32b6-4e08-b1ea-05a6c4666dcd",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{public-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"payment_config_key\": \"STRIPE\",\r\n    \"product_id\": \"{{product-id}}\",\r\n    \"external_transaction_id\": \"{{external-transaction-id}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/payment/init-with-external-transaction-id",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"payment",
+										"init-with-external-transaction-id"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Product Success [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f06d4c14-c818-4552-af6a-dc9ba1fd43aa",
+										"exec": [
+											"pm.test(\"Response code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Deleted Product Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include('product_id');\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{uri}}/product?product_id={{product-id}}",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"product"
+									],
+									"query": [
+										{
+											"key": "product_id",
+											"value": "{{product-id}}"
+										}
 									]
 								}
 							},

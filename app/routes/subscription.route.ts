@@ -24,9 +24,9 @@ router.post(subRoutes.root, async (req: Request, res: Response) => {
   const context = res.locals.ctx as Context;
 
   let subscriptionSession = await saveSubscription(
-    context.mongoDbProvider,
+    context.mongodb_provider,
     context.username,
-    req.body.paymentConfigKey,
+    req.body.payment_config_key,
     req.body.payload
   );
   res.status(ResponseCode.CREATED).json(subscriptionSession);
@@ -37,7 +37,7 @@ router.get(subRoutes.root, async (req: Request, res: Response) => {
   const context = res.locals.ctx as Context;
 
   let subscriptionSession = await getSubscription(
-    context.mongoDbProvider,
+    context.mongodb_provider,
     req.query.subscription_id as string
   );
   res.status(ResponseCode.OK).json(subscriptionSession);
@@ -48,7 +48,7 @@ router.get(subRoutes.me, async (req: Request, res: Response) => {
   const context = res.locals.ctx as Context;
   
   let subscriptionSession = await getUserSubscriptions(
-    context.mongoDbProvider,
+    context.mongodb_provider,
     context.username
   );
   res.status(ResponseCode.OK).json(subscriptionSession);

@@ -4,8 +4,8 @@ Content-Type: application/json
 Authorization: Bearer token
 
 {
- "paymentConfigKey": "STRIPE",
- "productId": "Product Id",
+ "payment_config_key": "STRIPE",
+ "product_id": "Product Id",
  "quantity": 1
 }
 
@@ -15,7 +15,7 @@ Content-Type: application/json
 Authorization: Bearer token
 
 {
- "paymentConfigKey": "STRIPE",
+ "payment_config_key": "STRIPE",
  "external_transaction_id": "cs_test_transaction_id",
- "productId": "Product Id"
+ "product_id": "Product Id"
 }

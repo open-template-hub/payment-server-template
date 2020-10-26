@@ -11,8 +11,8 @@ import { UserRole } from "./enums/user-role.enum";
 
 export const context = async (
   req: any,
-  mongoDbProvider: MongoDbProvider,
-  postgreSqlProvider: PostgreSqlProvider,
+  mongodb_provider: MongoDbProvider,
+  postgresql_provider: PostgreSqlProvider,
   publicPaths: string[]
 ) => {
   const tokenService = new TokenService();
@@ -38,8 +38,8 @@ export const context = async (
   const isAdmin = authService.isAdmin(role);
 
   return {
-    mongoDbProvider,
-    postgreSqlProvider,
+    mongodb_provider,
+    postgresql_provider,
     username: currentUser ? currentUser.username : "",
     role,
     isAdmin,

@@ -26,12 +26,12 @@ const subRoutes = {
 };
 
 export module Routes {
-  const mongoDbProvider = new MongoDbProvider();
-  const postgreSqlProvider = new PostgreSqlProvider();
+  const mongodb_provider = new MongoDbProvider();
+  const postgresql_provider = new PostgreSqlProvider();
   const publicRoutes: string[] = [];
 
   export function mount(app) {
-    preload(mongoDbProvider, postgreSqlProvider).then(() =>
+    preload(mongodb_provider, postgresql_provider).then(() =>
       console.log("DB preloads are completed.")
     );
 
@@ -65,8 +65,8 @@ export module Routes {
         // create context
         res.locals.ctx = await context(
           req,
-          mongoDbProvider,
-          postgreSqlProvider,
+          mongodb_provider,
+          postgresql_provider,
           publicRoutes
         );
 

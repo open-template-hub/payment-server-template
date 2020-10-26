@@ -22,8 +22,8 @@ router.post(subRoutes.coinbase, async (req: Request, res: Response) => {
   const context = res.locals.ctx as Context;
 
   await refreshTransactionHistory(
-    context.mongoDbProvider,
-    context.postgreSqlProvider,
+    context.mongodb_provider,
+    context.postgresql_provider,
     req.query.key as string,
     external_transaction_id
   );
@@ -43,8 +43,8 @@ router.post(subRoutes.stripe, async (req: Request, res: Response) => {
     const context = res.locals.ctx as Context;
 
     await refreshTransactionHistory(
-      context.mongoDbProvider,
-      context.postgreSqlProvider,
+      context.mongodb_provider,
+      context.postgresql_provider,
       req.query.key as string,
       external_transaction_id
     );
@@ -59,8 +59,8 @@ router.post(subRoutes.paypal, async (req: Request, res: Response) => {
     const context = res.locals.ctx as Context;
 
     await refreshTransactionHistory(
-      context.mongoDbProvider,
-      context.postgreSqlProvider,
+      context.mongodb_provider,
+      context.postgresql_provider,
       req.query.key as string,
       external_transaction_id
     );
