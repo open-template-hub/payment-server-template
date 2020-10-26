@@ -2,9 +2,13 @@
  * @description holds auth service
  */
 
+import { UserRole } from "../enums/user-role.enum";
 import { TokenService } from "./token.service";
 
 export class AuthService {
+  private adminRoles = [
+    UserRole.ADMIN
+  ];
   constructor(private readonly tokenService: TokenService) {}
 
   getCurrentUser = async (req: { headers: { authorization: string } }) => {
@@ -26,5 +30,13 @@ export class AuthService {
     }
 
     return currentUser;
-  };
+  }
+
+  isAdmin = (role: UserRole) => {
+    if (this.adminRoles.indexOf(role) >= 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

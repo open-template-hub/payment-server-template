@@ -4,7 +4,7 @@
 
 import Router from "express-promise-router";
 import { Request, Response } from "express";
-import { ResponseCode } from "../util/constant";
+import { ErrorMessage, ResponseCode } from "../util/constant";
 import { createProduct } from "../controllers/product.controller";
 import { Context } from "../models/context.model";
 
@@ -16,15 +16,18 @@ export const router = Router();
 
 router.post(subRoutes.root, async (req: Request, res: Response) => {
   const context = res.locals.ctx as Context;
+  if (context.isAdmin) { 
+    const product = await createProduct(
+      context.mongoDbProvider,
+      req.body.product_id,
+      req.body.name,
+      req.body.description,
+      req.body.amount,
+      req.body.currency
+    );
   
-  const product = await createProduct(
-    context.mongoDbProvider,
-    req.body.product_id,
-    req.body.name,
-    req.body.description,
-    req.body.amount,
-    req.body.currency
-  );
-
-  res.status(ResponseCode.CREATED).json(product);
+    res.status(ResponseCode.CREATED).json(product);
+  } else {
+    throw new Error(ErrorMessage.FORBIDDEN);
+  }
 });
