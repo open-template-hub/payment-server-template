@@ -5,11 +5,6 @@
 import mongoose, { Connection } from "mongoose";
 import { Builder } from "../util/builder";
 
-// debug logger
-const debugLog = require("debug")(
-  "basic-server:" + __filename.slice(__dirname.length + 1)
-);
-
 export class MongoDbProvider {
   // mongoose connection
   private connection: Connection = mongoose.createConnection();

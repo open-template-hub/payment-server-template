@@ -1,10 +1,6 @@
 import { Pool, QueryResult } from "pg";
 import { Builder } from "../util/builder";
-
-// debug logger
-const debugLog = require("debug")(
-  "file-server:" + __filename.slice(__dirname.length + 1)
-);
+import { debugLog } from '../services/debug-log.service';
 
 export class PostgreSqlProvider {
   private connectionPool: Pool = new Pool();
