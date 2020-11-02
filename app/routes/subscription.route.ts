@@ -23,13 +23,13 @@ router.post(subRoutes.root, async (req: Request, res: Response) => {
   // Create new subscription session
   const context = res.locals.ctx as Context;
 
-  let subscriptionSession = await saveSubscription(
+  let subscription_id = await saveSubscription(
     context.mongodb_provider,
     context.username,
     req.body.payment_config_key,
     req.body.payload
   );
-  res.status(ResponseCode.CREATED).json(subscriptionSession);
+  res.status(ResponseCode.CREATED).json({ subscription_id });
 });
 
 router.get(subRoutes.root, async (req: Request, res: Response) => {

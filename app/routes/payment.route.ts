@@ -39,13 +39,13 @@ router.post(subRoutes.confirm, async (req: Request, res: Response) => {
   // Create new payment session
   const context = res.locals.ctx as Context;
   if (context.isAdmin) {
-    let paymentSession = await confirmPayment(
+    let external_transaction_id = await confirmPayment(
       context.mongodb_provider,
       req.body.payment_config_key,
       req.body.external_transaction_id
     );
 
-    res.status(ResponseCode.OK).json(paymentSession);
+    res.status(ResponseCode.OK).json({ external_transaction_id });
   } else {
     throw new Error(ErrorMessage.FORBIDDEN);
   }

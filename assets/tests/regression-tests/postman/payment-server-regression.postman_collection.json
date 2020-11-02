@@ -1652,7 +1652,106 @@
 		},
 		{
 			"name": "Subscription",
-			"item": [],
+			"item": [
+				{
+					"name": "Create Subscription Success [201]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fd98d4d9-d7eb-4453-891b-deeaadcc7a02",
+								"exec": [
+									"pm.environment.set(\"subscription-id\", pm.response.json().subscription_id);\r",
+									"\r",
+									"pm.test(\"Response code is CREATED\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{public-auth-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"payment_config_key\": \"{{stripe-config-key}}\",\r\n    \"payload\": {\r\n        \"data\": \"{{subscription-data}}\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{uri}}/subscription",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"subscription"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Subscriptions Success [200]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d777a914-bfbc-4500-a71c-4b29f311975e",
+								"exec": [
+									"pm.test(\"Response code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains Created Subscription Id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(pm.environment.get(\"subscription-id\"));\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{public-auth-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{uri}}/subscription/me",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"subscription",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			],
 			"protocolProfileBehavior": {}
 		}
 	],
