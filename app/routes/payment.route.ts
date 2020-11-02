@@ -4,8 +4,9 @@
 
 import Router from "express-promise-router";
 import { Request, Response } from "express";
-import { ResponseCode } from "../util/constant";
+import { ErrorMessage, ResponseCode } from "../util/constant";
 import {
+  confirmPayment,
   initPayment,
   initPaymentWithExternalTransactionId,
 } from "../controllers/payment.controller";
@@ -15,6 +16,7 @@ const subRoutes = {
   root: "/",
   verify: "/verify",
   initWithExternalTransactionId: "/init-with-external-transaction-id",
+  confirm: "/confirm",
 };
 
 export const router = Router();
@@ -31,6 +33,22 @@ router.post(subRoutes.root, async (req: Request, res: Response) => {
     req.body.quantity
   );
   res.status(ResponseCode.CREATED).json(paymentSession);
+});
+
+router.post(subRoutes.confirm, async (req: Request, res: Response) => {
+  // Create new payment session
+  const context = res.locals.ctx as Context;
+  if (context.isAdmin) {
+    let paymentSession = await confirmPayment(
+      context.mongodb_provider,
+      req.body.payment_config_key,
+      req.body.external_transaction_id
+    );
+
+    res.status(ResponseCode.OK).json(paymentSession);
+  } else {
+    throw new Error(ErrorMessage.FORBIDDEN);
+  }
 });
 
 router.post(

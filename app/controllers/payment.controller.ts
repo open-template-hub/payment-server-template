@@ -150,3 +150,31 @@ export const refreshTransactionHistory = async (
     throw error;
   }
 };
+
+// only for admin usage, test purpose
+export const confirmPayment = async (
+  mongodb_provider: MongoDbProvider,
+  payment_config_key: string,
+  external_transaction_id: string
+) => {
+  try {
+    const paymentConfigRepository = await new PaymentConfigRepository().initialize(
+      mongodb_provider.getConnection()
+    );
+
+    let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
+      payment_config_key
+    );
+
+    if (paymentConfig === null)
+      throw new Error("Payment method can not be found");
+    const paymentWrapper = new PaymentWrapper(paymentConfig.payload.method);
+
+    await paymentWrapper.confirmPayment(paymentConfig, external_transaction_id);
+
+    return external_transaction_id;
+  } catch (error) {
+    console.error("> refreshTransactionHistory error: ", error);
+    throw error;
+  }
+};

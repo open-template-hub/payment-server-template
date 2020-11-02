@@ -414,6 +414,132 @@
 							"response": []
 						},
 						{
+							"name": "Confirm Payment Failure [403]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "47156b67-c4fc-43d7-8daf-55f174e8c57e",
+										"exec": [
+											"pm.test(\"Response code is FORBIDDEN\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "08cf088c-8bec-4145-8735-1bb6ae065592",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{public-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"payment_config_key\": \"{{stripe-config-key}}\",\r\n    \"external_transaction_id\": \"{{stripe-external-transaction-id}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/payment/confirm",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"payment",
+										"confirm"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm Payment Success [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ca830abf-c232-4537-b4dc-ff97e1ca32c9",
+										"exec": [
+											"pm.test(\"Response code is FORBIDDEN\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Checkout Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(pm.environment.get(\"stripe-external-transaction-id\"));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "2366abac-b485-4d05-b65e-3eb02c49dd5a",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"payment_config_key\": \"{{stripe-config-key}}\",\r\n    \"external_transaction_id\": \"{{stripe-external-transaction-id}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/payment/confirm",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"payment",
+										"confirm"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Webhook Success [200]",
 							"event": [
 								{
@@ -756,6 +882,132 @@
 									"path": [
 										"payment",
 										"init-with-external-transaction-id"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm Payment Failure [403]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f2027e5c-3ab3-4b22-8146-e5cb776a8fb0",
+										"exec": [
+											"pm.test(\"Response code is FORBIDDEN\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "1e2f8f24-7c15-4f7b-89d0-a537f1cda804",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{public-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"payment_config_key\": \"{{paypal-config-key}}\",\r\n    \"external_transaction_id\": \"{{paypal-external-transaction-id}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/payment/confirm",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"payment",
+										"confirm"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm Payment Success [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "d74cb593-5639-434e-b5b9-e88d5702bfbe",
+										"exec": [
+											"pm.test(\"Response code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Checkout Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(pm.environment.get(\"paypal-external-transaction-id\"));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "89eb7b81-d351-417b-8062-792aefc12e5c",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"payment_config_key\": \"{{paypal-config-key}}\",\r\n    \"external_transaction_id\": \"{{paypal-external-transaction-id}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/payment/confirm",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"payment",
+										"confirm"
 									]
 								}
 							},
@@ -1105,6 +1357,132 @@
 									"path": [
 										"payment",
 										"init-with-external-transaction-id"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm Payment Failure [403]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "aa1fa97c-b4d6-4359-bcfd-d19168853998",
+										"exec": [
+											"pm.test(\"Response code is FORBIDDEN\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "0ca3b211-87a2-4adf-b086-e38970664646",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{public-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"payment_config_key\": \"{{coinbase-config-key}}\",\r\n    \"external_transaction_id\": \"{{coinbase-external-transaction-id}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/payment/confirm",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"payment",
+										"confirm"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm Payment Success [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4736147d-c114-461f-b991-997588ebc9d1",
+										"exec": [
+											"pm.test(\"Response code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Checkout Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(pm.environment.get(\"coinbase-external-transaction-id\"));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "a900dfd9-6ce0-4133-b42a-01f2ac5ac6fa",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"payment_config_key\": \"{{coinbase-config-key}}\",\r\n    \"external_transaction_id\": \"{{coinbase-external-transaction-id}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/payment/confirm",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"payment",
+										"confirm"
 									]
 								}
 							},

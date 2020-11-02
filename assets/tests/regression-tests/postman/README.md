@@ -9,7 +9,9 @@ To run all the scenarios, these items must be configured:
 
 Please check README.md to get more information to configure them
 
-* RESPONSE_ENCRYPTION_SECRET must be disabled
+* RESPONSE_ENCRYPTION_SECRET must be disabled on environment variables
+
+* REGRESSION must be set to true on environment variables
 
 ## Configuration
 
@@ -17,4 +19,4 @@ Please check README.md to get more information to configure them
 
 * Import **payment-server-regression.postman_collection.json** as collection to Postman
 
-* Update imported environment variables and run collection on Postman.
+* Update imported environment variables and run collection on Postman

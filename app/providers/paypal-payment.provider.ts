@@ -6,8 +6,11 @@ import {
   getReceiptWithExternalTransactionId,
 } from "../repository/receipt.repository";
 import { CurrencyCode, ReceiptStatus } from "../util/constant";
+import { confirmed_external_transaction_ids } from "../store";
 
 export class PayPalPayment implements PaymentMethod {
+  private readonly SUCCESS_STATUS = "APPROVED";
+
   init = async (dbConn, paymentConfig, product, quantity) => {
     const paypalClient = this.getPayPalClient(paymentConfig);
 
@@ -51,7 +54,35 @@ export class PayPalPayment implements PaymentMethod {
     let order;
     order = await paypalClient.execute(request);
 
-    return order.result;
+    const isRegression = process.env.REGRESSION || false;
+
+    console.log(
+      "Coinbase.getTransactionHistory > isRegression: ",
+      isRegression
+    );
+
+    const history = order.result;
+
+    if (
+      confirmed_external_transaction_ids.indexOf(
+        paymentConfig.payload.method + "_" + external_transaction_id
+      ) !== -1 &&
+      isRegression
+    ) {
+      console.log(
+        "Coinbase.getTransactionHistory > Setting stripe status to success"
+      );
+      history.status = this.SUCCESS_STATUS;
+    }
+
+    return history;
+  };
+
+  // only for admin usage, test purpose
+  confirmPayment = async (paymentConfig, external_transaction_id) => {
+    confirmed_external_transaction_ids.push(
+      paymentConfig.payload.method + "_" + external_transaction_id
+    );
   };
 
   receiptStatusUpdate = async (
@@ -65,7 +96,7 @@ export class PayPalPayment implements PaymentMethod {
       updated_transaction_history &&
       updated_transaction_history.payload.transaction_history &&
       updated_transaction_history.payload.transaction_history.status ===
-        "APPROVED"
+        this.SUCCESS_STATUS
     ) {
       let created = await getReceiptWithExternalTransactionId(
         dbConn,
@@ -76,10 +107,15 @@ export class PayPalPayment implements PaymentMethod {
       );
 
       console.log("Created: ", created);
-      console.log("purchase_units: ", updated_transaction_history.payload.transaction_history
-      .purchase_units);
-      console.log("length: ", updated_transaction_history.payload.transaction_history.purchase_units
-      .length);
+      console.log(
+        "purchase_units: ",
+        updated_transaction_history.payload.transaction_history.purchase_units
+      );
+      console.log(
+        "length: ",
+        updated_transaction_history.payload.transaction_history.purchase_units
+          .length
+      );
       if (
         !created &&
         updated_transaction_history.payload.transaction_history

@@ -6,8 +6,11 @@ import {
   getReceiptWithExternalTransactionId,
 } from "../repository/receipt.repository";
 import { CurrencyCode, ReceiptStatus } from "../util/constant";
+import { confirmed_external_transaction_ids } from "../store";
 
 export class CoinbasePayment implements PaymentMethod {
+  private readonly SUCCESS_STATUS = "CONFIRMED";
+
   init = async (dbConn, paymentConfig, product, quantity) => {
     const charge = {
       name: product.name,
@@ -43,6 +46,13 @@ export class CoinbasePayment implements PaymentMethod {
     };
   };
 
+  // only for admin usage, test purpose
+  confirmPayment = async (paymentConfig, external_transaction_id) => {
+    confirmed_external_transaction_ids.push(
+      paymentConfig.payload.method + "_" + external_transaction_id
+    );
+  };
+
   getTransactionHistory = async (paymentConfig, external_transaction_id) => {
     const headers = {
       "X-CC-Api-Key": paymentConfig.payload.secret,
@@ -54,7 +64,30 @@ export class CoinbasePayment implements PaymentMethod {
       { headers: headers }
     );
 
-    return response.data.data;
+    const isRegression = process.env.REGRESSION || false;
+
+    console.log(
+      "Coinbase.getTransactionHistory > isRegression: ",
+      isRegression
+    );
+
+    const history = response.data.data;
+
+    if (
+      confirmed_external_transaction_ids.indexOf(
+        paymentConfig.payload.method + "_" + external_transaction_id
+      ) !== -1 &&
+      isRegression
+    ) {
+      console.log(
+        "Coinbase.getTransactionHistory > Setting stripe status to success"
+      );
+      history.payments.push({
+        status: this.SUCCESS_STATUS,
+      });
+    }
+
+    return history;
   };
 
   receiptStatusUpdate = async (
@@ -74,7 +107,7 @@ export class CoinbasePayment implements PaymentMethod {
 
       await updated_transaction_history.payload.transaction_history.payments.forEach(
         (payment) => {
-          if (payment.status === "CONFIRMED") {
+          if (payment.status === this.SUCCESS_STATUS) {
             confirmed = true;
           }
         }
