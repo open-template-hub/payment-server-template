@@ -1,10 +1,16 @@
-import { router as productRouter } from "./product.route";
+import {
+  router as productRouter,
+  adminRoutes as productAdminRoutes,
+} from "./product.route";
 import {
   router as webhookRouter,
   publicRoutes as webhookPublicRoutes,
 } from "./webhook.route";
 import { router as receiptRouter } from "./receipt.route";
-import { router as paymentRouter } from "./payment.route";
+import {
+  router as paymentRouter,
+  adminRoutes as paymentAdminRoutes,
+} from "./payment.route";
 import {
   router as monitorRouter,
   publicRoutes as monitorPublicRoutes,
@@ -31,20 +37,16 @@ const subRoutes = {
 export module Routes {
   const mongodb_provider = new MongoDbProvider();
   const postgresql_provider = new PostgreSqlProvider();
-  const publicRoutes: string[] = [];
+  var publicRoutes: string[] = [];
+  var adminRoutes: string[] = [];
 
   export function mount(app) {
     preload(mongodb_provider, postgresql_provider).then(() =>
       console.log("DB preloads are completed.")
     );
 
-    for (const route of monitorPublicRoutes) {
-      publicRoutes.push(subRoutes.monitor + route);
-    }
-
-    for (const route of webhookPublicRoutes) {
-      publicRoutes.push(subRoutes.webhook + route);
-    }
+    publicRoutes = [...monitorPublicRoutes, ...webhookPublicRoutes];
+    adminRoutes = [...productAdminRoutes, ...paymentAdminRoutes];
 
     const responseInterceptor = (req, res, next) => {
       var originalSend = res.send;
@@ -74,7 +76,8 @@ export module Routes {
           req,
           mongodb_provider,
           postgresql_provider,
-          publicRoutes
+          publicRoutes,
+          adminRoutes
         );
 
         next();

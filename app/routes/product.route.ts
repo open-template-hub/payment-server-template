@@ -12,6 +12,10 @@ const subRoutes = {
   root: "/",
 };
 
+export const adminRoutes = [
+  subRoutes.root
+];
+
 export const router = Router();
 
 router.post(subRoutes.root, async (req: Request, res: Response) => {

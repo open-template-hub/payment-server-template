@@ -8,22 +8,32 @@ import { Context } from "./models/context.model";
 import { PostgreSqlProvider } from "./providers/postgre.provider";
 import { TokenService } from "./services/token.service";
 import { UserRole } from "./enums/user-role.enum";
+import { ErrorMessage } from "./util/constant";
 
 export const context = async (
   req: any,
   mongodb_provider: MongoDbProvider,
   postgresql_provider: PostgreSqlProvider,
-  publicPaths: string[]
+  publicPaths: string[],
+  adminPaths: string[]
 ) => {
   const tokenService = new TokenService();
   const authService = new AuthService(tokenService);
 
   let currentUser: any;
   let publicPath = false;
+  let adminPath = false;
 
   for (const path of publicPaths) {
-    if (req.path.startsWith(path)) {
+    if (req.path.endsWith(path)) {
       publicPath = true;
+      break;
+    }
+  }
+
+  for (const path of adminPaths) {
+    if (req.path.endsWith(path)) {
+      adminPath = true;
       break;
     }
   }
@@ -36,6 +46,10 @@ export const context = async (
 
   const role = currentUser ? (currentUser.role as UserRole) : ("" as UserRole);
   const isAdmin = authService.isAdmin(role);
+
+  if (adminPath && !isAdmin) {
+    throw new Error(ErrorMessage.FORBIDDEN);
+  }
 
   return {
     mongodb_provider,
