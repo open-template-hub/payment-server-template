@@ -5,52 +5,51 @@
 import Router from "express-promise-router";
 import { Request, Response } from "express";
 import { ResponseCode } from "../util/constant";
-import { getCurrentUser } from "../services/auth.service";
 import {
   getSubscription,
   saveSubscription,
   getUserSubscriptions,
 } from "../controllers/subscription.controller";
+import { Context } from "../models/context.model";
 
 const subRoutes = {
   root: "/",
   me: "/me",
 };
 
-const router = Router();
-
-router.use("/*", async (req: Request, res: Response, next) => {
-  res.locals.ctx.currentUser = await getCurrentUser(req);
-  return next();
-});
+export const router = Router();
 
 router.post(subRoutes.root, async (req: Request, res: Response) => {
   // Create new subscription session
-  let subscriptionSession = await saveSubscription(
-    res.locals.ctx.dbProviders,
-    res.locals.ctx.currentUser.username,
-    req.body.paymentConfigKey,
+  const context = res.locals.ctx as Context;
+
+  let subscription_id = await saveSubscription(
+    context.mongodb_provider,
+    context.username,
+    req.body.payment_config_key,
     req.body.payload
   );
-  res.status(ResponseCode.CREATED).json(subscriptionSession);
+  res.status(ResponseCode.CREATED).json({ subscription_id });
 });
 
 router.get(subRoutes.root, async (req: Request, res: Response) => {
   // Get subscription with subscription id
+  const context = res.locals.ctx as Context;
+
   let subscriptionSession = await getSubscription(
-    res.locals.ctx.dbProviders,
-    req.query.subscription_id
+    context.mongodb_provider,
+    req.query.subscription_id as string
   );
   res.status(ResponseCode.OK).json(subscriptionSession);
 });
 
 router.get(subRoutes.me, async (req: Request, res: Response) => {
   // Get subscription with username
+  const context = res.locals.ctx as Context;
+  
   let subscriptionSession = await getUserSubscriptions(
-    res.locals.ctx.dbProviders,
-    res.locals.ctx.currentUser.username
+    context.mongodb_provider,
+    context.username
   );
   res.status(ResponseCode.OK).json(subscriptionSession);
 });
-
-export = router;

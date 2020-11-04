@@ -1,47 +1,42 @@
 /**
- * @description holds context
+ * @description holds auth service
  */
 
-import { verifyAccessToken } from './token.service';
+import { UserRole } from "../enums/user-role.enum";
+import { TokenService } from "./token.service";
 
-export const getCurrentUser = async (req) => {
- let authToken = null;
- let currentUser = null;
+export class AuthService {
+  private adminRoles = [
+    UserRole.ADMIN
+  ];
+  constructor(private readonly tokenService: TokenService) {}
 
- const authTokenHeader = req.headers.authorization || '';
- const BEARER = 'Bearer ';
+  getCurrentUser = async (req: { headers: { authorization: string } }) => {
+    let authToken = "";
+    let currentUser = null;
 
- if (authTokenHeader && authTokenHeader.startsWith(BEARER)) {
-  authToken = authTokenHeader.slice(BEARER.length);
-  currentUser = await verifyAccessToken(authToken);
- }
+    const authTokenHeader = req.headers.authorization;
+    const BEARER = "Bearer ";
 
- if (!currentUser) {
-  let e: any = new Error('User must be logged in');
-  e.responseCode = 403;
-  throw e;
- }
+    if (authTokenHeader && authTokenHeader.startsWith(BEARER)) {
+      authToken = authTokenHeader.slice(BEARER.length);
+      currentUser = await this.tokenService.verifyAccessToken(authToken);
+    }
 
- return currentUser;
-}
+    if (!currentUser) {
+      let e: any = new Error("User must be logged in");
+      e.responseCode = 403;
+      throw e;
+    }
 
-export const getAdmin = async (req) => {
- let authToken = null;
- let currentUser: any = null;
+    return currentUser;
+  }
 
- const authTokenHeader = req.headers.authorization || '';
- const BEARER = 'Bearer ';
-
- if (authTokenHeader && authTokenHeader.startsWith(BEARER)) {
-  authToken = authTokenHeader.slice(BEARER.length);
-  currentUser = await verifyAccessToken(authToken);
- }
-
- if (!currentUser || currentUser.role !== 'ADMIN') {
-  let e: any = new Error('Forbidden');
-  e.responseCode = 403;
-  throw e;
- }
-
- return currentUser;
+  isAdmin = (role: UserRole) => {
+    if (this.adminRoles.indexOf(role) >= 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

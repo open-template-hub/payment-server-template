@@ -23,3 +23,7 @@ export const ReceiptStatus = {
 export const CurrencyCode = {
  USD: 'USD'
 }
+
+export const ErrorMessage = {
+  FORBIDDEN: "You do not have right permission to do this operation."
+}

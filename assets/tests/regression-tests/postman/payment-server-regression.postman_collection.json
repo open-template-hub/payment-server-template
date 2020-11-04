@@ -1,0 +1,1759 @@
+{
+	"info": {
+		"_postman_id": "0a717fb6-5389-4e5e-b47a-95136f014420",
+		"name": "payment-server-regression",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "Create Product Success [201]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4e9832da-c961-4490-9896-7c3bc280ccda",
+								"exec": [
+									"pm.test(\"Response code is CREATED\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains Created Product Id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include('product_id');\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin-auth-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_id\": \"{{product-id}}\",\r\n    \"name\": \"Product 1\",\r\n    \"description\": \"product description\",\r\n    \"amount\": {{product-amount}},\r\n    \"currency\": \"usd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{uri}}/product",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product Success [200]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "81e996a9-8229-4f1e-b06f-3f14f178a897",
+								"exec": [
+									"pm.test(\"Response code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains Deleted Product Id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include('product_id');\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin-auth-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{uri}}/product?product_id={{product-id}}",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "product_id",
+									"value": "{{product-id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product Failed [403]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7751fce8-b4ae-49e3-811a-fb96e6a3eb80",
+								"exec": [
+									"pm.test(\"Response code is FORBIDDEN\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains Error Message\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include('message');\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{public-auth-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_id\": \"{{product-id}}\",\r\n    \"name\": \"Product 1\",\r\n    \"description\": \"product description\",\r\n    \"amount\": {{product-amount}},\r\n    \"currency\": \"usd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{uri}}/product",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product Failed [403]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4bd7af60-a7fb-4c5b-a203-ffa768db725d",
+								"exec": [
+									"pm.test(\"Response code is FORBIDDEN\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains Error Message\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include('message');\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{public-auth-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{uri}}/product?product_id={{product-id}}",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"product"
+							],
+							"query": [
+								{
+									"key": "product_id",
+									"value": "{{product-id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "One Time Payment",
+			"item": [
+				{
+					"name": "Stripe",
+					"item": [
+						{
+							"name": "Create Product Success [201]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3e974391-d166-404f-ab65-d3378769f81a",
+										"exec": [
+											"pm.test(\"Response code is CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Created Product Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include('product_id');\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"product_id\": \"{{product-id}}\",\r\n    \"name\": \"Product 1\",\r\n    \"description\": \"product description\",\r\n    \"amount\": {{product-amount}},\r\n    \"currency\": \"usd\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/product",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"product"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Init Payment Success [201]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "897a91d0-42bc-41cd-957a-bd6b3c2cef07",
+										"exec": [
+											"pm.environment.set(\"stripe-external-transaction-id\", pm.response.json().payload.payment_intent);\r",
+											"\r",
+											"pm.test(\"Response code is CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Checkout Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include('payload');\r",
+											"    pm.expect(pm.response.text()).to.include('payment_intent');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "65b7af77-6c12-4b51-aeb6-76eebed25804",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{public-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"payment_config_key\": \"{{stripe-config-key}}\",\r\n    \"product_id\": \"{{product-id}}\",\r\n    \"quantity\": {{product-quantity}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/payment",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"payment"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Init Payment With External Transaction Id Success [201]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "8ce03452-359a-4c88-8ab4-038457e94833",
+										"exec": [
+											"pm.test(\"Response code is CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Checkout Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include('external_transaction_id');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "c484ad02-32b6-4e08-b1ea-05a6c4666dcd",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{public-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"payment_config_key\": \"{{stripe-config-key}}\",\r\n    \"product_id\": \"{{product-id}}\",\r\n    \"external_transaction_id\": \"{{stripe-external-transaction-id}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/payment/init-with-external-transaction-id",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"payment",
+										"init-with-external-transaction-id"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm Payment Failure [403]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "47156b67-c4fc-43d7-8daf-55f174e8c57e",
+										"exec": [
+											"pm.test(\"Response code is FORBIDDEN\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "08cf088c-8bec-4145-8735-1bb6ae065592",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{public-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"payment_config_key\": \"{{stripe-config-key}}\",\r\n    \"external_transaction_id\": \"{{stripe-external-transaction-id}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/payment/confirm",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"payment",
+										"confirm"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm Payment Success [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "ca830abf-c232-4537-b4dc-ff97e1ca32c9",
+										"exec": [
+											"pm.test(\"Response code is FORBIDDEN\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Checkout Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(pm.environment.get(\"stripe-external-transaction-id\"));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "2366abac-b485-4d05-b65e-3eb02c49dd5a",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"payment_config_key\": \"{{stripe-config-key}}\",\r\n    \"external_transaction_id\": \"{{stripe-external-transaction-id}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/payment/confirm",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"payment",
+										"confirm"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Webhook Success [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "cbfa0be5-8dcc-4570-a444-0f622689f814",
+										"exec": [
+											"pm.test(\"Response code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"evt_1GpcquKyM2eqMlONaCwTXNpb\",\r\n    \"object\": \"event\",\r\n    \"api_version\": \"2020-03-02\",\r\n    \"created\": 1591114836,\r\n    \"data\": {\r\n        \"object\": {\r\n            \"id\": \"{{stripe-external-transaction-id}}\",\r\n            \"object\": \"payment_intent\",\r\n            \"amount\": 8000,\r\n            \"amount_capturable\": 0,\r\n            \"amount_received\": 8000,\r\n            \"application\": null,\r\n            \"application_fee_amount\": null,\r\n            \"canceled_at\": null,\r\n            \"cancellation_reason\": null,\r\n            \"capture_method\": \"automatic\",\r\n            \"charges\": {\r\n                \"object\": \"list\",\r\n                \"data\": [\r\n                    {\r\n                        \"id\": \"ch_1GpcquKyM2eqMlON2n9sEEAu\",\r\n                        \"object\": \"charge\",\r\n                        \"amount\": 8000,\r\n                        \"amount_refunded\": 0,\r\n                        \"application\": null,\r\n                        \"application_fee\": null,\r\n                        \"application_fee_amount\": null,\r\n                        \"balance_transaction\": \"txn_1GpcquKyM2eqMlONVcZIfKXd\",\r\n                        \"billing_details\": {\r\n                            \"address\": {\r\n                                \"city\": null,\r\n                                \"country\": \"TR\",\r\n                                \"line1\": null,\r\n                                \"line2\": null,\r\n                                \"postal_code\": null,\r\n                                \"state\": null\r\n                            },\r\n                            \"email\": \"fatihturker35@gmail.com\",\r\n                            \"name\": \"Fatih\",\r\n                            \"phone\": null\r\n                        },\r\n                        \"calculated_statement_descriptor\": \"Stripe\",\r\n                        \"captured\": true,\r\n                        \"created\": 1591114836,\r\n                        \"currency\": \"usd\",\r\n                        \"customer\": \"cus_HOPgqTvzlQoCrp\",\r\n                        \"description\": null,\r\n                        \"destination\": null,\r\n                        \"dispute\": null,\r\n                        \"disputed\": false,\r\n                        \"failure_code\": null,\r\n                        \"failure_message\": null,\r\n                        \"fraud_details\": {},\r\n                        \"invoice\": null,\r\n                        \"livemode\": false,\r\n                        \"metadata\": {},\r\n                        \"on_behalf_of\": null,\r\n                        \"order\": null,\r\n                        \"outcome\": {\r\n                            \"network_status\": \"approved_by_network\",\r\n                            \"reason\": null,\r\n                            \"risk_level\": \"normal\",\r\n                            \"risk_score\": 34,\r\n                            \"seller_message\": \"Payment complete.\",\r\n                            \"type\": \"authorized\"\r\n                        },\r\n                        \"paid\": true,\r\n                        \"payment_intent\": \"pi_1Gpcq3KyM2eqMlONy0sJaZTR\",\r\n                        \"payment_method\": \"pm_1GpcqsKyM2eqMlONu3jdXLgQ\",\r\n                        \"payment_method_details\": {\r\n                            \"card\": {\r\n                                \"brand\": \"visa\",\r\n                                \"checks\": {\r\n                                    \"address_line1_check\": null,\r\n                                    \"address_postal_code_check\": null,\r\n                                    \"cvc_check\": \"pass\"\r\n                                },\r\n                                \"country\": \"US\",\r\n                                \"exp_month\": 11,\r\n                                \"exp_year\": 2025,\r\n                                \"fingerprint\": \"7OEdUncp5EmTqQkA\",\r\n                                \"funding\": \"unknown\",\r\n                                \"installments\": null,\r\n                                \"last4\": \"1111\",\r\n                                \"network\": \"visa\",\r\n                                \"three_d_secure\": null,\r\n                                \"wallet\": null\r\n                            },\r\n                            \"type\": \"card\"\r\n                        },\r\n                        \"receipt_email\": null,\r\n                        \"receipt_number\": null,\r\n                        \"receipt_url\": \"https://pay.stripe.com/receipts/acct_1GoRPbKyM2eqMlON/ch_1GpcquKyM2eqMlON2n9sEEAu/rcpt_HOPg54GEvXknAhL25eYdIPZxfyr12kK\",\r\n                        \"refunded\": false,\r\n                        \"refunds\": {\r\n                            \"object\": \"list\",\r\n                            \"data\": [],\r\n                            \"has_more\": false,\r\n                            \"total_count\": 0,\r\n                            \"url\": \"/v1/charges/ch_1GpcquKyM2eqMlON2n9sEEAu/refunds\"\r\n                        },\r\n                        \"review\": null,\r\n                        \"shipping\": null,\r\n                        \"source\": null,\r\n                        \"source_transfer\": null,\r\n                        \"statement_descriptor\": null,\r\n                        \"statement_descriptor_suffix\": null,\r\n                        \"status\": \"succeeded\",\r\n                        \"transfer_data\": null,\r\n                        \"transfer_group\": null\r\n                    }\r\n                ],\r\n                \"has_more\": false,\r\n                \"total_count\": 1,\r\n                \"url\": \"/v1/charges?payment_intent=pi_1Gpcq3KyM2eqMlONy0sJaZTR\"\r\n            },\r\n            \"client_secret\": \"pi_1Gpcq3KyM2eqMlONy0sJaZTR_secret_4IaP57Yp7PNTNIT6wdOGuqDoa\",\r\n            \"confirmation_method\": \"automatic\",\r\n            \"created\": 1591114783,\r\n            \"currency\": \"usd\",\r\n            \"customer\": \"cus_HOPgqTvzlQoCrp\",\r\n            \"description\": null,\r\n            \"invoice\": null,\r\n            \"last_payment_error\": null,\r\n            \"livemode\": false,\r\n            \"metadata\": {},\r\n            \"next_action\": null,\r\n            \"on_behalf_of\": null,\r\n            \"payment_method\": \"pm_1GpcqsKyM2eqMlONu3jdXLgQ\",\r\n            \"payment_method_options\": {\r\n                \"card\": {\r\n                    \"installments\": null,\r\n                    \"request_three_d_secure\": \"automatic\"\r\n                }\r\n            },\r\n            \"payment_method_types\": [\r\n                \"card\"\r\n            ],\r\n            \"receipt_email\": null,\r\n            \"review\": null,\r\n            \"setup_future_usage\": null,\r\n            \"shipping\": null,\r\n            \"source\": null,\r\n            \"statement_descriptor\": null,\r\n            \"statement_descriptor_suffix\": null,\r\n            \"status\": \"succeeded\",\r\n            \"transfer_data\": null,\r\n            \"transfer_group\": null\r\n        }\r\n    },\r\n    \"livemode\": false,\r\n    \"pending_webhooks\": 1,\r\n    \"request\": {\r\n        \"id\": \"req_wvAK99Lx7U63hI\",\r\n        \"idempotency_key\": null\r\n    },\r\n    \"type\": \"payment_intent.succeeded\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/webhook/stripe?key={{stripe-config-key}}",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"webhook",
+										"stripe"
+									],
+									"query": [
+										{
+											"key": "key",
+											"value": "{{stripe-config-key}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Successful Receipts Success [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "1f1261ec-163d-451a-9328-f450db0b1de4",
+										"exec": [
+											"pm.test(\"Response code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Successful Receipt for STRIPE\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include('successful_receipts');\r",
+											"    pm.expect(pm.response.text()).to.include('external_transaction_id');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Receipt contains correct transaction id for STRIPE\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(pm.environment.get(\"stripe-external-transaction-id\"));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{public-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{uri}}/receipt?product_id={{product-id}}",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"receipt"
+									],
+									"query": [
+										{
+											"key": "product_id",
+											"value": "{{product-id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Product Success [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f06d4c14-c818-4552-af6a-dc9ba1fd43aa",
+										"exec": [
+											"pm.test(\"Response code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Deleted Product Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include('product_id');\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{uri}}/product?product_id={{product-id}}",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"product"
+									],
+									"query": [
+										{
+											"key": "product_id",
+											"value": "{{product-id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Paypal",
+					"item": [
+						{
+							"name": "Create Product Success [201]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "047337ba-d7b9-432e-9d34-7bdad4e6db1a",
+										"exec": [
+											"pm.test(\"Response code is CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Created Product Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include('product_id');\r",
+											"    pm.expect(pm.response.text()).to.include(pm.environment.get(\"product-id\"));\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"product_id\": \"{{product-id}}\",\r\n    \"name\": \"Product 1\",\r\n    \"description\": \"product description\",\r\n    \"amount\": {{product-amount}},\r\n    \"currency\": \"usd\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/product",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"product"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Init Payment Success [201]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "b17d3bba-15df-4c88-8f4e-8645e7074c65",
+										"exec": [
+											"pm.environment.set(\"paypal-external-transaction-id\", pm.response.json().payload.id);\r",
+											"\r",
+											"pm.test(\"Response code is CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Checkout Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include('payload');\r",
+											"    pm.expect(pm.response.text()).to.include('id');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "65296206-a8b6-4da9-bd56-e4e65265e3aa",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{public-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"payment_config_key\": \"{{paypal-config-key}}\",\r\n    \"product_id\": \"{{product-id}}\",\r\n    \"quantity\": {{product-quantity}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/payment",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"payment"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Init Payment With External Transaction Id Success [201]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "91a8bed4-f554-4c93-91f0-fd7ccc68eb6f",
+										"exec": [
+											"pm.test(\"Response code is CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Checkout Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include('external_transaction_id');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "d951cd16-5464-40ef-ad72-05b968e80ff0",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{public-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"payment_config_key\": \"{{paypal-config-key}}\",\r\n    \"product_id\": \"{{product-id}}\",\r\n    \"external_transaction_id\": \"{{paypal-external-transaction-id}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/payment/init-with-external-transaction-id",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"payment",
+										"init-with-external-transaction-id"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm Payment Failure [403]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f2027e5c-3ab3-4b22-8146-e5cb776a8fb0",
+										"exec": [
+											"pm.test(\"Response code is FORBIDDEN\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "1e2f8f24-7c15-4f7b-89d0-a537f1cda804",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{public-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"payment_config_key\": \"{{paypal-config-key}}\",\r\n    \"external_transaction_id\": \"{{paypal-external-transaction-id}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/payment/confirm",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"payment",
+										"confirm"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm Payment Success [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "d74cb593-5639-434e-b5b9-e88d5702bfbe",
+										"exec": [
+											"pm.test(\"Response code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Checkout Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(pm.environment.get(\"paypal-external-transaction-id\"));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "89eb7b81-d351-417b-8062-792aefc12e5c",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"payment_config_key\": \"{{paypal-config-key}}\",\r\n    \"external_transaction_id\": \"{{paypal-external-transaction-id}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/payment/confirm",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"payment",
+										"confirm"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Webhook Success [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "5c382246-e12d-4b77-97de-822babe1ef37",
+										"exec": [
+											"pm.test(\"Response code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"id\": \"WH-7EJ96441K1110272N-59895742AK7079143\",\r\n \"event_version\": \"1.0\",\r\n \"create_time\": \"2020-06-03T12:37:03.696Z\",\r\n \"resource_type\": \"checkout-order\",\r\n \"resource_version\": \"2.0\",\r\n \"event_type\": \"CHECKOUT.ORDER.APPROVED\",\r\n \"summary\": \"An order has been approved by buyer\",\r\n \"resource\": {\r\n  \"create_time\": \"2020-06-03T12:36:28Z\",\r\n  \"purchase_units\": [\r\n   {\r\n    \"reference_id\": \"default\",\r\n    \"amount\": {\r\n     \"currency_code\": \"USD\",\r\n     \"value\": \"2.00\"\r\n    },\r\n    \"payee\": {\r\n     \"email_address\": \"sb-nlx1y1717487@business.example.com\",\r\n     \"merchant_id\": \"MFZ2X4BDN42NG\"\r\n    },\r\n    \"shipping\": {\r\n     \"name\": {\r\n      \"full_name\": \"Furkan Yavuz\"\r\n     },\r\n     \"address\": {\r\n      \"address_line_1\": \"PO Box 4668 New York, NY 10163 NEW YORK, NY 10163\",\r\n      \"admin_area_2\": \"New York\",\r\n      \"admin_area_1\": \"NY\",\r\n      \"postal_code\": \"10163\",\r\n      \"country_code\": \"US\"\r\n     }\r\n    }\r\n   }\r\n  ],\r\n  \"links\": [\r\n   {\r\n    \"href\": \"https://api.sandbox.paypal.com/v2/checkout/orders/2P1869875K633350G\",\r\n    \"rel\": \"self\",\r\n    \"method\": \"GET\"\r\n   },\r\n   {\r\n    \"href\": \"https://api.sandbox.paypal.com/v2/checkout/orders/2P1869875K633350G\",\r\n    \"rel\": \"update\",\r\n    \"method\": \"PATCH\"\r\n   },\r\n   {\r\n    \"href\": \"https://api.sandbox.paypal.com/v2/checkout/orders/2P1869875K633350G/capture\",\r\n    \"rel\": \"capture\",\r\n    \"method\": \"POST\"\r\n   }\r\n  ],\r\n  \"id\": \"{{paypal-external-transaction-id}}\",\r\n  \"intent\": \"CAPTURE\",\r\n  \"payer\": {\r\n   \"name\": {\r\n    \"given_name\": \"Furkan\",\r\n    \"surname\": \"Yavuz\"\r\n   },\r\n   \"email_address\": \"furkanyavuz.spambox@gmail.com\",\r\n   \"payer_id\": \"D2P2HDVA2Z6H8\",\r\n   \"address\": {\r\n    \"country_code\": \"US\"\r\n   }\r\n  },\r\n  \"status\": \"APPROVED\"\r\n },\r\n \"links\": [\r\n  {\r\n   \"href\": \"https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-7EJ96441K1110272N-59895742AK7079143\",\r\n   \"rel\": \"self\",\r\n   \"method\": \"GET\"\r\n  },\r\n  {\r\n   \"href\": \"https://api.sandbox.paypal.com/v1/notifications/webhooks-events/WH-7EJ96441K1110272N-59895742AK7079143/resend\",\r\n   \"rel\": \"resend\",\r\n   \"method\": \"POST\"\r\n  }\r\n ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/webhook/paypal?key={{paypal-config-key}}",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"webhook",
+										"paypal"
+									],
+									"query": [
+										{
+											"key": "key",
+											"value": "{{paypal-config-key}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Successful Receipts Success [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2aabc6cd-9b54-4689-ab25-d1f86fe63cb6",
+										"exec": [
+											"pm.test(\"Response code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Successful Receipt for PAYPAL\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include('successful_receipts');\r",
+											"    pm.expect(pm.response.text()).to.include('external_transaction_id');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Receipt contains correct transaction id for PAYPAL\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(pm.environment.get(\"paypal-external-transaction-id\"));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{public-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{uri}}/receipt?product_id={{product-id}}",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"receipt"
+									],
+									"query": [
+										{
+											"key": "product_id",
+											"value": "{{product-id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Product Success [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "2ca5e65f-5ce9-4e8c-9611-43bc7d452f5c",
+										"exec": [
+											"pm.test(\"Response code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Deleted Product Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include('product_id');\r",
+											"    pm.expect(pm.response.text()).to.include(pm.environment.get(\"product-id\"));\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{uri}}/product?product_id={{product-id}}",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"product"
+									],
+									"query": [
+										{
+											"key": "product_id",
+											"value": "{{product-id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Coinbase",
+					"item": [
+						{
+							"name": "Create Product Success [201]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "11fc20bd-b785-47ac-b27f-c19e5d1da1c4",
+										"exec": [
+											"pm.test(\"Response code is CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Created Product Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include('product_id');\r",
+											"    pm.expect(pm.response.text()).to.include(pm.environment.get(\"product-id\"));\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"product_id\": \"{{product-id}}\",\r\n    \"name\": \"Product 1\",\r\n    \"description\": \"product description\",\r\n    \"amount\": {{product-amount}},\r\n    \"currency\": \"usd\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/product",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"product"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Init Payment Success [201]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "5cd622d2-2f8a-4df4-87ca-59f3e08f102e",
+										"exec": [
+											"pm.environment.set(\"coinbase-external-transaction-id\", pm.response.json().payload.id);\r",
+											"\r",
+											"pm.test(\"Response code is CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Checkout Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include('payload');\r",
+											"    pm.expect(pm.response.text()).to.include('id');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "ab0d75f2-4dc8-430e-ae53-040ba33c8d53",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{public-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"payment_config_key\": \"{{coinbase-config-key}}\",\r\n    \"product_id\": \"{{product-id}}\",\r\n    \"quantity\": {{product-quantity}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/payment",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"payment"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Init Payment With External Transaction Id Success [201]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "da3b38ac-6b4e-439c-8437-5a45feb2862d",
+										"exec": [
+											"pm.test(\"Response code is CREATED\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Checkout Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include('external_transaction_id');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "7de5dea3-0e3a-42f3-a555-8f8f4bb55412",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{public-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"payment_config_key\": \"{{coinbase-config-key}}\",\r\n    \"product_id\": \"{{product-id}}\",\r\n    \"external_transaction_id\": \"{{coinbase-external-transaction-id}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/payment/init-with-external-transaction-id",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"payment",
+										"init-with-external-transaction-id"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm Payment Failure [403]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "aa1fa97c-b4d6-4359-bcfd-d19168853998",
+										"exec": [
+											"pm.test(\"Response code is FORBIDDEN\", function () {\r",
+											"    pm.response.to.have.status(403);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "0ca3b211-87a2-4adf-b086-e38970664646",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{public-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"payment_config_key\": \"{{coinbase-config-key}}\",\r\n    \"external_transaction_id\": \"{{coinbase-external-transaction-id}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/payment/confirm",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"payment",
+										"confirm"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm Payment Success [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "4736147d-c114-461f-b991-997588ebc9d1",
+										"exec": [
+											"pm.test(\"Response code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Checkout Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(pm.environment.get(\"coinbase-external-transaction-id\"));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "a900dfd9-6ce0-4133-b42a-01f2ac5ac6fa",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"payment_config_key\": \"{{coinbase-config-key}}\",\r\n    \"external_transaction_id\": \"{{coinbase-external-transaction-id}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/payment/confirm",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"payment",
+										"confirm"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Webhook Success [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "8aeaf448-0d88-4df1-a2f5-1373890ad1ec",
+										"exec": [
+											"pm.test(\"Response code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"attempt_number\": 1,\r\n \"event\": {\r\n  \"api_version\": \"2018-03-22\",\r\n  \"created_at\": \"2020-06-01T19:43:19Z\",\r\n  \"data\": {\r\n   \"code\": \"AAAAAAAA\",\r\n   \"id\": \"{{coinbase-external-transaction-id}}\",\r\n   \"resource\": \"charge\",\r\n   \"name\": \"The Sovereign Individual\",\r\n   \"description\": \"Mastering the Transition to the Information Age\",\r\n   \"hosted_url\": \"https://commerce.coinbase.com/charges/AAAAAAAA\",\r\n   \"created_at\": \"2018-01-01T00:00:00Z\",\r\n   \"confirmed_at\": \"2018-01-01T00:40:00Z\",\r\n   \"expires_at\": \"2018-01-01T01:00:00Z\",\r\n   \"support_email\": \"test@test.test\",\r\n   \"timeline\": [\r\n    {\r\n     \"time\": \"2018-01-01T00:00:00Z\",\r\n     \"status\": \"NEW\"\r\n    },\r\n    {\r\n     \"status\": \"PENDING\",\r\n     \"payment\": {\r\n      \"network\": \"ethereum\",\r\n      \"transaction_id\": \"0x0000000000000000000000000000000000000000000000000000000000000000\"\r\n     },\r\n     \"time\": \"2018-01-01T00:30:00Z\"\r\n    },\r\n    {\r\n     \"status\": \"COMPLETED\",\r\n     \"payment\": {\r\n      \"network\": \"ethereum\",\r\n      \"transaction_id\": \"0x0000000000000000000000000000000000000000000000000000000000000000\"\r\n     },\r\n     \"time\": \"2018-01-01T00:40:00Z\"\r\n    }\r\n   ],\r\n   \"metadata\": {},\r\n   \"pricing\": {\r\n    \"local\": {\r\n     \"amount\": \"100.00\",\r\n     \"currency\": \"USD\"\r\n    },\r\n    \"bitcoin\": {\r\n     \"amount\": \"1.00000000\",\r\n     \"currency\": \"BTC\"\r\n    },\r\n    \"ethereum\": {\r\n     \"amount\": \"10.000000000\",\r\n     \"currency\": \"ETH\"\r\n    },\r\n    \"usdc\": {\r\n     \"amount\": \"10.000000\",\r\n     \"currency\": \"USDC\"\r\n    }\r\n   },\r\n   \"pricing_type\": \"fixed_price\",\r\n   \"payments\": [\r\n    {\r\n     \"network\": \"ethereum\",\r\n     \"transaction_id\": \"0x0000000000000000000000000000000000000000000000000000000000000000\",\r\n     \"status\": \"CONFIRMED\",\r\n     \"detected_at\": \"2018-01-01T00:30:00Z\",\r\n     \"value\": {\r\n      \"local\": {\r\n       \"amount\": \"100.0\",\r\n       \"currency\": \"USD\"\r\n      },\r\n      \"crypto\": {\r\n       \"amount\": \"10.00\",\r\n       \"currency\": \"ETH\"\r\n      }\r\n     },\r\n     \"block\": {\r\n      \"height\": 100,\r\n      \"hash\": \"0x0000000000000000000000000000000000000000000000000000000000000000\",\r\n      \"confirmations_accumulated\": 8,\r\n      \"confirmations_required\": 2\r\n     }\r\n    }\r\n   ],\r\n   \"addresses\": {\r\n    \"bitcoin\": \"1000000000000000000000000000000000\",\r\n    \"ethereum\": \"0x0000000000000000000000000000000000000000\",\r\n    \"usdc\": \"0x0000000000000000000000000000000000000000\"\r\n   }\r\n  },\r\n  \"id\": \"677035f9-3b27-42c5-a98d-3629bf0c7465\",\r\n  \"resource\": \"event\",\r\n  \"type\": \"charge:failed\"\r\n },\r\n \"id\": \"7fe8e4e8-95ca-43b2-8c57-b0ae35efee8a\",\r\n \"scheduled_for\": \"2020-06-01T19:43:19Z\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{uri}}/webhook/coinbase?key={{coinbase-config-key}}",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"webhook",
+										"coinbase"
+									],
+									"query": [
+										{
+											"key": "key",
+											"value": "{{coinbase-config-key}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Successful Receipts Success [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "54b9c5c5-a873-44fb-98b8-b83a8025018b",
+										"exec": [
+											"pm.test(\"Response code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Successful Receipt for PAYPAL\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include('successful_receipts');\r",
+											"    pm.expect(pm.response.text()).to.include('external_transaction_id');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Receipt contains correct transaction id for PAYPAL\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include(pm.environment.get(\"paypal-external-transaction-id\"));\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{public-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{uri}}/receipt?product_id={{product-id}}",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"receipt"
+									],
+									"query": [
+										{
+											"key": "product_id",
+											"value": "{{product-id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Product Success [200]",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "cf7bd915-268f-436b-b78f-4d8b91b1dde0",
+										"exec": [
+											"pm.test(\"Response code is OK\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains Deleted Product Id\", function () {\r",
+											"    pm.expect(pm.response.text()).to.include('product_id');\r",
+											"    pm.expect(pm.response.text()).to.include(pm.environment.get(\"product-id\"));\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{admin-auth-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{uri}}/product?product_id={{product-id}}",
+									"host": [
+										"{{uri}}"
+									],
+									"path": [
+										"product"
+									],
+									"query": [
+										{
+											"key": "product_id",
+											"value": "{{product-id}}"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Subscription",
+			"item": [
+				{
+					"name": "Create Subscription Success [201]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fd98d4d9-d7eb-4453-891b-deeaadcc7a02",
+								"exec": [
+									"pm.environment.set(\"subscription-id\", pm.response.json().subscription_id);\r",
+									"\r",
+									"pm.test(\"Response code is CREATED\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{public-auth-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"payment_config_key\": \"{{stripe-config-key}}\",\r\n    \"payload\": {\r\n        \"data\": \"{{subscription-data}}\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{uri}}/subscription",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"subscription"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Subscriptions Success [200]",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d777a914-bfbc-4500-a71c-4b29f311975e",
+								"exec": [
+									"pm.test(\"Response code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains Created Subscription Id\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(pm.environment.get(\"subscription-id\"));\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{public-auth-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{uri}}/subscription/me",
+							"host": [
+								"{{uri}}"
+							],
+							"path": [
+								"subscription",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

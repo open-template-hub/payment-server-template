@@ -2,18 +2,11 @@
  * @description holds token service
  */
 
-import { TokenExpiredError, verify } from 'jsonwebtoken';
-import { ResponseCode } from '../util/constant';
+import { verify } from "jsonwebtoken";
 
-export const verifyAccessToken = async (accessToken) => {
- try {
-  return verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
- } catch (e) {
-  if (e instanceof TokenExpiredError) {
-   e.responseCode = ResponseCode.UNAUTHORIZED;
-  } else {
-   e.responseCode = ResponseCode.FORBIDDEN;
-  }
-  throw e;
- }
-};
+export class TokenService {
+  verifyAccessToken = async (accessToken: string) => {
+    const accessTokenSecret: string = process.env.ACCESS_TOKEN_SECRET as string;
+    return verify(accessToken, accessTokenSecret);
+  };
+}

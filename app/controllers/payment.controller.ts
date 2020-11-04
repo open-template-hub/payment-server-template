@@ -6,23 +6,25 @@ import { PaymentConfigRepository } from "../repository/payment-config.repository
 import { TransactionHistoryRepository } from "../repository/transaction-history.repository";
 import { PaymentWrapper } from "../wrappers/payment.wrapper";
 import { ProductRepository } from "../repository/product.repository";
+import { MongoDbProvider } from "../providers/mongo.provider";
+import { PostgreSqlProvider } from "../providers/postgre.provider";
 
 export const initPayment = async (
-  dbProviders,
-  username,
-  paymentConfigKey,
-  product_id,
-  quantity
+  mongodb_provider: MongoDbProvider,
+  username: string,
+  payment_config_key: string,
+  product_id: string,
+  quantity: number
 ) => {
   let paymentSession = null;
 
   try {
     const paymentConfigRepository = await new PaymentConfigRepository().initialize(
-      dbProviders.mongoDbProvider.conn
+      mongodb_provider.getConnection()
     );
 
     let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
-      paymentConfigKey
+      payment_config_key
     );
 
     if (paymentConfig === null)
@@ -31,7 +33,7 @@ export const initPayment = async (
     const paymentWrapper = new PaymentWrapper(paymentConfig.payload.method);
 
     const productRepository = await new ProductRepository().initialize(
-      dbProviders.mongoDbProvider.conn
+      mongodb_provider.getConnection()
     );
 
     let product: any = await productRepository.getProductByProductId(
@@ -40,7 +42,7 @@ export const initPayment = async (
     if (product === null) throw new Error("Product can not be found");
 
     let external_transaction = await paymentWrapper.init(
-      dbProviders.mongoDbProvider.conn,
+      mongodb_provider.getConnection(),
       paymentConfig,
       product,
       quantity
@@ -49,11 +51,11 @@ export const initPayment = async (
       throw new Error("Payment can not be initiated");
 
     const transactionHistoryRepository = await new TransactionHistoryRepository().initialize(
-      dbProviders.mongoDbProvider.conn
+      mongodb_provider.getConnection()
     );
 
     await transactionHistoryRepository.createTransactionHistory(
-      paymentConfigKey,
+      payment_config_key,
       username,
       product_id,
       external_transaction.id,
@@ -77,18 +79,18 @@ export const initPayment = async (
 };
 
 export const initPaymentWithExternalTransactionId = async (
-  dbProviders,
-  username,
-  paymentConfigKey,
-  product_id,
-  external_transaction_id
+  mongodb_provider: MongoDbProvider,
+  username: string,
+  payment_config_key: string,
+  product_id: string,
+  external_transaction_id: string
 ) => {
   try {
     const transactionHistoryRepository = await new TransactionHistoryRepository().initialize(
-      dbProviders.mongoDbProvider.conn
+      mongodb_provider.getConnection()
     );
     await transactionHistoryRepository.createTransactionHistory(
-      paymentConfigKey,
+      payment_config_key,
       username,
       product_id,
       external_transaction_id,
@@ -104,17 +106,18 @@ export const initPaymentWithExternalTransactionId = async (
 };
 
 export const refreshTransactionHistory = async (
-  dbProviders,
-  paymentConfigKey,
-  external_transaction_id
+  mongodb_provider: MongoDbProvider,
+  postgresql_provider: PostgreSqlProvider,
+  payment_config_key: string,
+  external_transaction_id: string
 ) => {
   try {
     const paymentConfigRepository = await new PaymentConfigRepository().initialize(
-      dbProviders.mongoDbProvider.conn
+      mongodb_provider.getConnection()
     );
 
-    let paymentConfig: any = paymentConfigRepository.getPaymentConfigByKey(
-      paymentConfigKey
+    let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
+      payment_config_key
     );
 
     if (paymentConfig === null)
@@ -127,7 +130,7 @@ export const refreshTransactionHistory = async (
     );
 
     const transactionHistoryRepository = await new TransactionHistoryRepository().initialize(
-      dbProviders.mongoDbProvider.conn
+      mongodb_provider.getConnection()
     );
 
     const updated_transaction_history = await transactionHistoryRepository.updateTransactionHistory(
@@ -137,11 +140,39 @@ export const refreshTransactionHistory = async (
     );
 
     await paymentWrapper.receiptStatusUpdate(
-      dbProviders.postgreSqlProvider,
+      postgresql_provider,
       paymentConfig,
       external_transaction_id,
       updated_transaction_history
     );
+  } catch (error) {
+    console.error("> refreshTransactionHistory error: ", error);
+    throw error;
+  }
+};
+
+// only for admin usage, test purpose
+export const confirmPayment = async (
+  mongodb_provider: MongoDbProvider,
+  payment_config_key: string,
+  external_transaction_id: string
+) => {
+  try {
+    const paymentConfigRepository = await new PaymentConfigRepository().initialize(
+      mongodb_provider.getConnection()
+    );
+
+    let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
+      payment_config_key
+    );
+
+    if (paymentConfig === null)
+      throw new Error("Payment method can not be found");
+    const paymentWrapper = new PaymentWrapper(paymentConfig.payload.method);
+
+    await paymentWrapper.confirmPayment(paymentConfig, external_transaction_id);
+
+    return external_transaction_id;
   } catch (error) {
     console.error("> refreshTransactionHistory error: ", error);
     throw error;

@@ -1,14 +1,28 @@
-import monitorRouter from "./monitor.route";
-import paymentRouter from "./payment.route";
-import productRouter from "./product.route";
-import webhookRouter from "./webhook.route";
-import receiptRouter from "./receipt.route";
-import subscriptionRouter from './subscription.route';
+import {
+  router as productRouter,
+  adminRoutes as productAdminRoutes,
+} from "./product.route";
+import {
+  router as webhookRouter,
+  publicRoutes as webhookPublicRoutes,
+} from "./webhook.route";
+import { router as receiptRouter } from "./receipt.route";
+import {
+  router as paymentRouter,
+  adminRoutes as paymentAdminRoutes,
+} from "./payment.route";
+import {
+  router as monitorRouter,
+  publicRoutes as monitorPublicRoutes,
+} from "./monitor.route";
+import { preload } from "../services/preload.service";
+import { router as subscriptionRouter } from "./subscription.route";
 import { Request, Response } from "express";
 import { handle } from "../services/error-handler.service";
 import { MongoDbProvider } from "../providers/mongo.provider";
 import { PostgreSqlProvider } from "../providers/postgre.provider";
 import { EncryptionService } from "../services/encryption.service";
+import { context } from "../context";
 
 const subRoutes = {
   root: "/",
@@ -21,16 +35,18 @@ const subRoutes = {
 };
 
 export module Routes {
-  export function mount(app) {
-    const mongoDbProvider = new MongoDbProvider();
-    const postgreSqlProvider = new PostgreSqlProvider();
+  const mongodb_provider = new MongoDbProvider();
+  const postgresql_provider = new PostgreSqlProvider();
+  var publicRoutes: string[] = [];
+  var adminRoutes: string[] = [];
 
-    postgreSqlProvider
-      .preload()
-      .then(() => console.log("PostgreSQL preload completed."));
-    mongoDbProvider
-      .preload()
-      .then(() => console.log("MongoDB preload completed."));
+  export function mount(app) {
+    preload(mongodb_provider, postgresql_provider).then(() =>
+      console.log("DB preloads are completed.")
+    );
+
+    publicRoutes = [...monitorPublicRoutes, ...webhookPublicRoutes];
+    adminRoutes = [...productAdminRoutes, ...paymentAdminRoutes];
 
     const responseInterceptor = (req, res, next) => {
       var originalSend = res.send;
@@ -56,11 +72,13 @@ export module Routes {
     app.all("/*", async (req: Request, res: Response, next) => {
       try {
         // create context
-        let dbProviders = {
-          mongoDbProvider: mongoDbProvider,
-          postgreSqlProvider: postgreSqlProvider,
-        };
-        res.locals.ctx = { dbProviders };
+        res.locals.ctx = await context(
+          req,
+          mongodb_provider,
+          postgresql_provider,
+          publicRoutes,
+          adminRoutes
+        );
 
         next();
       } catch (e) {

@@ -7,8 +7,11 @@ import {
   getReceiptWithExternalTransactionId,
 } from "../repository/receipt.repository";
 import { CurrencyCode, ReceiptStatus } from "../util/constant";
+import { confirmed_external_transaction_ids } from "../store";
 
 export class StripePayment implements PaymentMethod {
+  private readonly SUCCESS_STATUS = "succeeded";
+
   init = async (dbConn, paymentConfig, product, quantity) => {
     let stripe = new Stripe(
       paymentConfig.payload.secret,
@@ -58,7 +61,29 @@ export class StripePayment implements PaymentMethod {
     const intent = await stripe.paymentIntents.retrieve(
       external_transaction_id
     );
+    const isRegression = process.env.REGRESSION || false;
+
+    console.log("Stripe.getTransactionHistory > isRegression: ", isRegression);
+
+    if (
+      confirmed_external_transaction_ids.indexOf(
+        paymentConfig.payload.method + "_" + external_transaction_id
+      ) !== -1 &&
+      isRegression
+    ) {
+      console.log(
+        "Stripe.getTransactionHistory > Setting stripe status to success"
+      );
+      intent.status = this.SUCCESS_STATUS;
+    }
     return intent;
+  };
+
+  // only for admin usage, test purpose
+  confirmPayment = async (paymentConfig, external_transaction_id) => {
+    confirmed_external_transaction_ids.push(
+      paymentConfig.payload.method + "_" + external_transaction_id
+    );
   };
 
   receiptStatusUpdate = async (
@@ -71,7 +96,7 @@ export class StripePayment implements PaymentMethod {
       updated_transaction_history &&
       updated_transaction_history.payload.transaction_history &&
       updated_transaction_history.payload.transaction_history.status ===
-        "succeeded"
+        this.SUCCESS_STATUS
     ) {
       let created = await getReceiptWithExternalTransactionId(
         dbConn,
@@ -80,6 +105,7 @@ export class StripePayment implements PaymentMethod {
         updated_transaction_history.product_id,
         paymentConfig.key
       );
+
       if (!created) {
         let amount = this.calculateAmount(
           updated_transaction_history.payload.transaction_history
@@ -136,7 +162,11 @@ export class StripePayment implements PaymentMethod {
       const productRepository = await new ProductRepository().initialize(
         dbConn
       );
-      await productRepository.updateProductPayload(product.productId, "payload.stripe",product.payload.stripe);
+      await productRepository.updateProductPayload(
+        product.productId,
+        "payload.stripe",
+        product.payload.stripe
+      );
       return price.id;
     } else {
       return product.payload.stripe.external_price_id;

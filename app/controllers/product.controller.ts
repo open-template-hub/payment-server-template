@@ -1,17 +1,18 @@
 import { PaymentMethodEnum, PaymentWrapper } from "../wrappers/payment.wrapper";
 import { ProductRepository } from "../repository/product.repository";
+import { MongoDbProvider } from "../providers/mongo.provider";
 
 /**
  * @description holds crud operations for the product entity
  */
 
 export const createProduct = async (
-  dbProviders,
-  product_id,
-  name,
-  description,
-  amount,
-  currency
+  mongodb_provider: MongoDbProvider,
+  product_id: string,
+  name: string,
+  description: string,
+  amount: number,
+  currency: string
 ) => {
   const stripePaymentWrapper = new PaymentWrapper(PaymentMethodEnum.Stripe);
   const coinbasePaymentWrapper = new PaymentWrapper(PaymentMethodEnum.Coinbase);
@@ -27,7 +28,7 @@ export const createProduct = async (
 
   try {
     const productRepository = await new ProductRepository().initialize(
-      dbProviders.mongoDbProvider.conn
+      mongodb_provider.getConnection()
     );
 
     return await productRepository.createProductDocument(
@@ -40,4 +41,23 @@ export const createProduct = async (
     console.error("> createProductDocument error: ", error);
     throw error;
   }
-};
+}
+
+export const deleteProduct = async (
+  mongodb_provider: MongoDbProvider,
+  product_id: string
+) => {
+  try {
+    const productRepository = await new ProductRepository().initialize(
+      mongodb_provider.getConnection()
+    );
+
+    return await productRepository.deleteProductDocument(
+      product_id
+    );
+  } catch (error) {
+    console.error("> createProductDocument error: ", error);
+    throw error;
+  }
+}
+
