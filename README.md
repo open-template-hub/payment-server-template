@@ -69,6 +69,8 @@ RESPONSE_ENCRYPTION_SECRET={Response Encryption Secret}
 MONGODB_CONNECTION_LIMIT={MongoDB Open Connection Limit}
 
 POSTGRESQL_CONNECTION_LIMIT={PostgreSQL Open Connection Limit}
+
+REGRESSION={Set true if Start Purpose Is Regression}
 ```
 
 ### Example Product:
