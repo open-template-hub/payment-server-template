@@ -1,5 +1,5 @@
 import { Pool, QueryResult } from "pg";
-import { Builder } from "../util/builder";
+import { Builder } from "../util/builder.util";
 import { debugLog } from '../services/debug-log.service';
 
 export class PostgreSqlProvider {

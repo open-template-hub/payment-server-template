@@ -23,6 +23,7 @@ import { MongoDbProvider } from "../providers/mongo.provider";
 import { PostgreSqlProvider } from "../providers/postgre.provider";
 import { EncryptionService } from "../services/encryption.service";
 import { context } from "../context";
+import * as Path from "path";
 
 const subRoutes = {
   root: "/",
@@ -40,13 +41,32 @@ export module Routes {
   var publicRoutes: string[] = [];
   var adminRoutes: string[] = [];
 
+  function populateRoutes(mainRoute, subRoutes) {
+    var populated = Array<string>();
+    for (var i = 0; i < subRoutes.length; i++) {
+      const s = subRoutes[i];
+      populated.push(mainRoute + (s === '/' ? "" : s));
+    }
+
+    return populated;
+  }
+
   export function mount(app) {
     preload(mongodb_provider, postgresql_provider).then(() =>
       console.log("DB preloads are completed.")
     );
 
-    publicRoutes = [...monitorPublicRoutes, ...webhookPublicRoutes];
-    adminRoutes = [...productAdminRoutes, ...paymentAdminRoutes];
+    publicRoutes = [
+      ...populateRoutes(subRoutes.monitor, monitorPublicRoutes),
+      ...populateRoutes(subRoutes.webhook, webhookPublicRoutes),
+    ];
+    console.log("Public Routes: ", publicRoutes);
+
+    adminRoutes = [
+      ...populateRoutes(subRoutes.product, productAdminRoutes),
+      ...populateRoutes(subRoutes.payment, paymentAdminRoutes),
+    ];
+    console.log("Admin Routes: ", adminRoutes);
 
     const responseInterceptor = (req, res, next) => {
       var originalSend = res.send;
@@ -82,6 +102,7 @@ export module Routes {
 
         next();
       } catch (e) {
+        console.log("error: ", e);
         let error = handle(e);
         res.status(error.code).json({ message: error.message });
       }

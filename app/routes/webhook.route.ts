@@ -4,12 +4,12 @@
 
 import Router from "express-promise-router";
 import { Request, Response } from "express";
-import { ResponseCode } from "../util/constant";
+import { ResponseCode } from "../constant";
 import { refreshTransactionHistory } from "../controllers/payment.controller";
 import { Context } from "../models/context.model";
 
 const subRoutes = {
-  root: "/",
+  root: '/',
   coinbase: "/coinbase",
   stripe: "/stripe",
   paypal: "/paypal",

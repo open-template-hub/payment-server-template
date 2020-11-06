@@ -1,4 +1,4 @@
-import { ReceiptStatus } from '../util/constant';
+import { ReceiptStatus } from '../constant';
 
 export const getReceiptWithExternalTransactionId = async (db, username, external_transaction_id, product_id, payment_config_key) => {
  let res;

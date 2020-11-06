@@ -1,6 +1,6 @@
 import Router from 'express-promise-router';
 import { Request, Response } from 'express';
-import { ResponseCode } from '../util/constant';
+import { ResponseCode } from '../constant';
 
 const subRoutes = {
  root: '/',

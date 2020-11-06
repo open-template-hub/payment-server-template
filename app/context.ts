@@ -8,7 +8,7 @@ import { Context } from "./models/context.model";
 import { PostgreSqlProvider } from "./providers/postgre.provider";
 import { TokenService } from "./services/token.service";
 import { UserRole } from "./enums/user-role.enum";
-import { ErrorMessage } from "./util/constant";
+import { ErrorMessage } from "./constant";
 
 export const context = async (
   req: any,
@@ -24,19 +24,19 @@ export const context = async (
   let publicPath = false;
   let adminPath = false;
 
-  for (const path of publicPaths) {
-    if (req.path.endsWith(path)) {
+  publicPaths.forEach(p => {
+    if (req.path === p) {
       publicPath = true;
-      break;
+      return;
     }
-  }
+  });
 
-  for (const path of adminPaths) {
-    if (req.path.endsWith(path)) {
+  adminPaths.forEach(p => {
+    if (req.path === p) {
       adminPath = true;
-      break;
+      return;
     }
-  }
+  });
 
   if (!publicPath) {
     currentUser = await authService.getCurrentUser(req);

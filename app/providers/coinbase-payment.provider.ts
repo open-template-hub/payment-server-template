@@ -5,7 +5,7 @@ import {
   createReceipt,
   getReceiptWithExternalTransactionId,
 } from "../repository/receipt.repository";
-import { CurrencyCode, ReceiptStatus } from "../util/constant";
+import { CurrencyCode, ReceiptStatus } from "../constant";
 import { confirmed_external_transaction_ids } from "../store";
 
 export class CoinbasePayment implements PaymentMethod {

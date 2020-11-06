@@ -2,7 +2,7 @@
  * Error Handler
  */
 
-import { ErrorMessage, ResponseCode } from '../util/constant';
+import { ErrorMessage, ResponseCode } from '../constant';
 
 export const handle = (exception) => {
  let response = {

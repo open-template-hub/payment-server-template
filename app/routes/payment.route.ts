@@ -2,21 +2,21 @@
  * @description holds payment routes
  */
 
-import Router from "express-promise-router";
-import { Request, Response } from "express";
-import { ErrorMessage, ResponseCode } from "../util/constant";
+import Router from 'express-promise-router';
+import { Request, Response } from 'express';
+import { ResponseCode } from '../constant';
 import {
   confirmPayment,
   initPayment,
   initPaymentWithExternalTransactionId,
-} from "../controllers/payment.controller";
-import { Context } from "../models/context.model";
+} from '../controllers/payment.controller';
+import { Context } from '../models/context.model';
 
 const subRoutes = {
-  root: "/",
-  verify: "/verify",
-  initWithExternalTransactionId: "/init-with-external-transaction-id",
-  confirm: "/confirm",
+  root: '/',
+  verify: '/verify',
+  initWithExternalTransactionId: '/init-with-external-transaction-id',
+  confirm: '/confirm',
 };
 
 export const adminRoutes = [

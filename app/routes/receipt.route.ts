@@ -2,14 +2,14 @@
  * @description holds product routes
  */
 
-import Router from "express-promise-router";
-import { Request, Response } from "express";
-import { ResponseCode } from "../util/constant";
-import { getSuccesfulReceipts } from "../controllers/receipt.controller";
-import { Context } from "../models/context.model";
+import Router from 'express-promise-router';
+import { Request, Response } from 'express';
+import { ResponseCode } from '../constant';
+import { getSuccesfulReceipts } from '../controllers/receipt.controller';
+import { Context } from '../models/context.model';
 
 const subRoutes = {
-  root: "/",
+  root: '/',
 };
 
 export const router = Router();

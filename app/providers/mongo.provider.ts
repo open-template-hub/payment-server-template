@@ -3,7 +3,7 @@
  */
 
 import mongoose, { Connection } from "mongoose";
-import { Builder } from "../util/builder";
+import { Builder } from "../util/builder.util";
 
 export class MongoDbProvider {
   // mongoose connection
