@@ -15,15 +15,14 @@ import {
   router as monitorRouter,
   publicRoutes as monitorPublicRoutes,
 } from './monitor.route';
-import { preload } from '../services/preload.service';
+import { preload } from '../util/preload.util';
 import { router as subscriptionRouter } from './subscription.route';
 import { Request, Response } from 'express';
-import { handle } from '../services/error-handler.service';
+import { handle } from '../util/error-handler.util';
 import { MongoDbProvider } from '../providers/mongo.provider';
 import { PostgreSqlProvider } from '../providers/postgre.provider';
-import { EncryptionService } from '../services/encryption.service';
+import { EncryptionService } from '../util/encryption.util';
 import { context } from '../context';
-import * as Path from 'path';
 
 const subRoutes = {
   root: '/',

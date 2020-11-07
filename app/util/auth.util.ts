@@ -3,7 +3,7 @@
  */
 
 import { UserRole } from '../enums/user-role.enum';
-import { TokenService } from './token.service';
+import { TokenService } from './token.util';
 
 export class AuthService {
   private adminRoles = [UserRole.ADMIN];

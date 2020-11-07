@@ -2,11 +2,11 @@
  * @description holds context
  */
 
-import { AuthService } from './services/auth.service';
+import { AuthService } from './util/auth.util';
 import { MongoDbProvider } from './providers/mongo.provider';
 import { Context } from './models/context.model';
 import { PostgreSqlProvider } from './providers/postgre.provider';
-import { TokenService } from './services/token.service';
+import { TokenService } from './util/token.util';
 import { UserRole } from './enums/user-role.enum';
 import { ErrorMessage } from './constant';
 

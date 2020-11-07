@@ -6,8 +6,8 @@ import cors from 'cors';
 import { Routes } from './app/routes/index.route';
 import express = require('express');
 import bodyParser = require('body-parser');
-import { debugLog } from './app/services/debug-log.service';
-import { configureCronJobs } from './app/services/cron.service';
+import { debugLog } from './app/util/debug-log.util';
+import { configureCronJobs } from './app/util/cron.util';
 
 const env = dotenv.config();
 debugLog(env.parsed);
