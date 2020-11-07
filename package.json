@@ -2,7 +2,7 @@
  "name": "payment-server",
  "version": "2.1.1",
  "description": "Payment Server Template",
- "main": "paymentServer.ts",
+ "main": "payment-server.main.ts",
  "license": "MIT",
  "homepage": "https://github.com/open-template-hub/payment-server-template#readme",
  "repository": {
@@ -10,25 +10,29 @@
   "url": "git+https://github.com/open-template-hub/payment-server-template.git"
  },
  "scripts": {
-  "start": "ts-node paymentServer.ts",
-  "devStart": "nodemon --exec ts-node paymentServer.ts"
+  "start": "ts-node payment-server.main.ts",
+  "devStart": "nodemon --exec DEBUG=* ts-node payment-server.main.ts"
  },
  "dependencies": {
   "@paypal/checkout-server-sdk": "^1.0.2",
   "@types/crypto-js": "^3.1.47",
+  "@types/debug": "^4.1.5",
   "@types/dotenv": "^8.2.0",
   "@types/express": "^4.17.6",
   "@types/mongoose": "^5.5.34",
+  "@types/node-cron": "^2.0.3",
   "@types/uuid": "^8.0.0",
   "axios": "^0.19.2",
   "body-parser": "^1.19.0",
   "cors": "^2.8.5",
   "crypto-js": "^4.0.0",
+  "debug": "^4.1.1",
   "dotenv": "^8.2.0",
   "express": "^4.17.1",
   "express-promise-router": "^3.0.3",
   "jsonwebtoken": "^8.5.1",
   "mongoose": "^5.8.2",
+  "node-cron": "^2.0.3",
   "pg": "^8.2.1",
   "request": "^2.88.2",
   "stripe": "^8.56.0",
