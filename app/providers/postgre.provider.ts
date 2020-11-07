@@ -1,5 +1,5 @@
-import { Pool, QueryResult } from "pg";
-import { Builder } from "../util/builder.util";
+import { Pool, QueryResult } from 'pg';
+import { Builder } from '../util/builder.util';
 import { debugLog } from '../services/debug-log.service';
 
 export class PostgreSqlProvider {
@@ -8,7 +8,7 @@ export class PostgreSqlProvider {
 
   builder = new Builder();
 
-  preloadTablesTemplatePath = "./assets/sql/preload.tables.psql";
+  preloadTablesTemplatePath = './assets/sql/preload.tables.psql';
 
   preload = async () => {
     this.currentPoolLimit = process.env.POSTGRESQL_CONNECTION_LIMIT
@@ -18,7 +18,7 @@ export class PostgreSqlProvider {
     // Creating Connection Pool
     this.connectionPool = new Pool({
       connectionString: process.env.DATABASE_URL,
-      application_name: "PaymentServer",
+      application_name: 'PaymentServer',
       max: this.currentPoolLimit,
       ssl: {
         rejectUnauthorized: false,
@@ -45,7 +45,7 @@ export class PostgreSqlProvider {
             console.error(err);
             reject(err);
           } else {
-            debugLog("executed query", {
+            debugLog('executed query', {
               sql: text,
               duration: Date.now() - start,
               result: res,

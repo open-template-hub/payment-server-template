@@ -1,15 +1,15 @@
-import { PaymentMethod } from "../models/payment-method.model";
-import { PaymentMethodEnum } from "../wrappers/payment.wrapper";
-import axios from "axios";
+import { PaymentMethod } from '../models/payment-method.model';
+import { PaymentMethodEnum } from '../wrappers/payment.wrapper';
+import axios from 'axios';
 import {
   createReceipt,
   getReceiptWithExternalTransactionId,
-} from "../repository/receipt.repository";
-import { CurrencyCode, ReceiptStatus } from "../constant";
-import { confirmed_external_transaction_ids } from "../store";
+} from '../repository/receipt.repository';
+import { CurrencyCode, ReceiptStatus } from '../constant';
+import { confirmed_external_transaction_ids } from '../store';
 
 export class CoinbasePayment implements PaymentMethod {
-  private readonly SUCCESS_STATUS = "CONFIRMED";
+  private readonly SUCCESS_STATUS = 'CONFIRMED';
 
   init = async (dbConn, paymentConfig, product, quantity) => {
     const charge = {
@@ -19,15 +19,15 @@ export class CoinbasePayment implements PaymentMethod {
         amount: product.payload.coinbase.amount * quantity,
         currency: product.payload.coinbase.currency,
       },
-      pricing_type: "fixed_price",
+      pricing_type: 'fixed_price',
       redirect_url: paymentConfig.payload.success_url,
       cancel_url: paymentConfig.payload.cancel_url,
     };
 
     const headers = {
-      "Content-Type": "application/json",
-      "X-CC-Api-Key": paymentConfig.payload.secret,
-      "X-CC-Version": "2018-03-22",
+      'Content-Type': 'application/json',
+      'X-CC-Api-Key': paymentConfig.payload.secret,
+      'X-CC-Version': '2018-03-22',
     };
 
     const response = await axios.post<any>(
@@ -49,14 +49,14 @@ export class CoinbasePayment implements PaymentMethod {
   // only for admin usage, test purpose
   confirmPayment = async (paymentConfig, external_transaction_id) => {
     confirmed_external_transaction_ids.push(
-      paymentConfig.payload.method + "_" + external_transaction_id
+      paymentConfig.payload.method + '_' + external_transaction_id
     );
   };
 
   getTransactionHistory = async (paymentConfig, external_transaction_id) => {
     const headers = {
-      "X-CC-Api-Key": paymentConfig.payload.secret,
-      "X-CC-Version": "2018-03-22",
+      'X-CC-Api-Key': paymentConfig.payload.secret,
+      'X-CC-Version': '2018-03-22',
     };
 
     const response = await axios.get<any>(
@@ -67,7 +67,7 @@ export class CoinbasePayment implements PaymentMethod {
     const isRegression = process.env.REGRESSION || false;
 
     console.log(
-      "Coinbase.getTransactionHistory > isRegression: ",
+      'Coinbase.getTransactionHistory > isRegression: ',
       isRegression
     );
 
@@ -75,12 +75,12 @@ export class CoinbasePayment implements PaymentMethod {
 
     if (
       confirmed_external_transaction_ids.indexOf(
-        paymentConfig.payload.method + "_" + external_transaction_id
+        paymentConfig.payload.method + '_' + external_transaction_id
       ) !== -1 &&
       isRegression
     ) {
       console.log(
-        "Coinbase.getTransactionHistory > Setting stripe status to success"
+        'Coinbase.getTransactionHistory > Setting stripe status to success'
       );
       history.payments.push({
         status: this.SUCCESS_STATUS,
@@ -151,7 +151,7 @@ export class CoinbasePayment implements PaymentMethod {
   };
 
   currencyCodeMap = (currency_code) => {
-    if (currency_code === "USD") {
+    if (currency_code === 'USD') {
       return CurrencyCode.USD;
     }
     return currency_code;

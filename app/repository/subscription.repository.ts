@@ -1,4 +1,4 @@
-import { SubscriptionDataModel } from "../data/subscription.data";
+import { SubscriptionDataModel } from '../data/subscription.data';
 
 export class SubscriptionRepository {
   private dataModel: any = null;
@@ -6,7 +6,7 @@ export class SubscriptionRepository {
   initialize = async (connection: any) => {
     this.dataModel = await new SubscriptionDataModel().getDataModel(connection);
     return this;
-  }
+  };
 
   createSubscription = async (subscription_id, key, username, payload) => {
     try {
@@ -17,10 +17,10 @@ export class SubscriptionRepository {
         payload,
       });
     } catch (error) {
-      console.error("> createSubscription error: ", error);
+      console.error('> createSubscription error: ', error);
       throw error;
     }
-  }
+  };
 
   getSubscription = async (subscription_id) => {
     try {
@@ -29,7 +29,7 @@ export class SubscriptionRepository {
       console.error('> getSubscription error: ', error);
       throw error;
     }
-  }
+  };
 
   getUserSubscriptions = async (username) => {
     try {
@@ -38,5 +38,5 @@ export class SubscriptionRepository {
       console.error('> getUserSubscriptions error: ', error);
       throw error;
     }
-  }
+  };
 }

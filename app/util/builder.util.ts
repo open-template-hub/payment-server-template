@@ -1,12 +1,12 @@
-import fs from "fs";
+import fs from 'fs';
 import { debugLog } from '../services/debug-log.service';
 
 export class Builder {
   buildTemplateFromFile = (filePath: string, params?: Map<string, string>) => {
-    var template = "";
+    var template = '';
 
     try {
-      template = fs.readFileSync(filePath, "utf-8");
+      template = fs.readFileSync(filePath, 'utf-8');
     } catch (err) {
       console.error(err);
     }
@@ -16,7 +16,7 @@ export class Builder {
         template = template.replace(key, value);
       });
     }
-    debugLog("Successfully build template: \n" + template);
+    debugLog('Successfully build template: \n' + template);
 
     return template;
   };
@@ -25,7 +25,7 @@ export class Builder {
     let generatedUrl = url;
     for (let i = 0; i < params.length; i++) {
       let param = params[i];
-      generatedUrl = generatedUrl.replace("{{" + i + "}}", param);
+      generatedUrl = generatedUrl.replace('{{' + i + '}}', param);
     }
     return generatedUrl;
   };

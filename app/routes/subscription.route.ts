@@ -46,7 +46,7 @@ router.get(subRoutes.root, async (req: Request, res: Response) => {
 router.get(subRoutes.me, async (req: Request, res: Response) => {
   // Get subscription with username
   const context = res.locals.ctx as Context;
-  
+
   let subscriptionSession = await getUserSubscriptions(
     context.mongodb_provider,
     context.username

@@ -1,16 +1,16 @@
-import { PaymentMethod } from "../models/payment-method.model";
-import Stripe from "stripe";
-import { ProductRepository } from "../repository/product.repository";
-import { PaymentMethodEnum } from "../wrappers/payment.wrapper";
+import { PaymentMethod } from '../models/payment-method.model';
+import Stripe from 'stripe';
+import { ProductRepository } from '../repository/product.repository';
+import { PaymentMethodEnum } from '../wrappers/payment.wrapper';
 import {
   createReceipt,
   getReceiptWithExternalTransactionId,
-} from "../repository/receipt.repository";
-import { CurrencyCode, ReceiptStatus } from "../constant";
-import { confirmed_external_transaction_ids } from "../store";
+} from '../repository/receipt.repository';
+import { CurrencyCode, ReceiptStatus } from '../constant';
+import { confirmed_external_transaction_ids } from '../store';
 
 export class StripePayment implements PaymentMethod {
-  private readonly SUCCESS_STATUS = "succeeded";
+  private readonly SUCCESS_STATUS = 'succeeded';
 
   init = async (dbConn, paymentConfig, product, quantity) => {
     let stripe = new Stripe(
@@ -63,16 +63,16 @@ export class StripePayment implements PaymentMethod {
     );
     const isRegression = process.env.REGRESSION || false;
 
-    console.log("Stripe.getTransactionHistory > isRegression: ", isRegression);
+    console.log('Stripe.getTransactionHistory > isRegression: ', isRegression);
 
     if (
       confirmed_external_transaction_ids.indexOf(
-        paymentConfig.payload.method + "_" + external_transaction_id
+        paymentConfig.payload.method + '_' + external_transaction_id
       ) !== -1 &&
       isRegression
     ) {
       console.log(
-        "Stripe.getTransactionHistory > Setting stripe status to success"
+        'Stripe.getTransactionHistory > Setting stripe status to success'
       );
       intent.status = this.SUCCESS_STATUS;
     }
@@ -82,7 +82,7 @@ export class StripePayment implements PaymentMethod {
   // only for admin usage, test purpose
   confirmPayment = async (paymentConfig, external_transaction_id) => {
     confirmed_external_transaction_ids.push(
-      paymentConfig.payload.method + "_" + external_transaction_id
+      paymentConfig.payload.method + '_' + external_transaction_id
     );
   };
 
@@ -135,7 +135,7 @@ export class StripePayment implements PaymentMethod {
   };
 
   currencyCodeMap = (currency_code) => {
-    if (currency_code === "usd") {
+    if (currency_code === 'usd') {
       return CurrencyCode.USD;
     }
     return currency_code;
@@ -164,7 +164,7 @@ export class StripePayment implements PaymentMethod {
       );
       await productRepository.updateProductPayload(
         product.productId,
-        "payload.stripe",
+        'payload.stripe',
         product.payload.stripe
       );
       return price.id;

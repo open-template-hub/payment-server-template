@@ -1,6 +1,6 @@
-import { UserRole } from "../enums/user-role.enum";
-import { MongoDbProvider } from "../providers/mongo.provider";
-import { PostgreSqlProvider } from "../providers/postgre.provider";
+import { UserRole } from '../enums/user-role.enum';
+import { MongoDbProvider } from '../providers/mongo.provider';
+import { PostgreSqlProvider } from '../providers/postgre.provider';
 
 export interface Context {
   mongodb_provider: MongoDbProvider;

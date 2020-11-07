@@ -1,14 +1,14 @@
-import { PaymentMethod } from "../models/payment-method.model";
-import { CoinbasePayment } from "../providers/coinbase-payment.provider";
-import { GooglePayment } from "../providers/google-payment.provider";
-import { PayPalPayment } from "../providers/paypal-payment.provider";
-import { StripePayment } from "../providers/stripe-payment.provider";
+import { PaymentMethod } from '../models/payment-method.model';
+import { CoinbasePayment } from '../providers/coinbase-payment.provider';
+import { GooglePayment } from '../providers/google-payment.provider';
+import { PayPalPayment } from '../providers/paypal-payment.provider';
+import { StripePayment } from '../providers/stripe-payment.provider';
 
 export enum PaymentMethodEnum {
-  Stripe = "stripe",
-  Coinbase = "coinbase",
-  Google = "google",
-  PayPal = "paypal",
+  Stripe = 'stripe',
+  Coinbase = 'coinbase',
+  Google = 'google',
+  PayPal = 'paypal',
 }
 
 export class PaymentWrapper implements PaymentMethod {

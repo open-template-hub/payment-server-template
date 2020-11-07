@@ -2,10 +2,10 @@
  * @description holds product data model
  */
 
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 export class ProductDataModel {
-  private readonly collectionName: string = "product";
+  private readonly collectionName: string = 'product';
   private dataSchema: mongoose.Schema;
 
   constructor() {

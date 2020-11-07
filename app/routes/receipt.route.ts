@@ -16,7 +16,7 @@ export const router = Router();
 
 router.get(subRoutes.root, async (req: Request, res: Response) => {
   const context = res.locals.ctx as Context;
-  
+
   const successful_receipts = await getSuccesfulReceipts(
     context.postgresql_provider,
     context.username,
@@ -27,4 +27,3 @@ router.get(subRoutes.root, async (req: Request, res: Response) => {
     .status(ResponseCode.OK)
     .json({ successful_receipts: successful_receipts });
 });
-

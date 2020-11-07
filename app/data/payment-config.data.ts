@@ -2,10 +2,10 @@
  * @description holds payment config data model
  */
 
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 export class PaymentConfigDataModel {
-  private readonly collectionName: string = "payment-config";
+  private readonly collectionName: string = 'payment-config';
   private dataSchema: mongoose.Schema;
 
   constructor() {

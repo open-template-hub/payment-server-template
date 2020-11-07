@@ -2,10 +2,10 @@
  * @description holds subscription data model
  */
 
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 export class SubscriptionDataModel {
-  private readonly collectionName: string = "subscription";
+  private readonly collectionName: string = 'subscription';
   private dataSchema: mongoose.Schema;
 
   constructor() {

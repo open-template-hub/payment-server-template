@@ -1,7 +1,7 @@
 /**
  * @description holds server main
  */
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 import cors from 'cors';
 import { Routes } from './app/routes/index.route';
 import express = require('express');
@@ -18,10 +18,10 @@ const app: express.Application = express();
 // public files
 app.use(express.static('public'));
 
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -29,9 +29,9 @@ app.use(cors());
 Routes.mount(app);
 
 // listen port
-const port: string = process.env.PORT || '4003' as string;
+const port: string = process.env.PORT || ('4003' as string);
 app.listen(port, () => {
- console.info('Payment Server is running on port', port);
+  console.info('Payment Server is running on port', port);
 });
 
 // cron

@@ -1,7 +1,7 @@
-import { PaymentConfigRepository } from "../repository/payment-config.repository";
-import { SubscriptionRepository } from "../repository/subscription.repository";
-import { v4 as uuidv4 } from "uuid";
-import { MongoDbProvider } from "../providers/mongo.provider";
+import { PaymentConfigRepository } from '../repository/payment-config.repository';
+import { SubscriptionRepository } from '../repository/subscription.repository';
+import { v4 as uuidv4 } from 'uuid';
+import { MongoDbProvider } from '../providers/mongo.provider';
 
 export const saveSubscription = async (
   mongodb_provider: MongoDbProvider,
@@ -19,7 +19,7 @@ export const saveSubscription = async (
     );
 
     if (paymentConfig === null)
-      throw new Error("Payment method can not be found");
+      throw new Error('Payment method can not be found');
 
     const subscriptionRepository = await new SubscriptionRepository().initialize(
       mongodb_provider.getConnection()
@@ -35,7 +35,7 @@ export const saveSubscription = async (
     );
     return subscription_id;
   } catch (error) {
-    console.error("> saveSubscription error: ", error);
+    console.error('> saveSubscription error: ', error);
     throw error;
   }
 };
@@ -51,7 +51,7 @@ export const getSubscription = async (
 
     return await subscriptionRepository.getSubscription(subscription_id);
   } catch (error) {
-    console.error("> getSubscription error: ", error);
+    console.error('> getSubscription error: ', error);
     throw error;
   }
 };
@@ -67,7 +67,7 @@ export const getUserSubscriptions = async (
 
     return await subscriptionRepository.getUserSubscriptions(username);
   } catch (error) {
-    console.error("> getUserSubscriptions error: ", error);
+    console.error('> getUserSubscriptions error: ', error);
     throw error;
   }
 };

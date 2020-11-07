@@ -19,9 +19,7 @@ const subRoutes = {
   confirm: '/confirm',
 };
 
-export const adminRoutes = [
-  subRoutes.confirm
-];
+export const adminRoutes = [subRoutes.confirm];
 
 export const router = Router();
 

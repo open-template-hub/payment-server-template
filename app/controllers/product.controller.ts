@@ -1,6 +1,6 @@
-import { PaymentMethodEnum, PaymentWrapper } from "../wrappers/payment.wrapper";
-import { ProductRepository } from "../repository/product.repository";
-import { MongoDbProvider } from "../providers/mongo.provider";
+import { PaymentMethodEnum, PaymentWrapper } from '../wrappers/payment.wrapper';
+import { ProductRepository } from '../repository/product.repository';
+import { MongoDbProvider } from '../providers/mongo.provider';
 
 /**
  * @description holds crud operations for the product entity
@@ -38,10 +38,10 @@ export const createProduct = async (
       payload
     );
   } catch (error) {
-    console.error("> createProductDocument error: ", error);
+    console.error('> createProductDocument error: ', error);
     throw error;
   }
-}
+};
 
 export const deleteProduct = async (
   mongodb_provider: MongoDbProvider,
@@ -52,12 +52,9 @@ export const deleteProduct = async (
       mongodb_provider.getConnection()
     );
 
-    return await productRepository.deleteProductDocument(
-      product_id
-    );
+    return await productRepository.deleteProductDocument(product_id);
   } catch (error) {
-    console.error("> createProductDocument error: ", error);
+    console.error('> createProductDocument error: ', error);
     throw error;
   }
-}
-
+};

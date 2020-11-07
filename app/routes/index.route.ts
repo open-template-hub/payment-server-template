@@ -1,38 +1,38 @@
 import {
   router as productRouter,
   adminRoutes as productAdminRoutes,
-} from "./product.route";
+} from './product.route';
 import {
   router as webhookRouter,
   publicRoutes as webhookPublicRoutes,
-} from "./webhook.route";
-import { router as receiptRouter } from "./receipt.route";
+} from './webhook.route';
+import { router as receiptRouter } from './receipt.route';
 import {
   router as paymentRouter,
   adminRoutes as paymentAdminRoutes,
-} from "./payment.route";
+} from './payment.route';
 import {
   router as monitorRouter,
   publicRoutes as monitorPublicRoutes,
-} from "./monitor.route";
-import { preload } from "../services/preload.service";
-import { router as subscriptionRouter } from "./subscription.route";
-import { Request, Response } from "express";
-import { handle } from "../services/error-handler.service";
-import { MongoDbProvider } from "../providers/mongo.provider";
-import { PostgreSqlProvider } from "../providers/postgre.provider";
-import { EncryptionService } from "../services/encryption.service";
-import { context } from "../context";
-import * as Path from "path";
+} from './monitor.route';
+import { preload } from '../services/preload.service';
+import { router as subscriptionRouter } from './subscription.route';
+import { Request, Response } from 'express';
+import { handle } from '../services/error-handler.service';
+import { MongoDbProvider } from '../providers/mongo.provider';
+import { PostgreSqlProvider } from '../providers/postgre.provider';
+import { EncryptionService } from '../services/encryption.service';
+import { context } from '../context';
+import * as Path from 'path';
 
 const subRoutes = {
-  root: "/",
-  monitor: "/monitor",
-  payment: "/payment",
-  product: "/product",
-  webhook: "/webhook",
-  receipt: "/receipt",
-  subscription: "/subscription",
+  root: '/',
+  monitor: '/monitor',
+  payment: '/payment',
+  product: '/product',
+  webhook: '/webhook',
+  receipt: '/receipt',
+  subscription: '/subscription',
 };
 
 export module Routes {
@@ -45,7 +45,7 @@ export module Routes {
     var populated = Array<string>();
     for (var i = 0; i < subRoutes.length; i++) {
       const s = subRoutes[i];
-      populated.push(mainRoute + (s === '/' ? "" : s));
+      populated.push(mainRoute + (s === '/' ? '' : s));
     }
 
     return populated;
@@ -53,28 +53,28 @@ export module Routes {
 
   export function mount(app) {
     preload(mongodb_provider, postgresql_provider).then(() =>
-      console.log("DB preloads are completed.")
+      console.log('DB preloads are completed.')
     );
 
     publicRoutes = [
       ...populateRoutes(subRoutes.monitor, monitorPublicRoutes),
       ...populateRoutes(subRoutes.webhook, webhookPublicRoutes),
     ];
-    console.log("Public Routes: ", publicRoutes);
+    console.log('Public Routes: ', publicRoutes);
 
     adminRoutes = [
       ...populateRoutes(subRoutes.product, productAdminRoutes),
       ...populateRoutes(subRoutes.payment, paymentAdminRoutes),
     ];
-    console.log("Admin Routes: ", adminRoutes);
+    console.log('Admin Routes: ', adminRoutes);
 
     const responseInterceptor = (req, res, next) => {
       var originalSend = res.send;
       const service = new EncryptionService();
       res.send = function () {
-        console.log("Starting Encryption: ", new Date());
+        console.log('Starting Encryption: ', new Date());
         let encrypted_arguments = service.encrypt(arguments);
-        console.log("Encryption Completed: ", new Date());
+        console.log('Encryption Completed: ', new Date());
 
         originalSend.apply(res, encrypted_arguments);
       };
@@ -89,7 +89,7 @@ export module Routes {
     app.use(subRoutes.monitor, monitorRouter);
 
     // INFO: Keep this method at top at all times
-    app.all("/*", async (req: Request, res: Response, next) => {
+    app.all('/*', async (req: Request, res: Response, next) => {
       try {
         // create context
         res.locals.ctx = await context(
@@ -102,7 +102,7 @@ export module Routes {
 
         next();
       } catch (e) {
-        console.log("error: ", e);
+        console.log('error: ', e);
         let error = handle(e);
         res.status(error.code).json({ message: error.message });
       }

@@ -2,12 +2,12 @@
  * @description holds crud operations for the payment entity
  */
 
-import { PaymentConfigRepository } from "../repository/payment-config.repository";
-import { TransactionHistoryRepository } from "../repository/transaction-history.repository";
-import { PaymentWrapper } from "../wrappers/payment.wrapper";
-import { ProductRepository } from "../repository/product.repository";
-import { MongoDbProvider } from "../providers/mongo.provider";
-import { PostgreSqlProvider } from "../providers/postgre.provider";
+import { PaymentConfigRepository } from '../repository/payment-config.repository';
+import { TransactionHistoryRepository } from '../repository/transaction-history.repository';
+import { PaymentWrapper } from '../wrappers/payment.wrapper';
+import { ProductRepository } from '../repository/product.repository';
+import { MongoDbProvider } from '../providers/mongo.provider';
+import { PostgreSqlProvider } from '../providers/postgre.provider';
 
 export const initPayment = async (
   mongodb_provider: MongoDbProvider,
@@ -28,7 +28,7 @@ export const initPayment = async (
     );
 
     if (paymentConfig === null)
-      throw new Error("Payment method can not be found");
+      throw new Error('Payment method can not be found');
 
     const paymentWrapper = new PaymentWrapper(paymentConfig.payload.method);
 
@@ -39,7 +39,7 @@ export const initPayment = async (
     let product: any = await productRepository.getProductByProductId(
       product_id
     );
-    if (product === null) throw new Error("Product can not be found");
+    if (product === null) throw new Error('Product can not be found');
 
     let external_transaction = await paymentWrapper.init(
       mongodb_provider.getConnection(),
@@ -48,7 +48,7 @@ export const initPayment = async (
       quantity
     );
     if (external_transaction === null)
-      throw new Error("Payment can not be initiated");
+      throw new Error('Payment can not be initiated');
 
     const transactionHistoryRepository = await new TransactionHistoryRepository().initialize(
       mongodb_provider.getConnection()
@@ -71,7 +71,7 @@ export const initPayment = async (
       external_transaction
     );
   } catch (error) {
-    console.error("> initPayment error: ", error);
+    console.error('> initPayment error: ', error);
     throw error;
   }
 
@@ -100,7 +100,7 @@ export const initPaymentWithExternalTransactionId = async (
       external_transaction_id: external_transaction_id,
     };
   } catch (error) {
-    console.error("> initPaymentWithExternalTransactionId error: ", error);
+    console.error('> initPaymentWithExternalTransactionId error: ', error);
     throw error;
   }
 };
@@ -121,7 +121,7 @@ export const refreshTransactionHistory = async (
     );
 
     if (paymentConfig === null)
-      throw new Error("Payment method can not be found");
+      throw new Error('Payment method can not be found');
     const paymentWrapper = new PaymentWrapper(paymentConfig.payload.method);
 
     const transaction_history = await paymentWrapper.getTransactionHistory(
@@ -146,7 +146,7 @@ export const refreshTransactionHistory = async (
       updated_transaction_history
     );
   } catch (error) {
-    console.error("> refreshTransactionHistory error: ", error);
+    console.error('> refreshTransactionHistory error: ', error);
     throw error;
   }
 };
@@ -167,14 +167,14 @@ export const confirmPayment = async (
     );
 
     if (paymentConfig === null)
-      throw new Error("Payment method can not be found");
+      throw new Error('Payment method can not be found');
     const paymentWrapper = new PaymentWrapper(paymentConfig.payload.method);
 
     await paymentWrapper.confirmPayment(paymentConfig, external_transaction_id);
 
     return external_transaction_id;
   } catch (error) {
-    console.error("> refreshTransactionHistory error: ", error);
+    console.error('> refreshTransactionHistory error: ', error);
     throw error;
   }
 };

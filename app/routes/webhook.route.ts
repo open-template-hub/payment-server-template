@@ -2,23 +2,23 @@
  * @description holds webhook routes
  */
 
-import Router from "express-promise-router";
-import { Request, Response } from "express";
-import { ResponseCode } from "../constant";
-import { refreshTransactionHistory } from "../controllers/payment.controller";
-import { Context } from "../models/context.model";
+import Router from 'express-promise-router';
+import { Request, Response } from 'express';
+import { ResponseCode } from '../constant';
+import { refreshTransactionHistory } from '../controllers/payment.controller';
+import { Context } from '../models/context.model';
 
 const subRoutes = {
   root: '/',
-  coinbase: "/coinbase",
-  stripe: "/stripe",
-  paypal: "/paypal",
+  coinbase: '/coinbase',
+  stripe: '/stripe',
+  paypal: '/paypal',
 };
 
 export const publicRoutes = [
   subRoutes.coinbase,
   subRoutes.stripe,
-  subRoutes.paypal
+  subRoutes.paypal,
 ];
 
 export const router = Router();
@@ -43,11 +43,11 @@ router.post(subRoutes.stripe, async (req: Request, res: Response) => {
     req.body &&
     req.body.data &&
     req.body.data.object &&
-    req.body.data.object.object === "payment_intent"
+    req.body.data.object.object === 'payment_intent'
   ) {
     const external_transaction_id = req.body.data.object.id;
     const context = res.locals.ctx as Context;
-    
+
     await refreshTransactionHistory(
       context.mongodb_provider,
       context.postgresql_provider,
@@ -60,7 +60,7 @@ router.post(subRoutes.stripe, async (req: Request, res: Response) => {
 });
 
 router.post(subRoutes.paypal, async (req: Request, res: Response) => {
-  if (req.body.resource_type === "checkout-order") {
+  if (req.body.resource_type === 'checkout-order') {
     const external_transaction_id = req.body.resource.id;
     const context = res.locals.ctx as Context;
 

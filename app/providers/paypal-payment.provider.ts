@@ -1,27 +1,27 @@
-import { PaymentMethod } from "../models/payment-method.model";
-import { PaymentMethodEnum } from "../wrappers/payment.wrapper";
-import paypal from "@paypal/checkout-server-sdk";
+import { PaymentMethod } from '../models/payment-method.model';
+import { PaymentMethodEnum } from '../wrappers/payment.wrapper';
+import paypal from '@paypal/checkout-server-sdk';
 import {
   createReceipt,
   getReceiptWithExternalTransactionId,
-} from "../repository/receipt.repository";
-import { CurrencyCode, ReceiptStatus } from "../constant";
-import { confirmed_external_transaction_ids } from "../store";
+} from '../repository/receipt.repository';
+import { CurrencyCode, ReceiptStatus } from '../constant';
+import { confirmed_external_transaction_ids } from '../store';
 
 export class PayPalPayment implements PaymentMethod {
-  private readonly SUCCESS_STATUS = "APPROVED";
+  private readonly SUCCESS_STATUS = 'APPROVED';
 
   init = async (dbConn, paymentConfig, product, quantity) => {
     const paypalClient = this.getPayPalClient(paymentConfig);
 
     const request = new paypal.orders.OrdersCreateRequest();
-    request.prefer("return=representation");
+    request.prefer('return=representation');
     request.requestBody({
-      intent: "CAPTURE",
+      intent: 'CAPTURE',
       application_context: {
         return_url: paymentConfig.payload.success_url,
         cancel_url: paymentConfig.payload.cancel_url,
-        locale: "en-US",
+        locale: 'en-US',
       },
       purchase_units: [
         {
@@ -57,7 +57,7 @@ export class PayPalPayment implements PaymentMethod {
     const isRegression = process.env.REGRESSION || false;
 
     console.log(
-      "Coinbase.getTransactionHistory > isRegression: ",
+      'Coinbase.getTransactionHistory > isRegression: ',
       isRegression
     );
 
@@ -65,12 +65,12 @@ export class PayPalPayment implements PaymentMethod {
 
     if (
       confirmed_external_transaction_ids.indexOf(
-        paymentConfig.payload.method + "_" + external_transaction_id
+        paymentConfig.payload.method + '_' + external_transaction_id
       ) !== -1 &&
       isRegression
     ) {
       console.log(
-        "Coinbase.getTransactionHistory > Setting stripe status to success"
+        'Coinbase.getTransactionHistory > Setting stripe status to success'
       );
       history.status = this.SUCCESS_STATUS;
     }
@@ -81,7 +81,7 @@ export class PayPalPayment implements PaymentMethod {
   // only for admin usage, test purpose
   confirmPayment = async (paymentConfig, external_transaction_id) => {
     confirmed_external_transaction_ids.push(
-      paymentConfig.payload.method + "_" + external_transaction_id
+      paymentConfig.payload.method + '_' + external_transaction_id
     );
   };
 
@@ -91,7 +91,7 @@ export class PayPalPayment implements PaymentMethod {
     external_transaction_id,
     updated_transaction_history
   ) => {
-    console.log("receiptStatusUpdate: ");
+    console.log('receiptStatusUpdate: ');
     if (
       updated_transaction_history &&
       updated_transaction_history.payload.transaction_history &&
@@ -106,13 +106,13 @@ export class PayPalPayment implements PaymentMethod {
         paymentConfig.key
       );
 
-      console.log("Created: ", created);
+      console.log('Created: ', created);
       console.log(
-        "purchase_units: ",
+        'purchase_units: ',
         updated_transaction_history.payload.transaction_history.purchase_units
       );
       console.log(
-        "length: ",
+        'length: ',
         updated_transaction_history.payload.transaction_history.purchase_units
           .length
       );
@@ -136,7 +136,7 @@ export class PayPalPayment implements PaymentMethod {
                 currency_code !== purchase_unit.amount.currency_code
               ) {
                 console.error(
-                  "Two different currency codes in one transaction!"
+                  'Two different currency codes in one transaction!'
                 );
               }
               currency_code = this.currencyCodeMap(
@@ -162,7 +162,7 @@ export class PayPalPayment implements PaymentMethod {
   };
 
   currencyCodeMap = (currency_code) => {
-    if (currency_code === "USD") {
+    if (currency_code === 'USD') {
       return CurrencyCode.USD;
     }
     return currency_code;
@@ -171,14 +171,14 @@ export class PayPalPayment implements PaymentMethod {
   getPayPalClient(paymentConfig) {
     let paypalClient;
 
-    if (paymentConfig.payload.env === "sandbox") {
+    if (paymentConfig.payload.env === 'sandbox') {
       paypalClient = new paypal.core.PayPalHttpClient(
         new paypal.core.SandboxEnvironment(
           paymentConfig.payload.client_id,
           paymentConfig.payload.secret
         )
       );
-    } else if (paymentConfig.payload.env === "live") {
+    } else if (paymentConfig.payload.env === 'live') {
       paypalClient = new paypal.core.PayPalHttpClient(
         new paypal.core.LiveEnvironment(
           paymentConfig.payload.client_id,

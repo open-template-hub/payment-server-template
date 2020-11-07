@@ -1,4 +1,4 @@
-import { PaymentMethod } from "../models/payment-method.model";
+import { PaymentMethod } from '../models/payment-method.model';
 
 export class GooglePayment implements PaymentMethod {
   init = async (dbConn, paymentConfig, product, quantity) => {
@@ -19,7 +19,7 @@ export class GooglePayment implements PaymentMethod {
     external_transaction_id: any,
     updated_transaction_history: any
   ) {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
   createProduct(amount: number, currency) {
@@ -27,5 +27,5 @@ export class GooglePayment implements PaymentMethod {
   }
 
   // only for admin usage, test purpose
-  confirmPayment = async (paymentConfig, external_transaction_id) => {}
+  confirmPayment = async (paymentConfig, external_transaction_id) => {};
 }

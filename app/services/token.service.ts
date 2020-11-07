@@ -2,7 +2,7 @@
  * @description holds token service
  */
 
-import { verify } from "jsonwebtoken";
+import { verify } from 'jsonwebtoken';
 
 export class TokenService {
   verifyAccessToken = async (accessToken: string) => {

@@ -1,4 +1,4 @@
-import { ProductDataModel } from "../data/product.data";
+import { ProductDataModel } from '../data/product.data';
 
 export class ProductRepository {
   private dataModel: any = null;
@@ -6,7 +6,7 @@ export class ProductRepository {
   initialize = async (connection: any) => {
     this.dataModel = await new ProductDataModel().getDataModel(connection);
     return this;
-  }
+  };
 
   createProductDocument = async (product_id, name, description, payload) => {
     try {
@@ -20,25 +20,25 @@ export class ProductRepository {
       console.error('> createProductDocument error: ', error);
       throw error;
     }
-  }
+  };
 
-  deleteProductDocument = async(product_id) => {
+  deleteProductDocument = async (product_id) => {
     try {
       return await this.dataModel.findOneAndRemove({ product_id });
     } catch (error) {
       console.error('> getProductByProductId error: ', error);
       throw error;
     }
-  }
+  };
 
-  getProductByProductId = async(product_id) => {
+  getProductByProductId = async (product_id) => {
     try {
       return await this.dataModel.findOne({ product_id });
     } catch (error) {
       console.error('> getProductByProductId error: ', error);
       throw error;
     }
-  }
+  };
 
   updateProductPayload = async (product_id, payloadName, payload) => {
     let obj = {};
