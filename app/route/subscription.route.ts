@@ -9,8 +9,8 @@ import {
   getSubscription,
   saveSubscription,
   getUserSubscriptions,
-} from '../controllers/subscription.controller';
-import { Context } from '../models/context.model';
+} from '../controller/subscription.controller';
+import { Context } from '../interface/context.interface';
 
 const subRoutes = {
   root: '/',

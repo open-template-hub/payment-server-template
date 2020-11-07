@@ -1,7 +1,7 @@
-import { PaymentMethod } from '../models/payment-method.model';
+import { PaymentMethod } from '../interface/payment-method.interface';
 import Stripe from 'stripe';
 import { ProductRepository } from '../repository/product.repository';
-import { PaymentMethodEnum } from '../wrappers/payment.wrapper';
+import { PaymentMethodEnum } from '../wrapper/payment.wrapper';
 import {
   createReceipt,
   getReceiptWithExternalTransactionId,

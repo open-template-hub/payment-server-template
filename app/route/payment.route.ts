@@ -9,8 +9,8 @@ import {
   confirmPayment,
   initPayment,
   initPaymentWithExternalTransactionId,
-} from '../controllers/payment.controller';
-import { Context } from '../models/context.model';
+} from '../controller/payment.controller';
+import { Context } from '../interface/context.interface';
 
 const subRoutes = {
   root: '/',

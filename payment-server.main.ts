@@ -3,7 +3,7 @@
  */
 import dotenv from 'dotenv';
 import cors from 'cors';
-import { Routes } from './app/routes/index.route';
+import { Routes } from './app/route/index.route';
 import express = require('express');
 import bodyParser = require('body-parser');
 import { debugLog } from './app/util/debug-log.util';

@@ -3,11 +3,11 @@
  */
 
 import { AuthService } from './util/auth.util';
-import { MongoDbProvider } from './providers/mongo.provider';
-import { Context } from './models/context.model';
-import { PostgreSqlProvider } from './providers/postgre.provider';
+import { MongoDbProvider } from './provider/mongo.provider';
+import { Context } from './interface/context.interface';
+import { PostgreSqlProvider } from './provider/postgre.provider';
 import { TokenService } from './util/token.util';
-import { UserRole } from './enums/user-role.enum';
+import { UserRole } from './enum/user-role.enum';
 import { ErrorMessage } from './constant';
 
 export const context = async (

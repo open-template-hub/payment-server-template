@@ -8,8 +8,8 @@ import { ResponseCode } from '../constant';
 import {
   createProduct,
   deleteProduct,
-} from '../controllers/product.controller';
-import { Context } from '../models/context.model';
+} from '../controller/product.controller';
+import { Context } from '../interface/context.interface';
 
 const subRoutes = {
   root: '/',

@@ -4,10 +4,10 @@
 
 import { PaymentConfigRepository } from '../repository/payment-config.repository';
 import { TransactionHistoryRepository } from '../repository/transaction-history.repository';
-import { PaymentWrapper } from '../wrappers/payment.wrapper';
+import { PaymentWrapper } from '../wrapper/payment.wrapper';
 import { ProductRepository } from '../repository/product.repository';
-import { MongoDbProvider } from '../providers/mongo.provider';
-import { PostgreSqlProvider } from '../providers/postgre.provider';
+import { MongoDbProvider } from '../provider/mongo.provider';
+import { PostgreSqlProvider } from '../provider/postgre.provider';
 
 export const initPayment = async (
   mongodb_provider: MongoDbProvider,

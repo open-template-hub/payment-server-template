@@ -1,6 +1,6 @@
-import { PaymentMethodEnum, PaymentWrapper } from '../wrappers/payment.wrapper';
+import { PaymentMethodEnum, PaymentWrapper } from '../wrapper/payment.wrapper';
 import { ProductRepository } from '../repository/product.repository';
-import { MongoDbProvider } from '../providers/mongo.provider';
+import { MongoDbProvider } from '../provider/mongo.provider';
 
 /**
  * @description holds crud operations for the product entity

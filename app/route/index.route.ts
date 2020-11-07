@@ -19,8 +19,8 @@ import { preload } from '../util/preload.util';
 import { router as subscriptionRouter } from './subscription.route';
 import { Request, Response } from 'express';
 import { handle } from '../util/error-handler.util';
-import { MongoDbProvider } from '../providers/mongo.provider';
-import { PostgreSqlProvider } from '../providers/postgre.provider';
+import { MongoDbProvider } from '../provider/mongo.provider';
+import { PostgreSqlProvider } from '../provider/postgre.provider';
 import { EncryptionService } from '../util/encryption.util';
 import { context } from '../context';
 

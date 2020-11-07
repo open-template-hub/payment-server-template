@@ -5,8 +5,8 @@
 import Router from 'express-promise-router';
 import { Request, Response } from 'express';
 import { ResponseCode } from '../constant';
-import { getSuccesfulReceipts } from '../controllers/receipt.controller';
-import { Context } from '../models/context.model';
+import { getSuccesfulReceipts } from '../controller/receipt.controller';
+import { Context } from '../interface/context.interface';
 
 const subRoutes = {
   root: '/',

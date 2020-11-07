@@ -1,5 +1,5 @@
-import { MongoDbProvider } from '../providers/mongo.provider';
-import { PostgreSqlProvider } from '../providers/postgre.provider';
+import { MongoDbProvider } from '../provider/mongo.provider';
+import { PostgreSqlProvider } from '../provider/postgre.provider';
 
 export const preload = async (
   mongodb_provider: MongoDbProvider,

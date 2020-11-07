@@ -1,5 +1,5 @@
-import { PaymentMethod } from '../models/payment-method.model';
-import { PaymentMethodEnum } from '../wrappers/payment.wrapper';
+import { PaymentMethod } from '../interface/payment-method.interface';
+import { PaymentMethodEnum } from '../wrapper/payment.wrapper';
 import axios from 'axios';
 import {
   createReceipt,

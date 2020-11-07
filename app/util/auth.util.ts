@@ -2,7 +2,7 @@
  * @description holds auth service
  */
 
-import { UserRole } from '../enums/user-role.enum';
+import { UserRole } from '../enum/user-role.enum';
 import { TokenService } from './token.util';
 
 export class AuthService {

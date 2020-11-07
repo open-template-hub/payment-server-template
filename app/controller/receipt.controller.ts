@@ -1,4 +1,4 @@
-import { PostgreSqlProvider } from '../providers/postgre.provider';
+import { PostgreSqlProvider } from '../provider/postgre.provider';
 import { getSuccessfulReceiptsWithUsernameAndProductId } from '../repository/receipt.repository';
 
 export const getSuccesfulReceipts = async (

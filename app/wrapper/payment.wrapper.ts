@@ -1,8 +1,8 @@
-import { PaymentMethod } from '../models/payment-method.model';
-import { CoinbasePayment } from '../providers/coinbase-payment.provider';
-import { GooglePayment } from '../providers/google-payment.provider';
-import { PayPalPayment } from '../providers/paypal-payment.provider';
-import { StripePayment } from '../providers/stripe-payment.provider';
+import { PaymentMethod } from '../interface/payment-method.interface';
+import { CoinbasePayment } from '../provider/coinbase-payment.provider';
+import { GooglePayment } from '../provider/google-payment.provider';
+import { PayPalPayment } from '../provider/paypal-payment.provider';
+import { StripePayment } from '../provider/stripe-payment.provider';
 
 export enum PaymentMethodEnum {
   Stripe = 'stripe',

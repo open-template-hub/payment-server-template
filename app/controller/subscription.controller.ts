@@ -1,7 +1,7 @@
 import { PaymentConfigRepository } from '../repository/payment-config.repository';
 import { SubscriptionRepository } from '../repository/subscription.repository';
 import { v4 as uuidv4 } from 'uuid';
-import { MongoDbProvider } from '../providers/mongo.provider';
+import { MongoDbProvider } from '../provider/mongo.provider';
 
 export const saveSubscription = async (
   mongodb_provider: MongoDbProvider,

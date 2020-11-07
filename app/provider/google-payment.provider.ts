@@ -1,4 +1,4 @@
-import { PaymentMethod } from '../models/payment-method.model';
+import { PaymentMethod } from '../interface/payment-method.interface';
 
 export class GooglePayment implements PaymentMethod {
   init = async (dbConn, paymentConfig, product, quantity) => {
