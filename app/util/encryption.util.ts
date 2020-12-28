@@ -1,7 +1,15 @@
+/**
+ * @description holds encryption util
+ */
+
 import CryptoJS from 'crypto-js';
 
-export class EncryptionService {
-  encrypt = (args) => {
+export class EncryptionUtil {
+  /**
+   * encrpyts response
+   * @param args arguments
+   */
+  encrypt = (args: IArguments) => {
     if (
       args === undefined ||
       args === null ||

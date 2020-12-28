@@ -1,14 +1,27 @@
-import { PostgreSqlProvider } from '../provider/postgre.provider';
-import { getSuccessfulReceiptsWithUsernameAndProductId } from '../repository/receipt.repository';
+/**
+ * @description holds receipt controller
+ */
 
-export const getSuccesfulReceipts = async (
-  postgresql_provider: PostgreSqlProvider,
-  username: string,
-  product_id: string
-) => {
-  return await getSuccessfulReceiptsWithUsernameAndProductId(
-    postgresql_provider,
-    username,
-    product_id
-  );
-};
+import { PostgreSqlProvider } from '../provider/postgre.provider';
+import { ReceiptRepository } from '../repository/receipt.repository';
+
+export class ReceiptController {
+  /**
+   * gets successful receipts for user
+   * @param postgresql_provider postgresql provider
+   * @param username username
+   * @param product_id product id
+   * @returns successful receipts
+   */
+  getSuccesfulReceipts = async (
+    postgresql_provider: PostgreSqlProvider,
+    username: string,
+    product_id: string
+  ) => {
+    const receiptRepository = new ReceiptRepository(postgresql_provider);
+    return await receiptRepository.getSuccessfulReceiptsWithUsernameAndProductId(
+      username,
+      product_id
+    );
+  };
+}
