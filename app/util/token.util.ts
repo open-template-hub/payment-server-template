@@ -14,7 +14,7 @@ export class TokenUtil {
     try {
       return verify(accessToken, process.env.ACCESS_TOKEN_SECRET as string);
     } catch (e) {
-      var ex = e as any;
+      var ex = e;
       if (e instanceof TokenExpiredError) {
         ex.responseCode = ResponseCode.UNAUTHORIZED;
       } else {

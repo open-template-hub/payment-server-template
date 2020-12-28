@@ -156,7 +156,7 @@ export class StripePayment implements PaymentMethod {
           updated_transaction_history.payload.transaction_history
             .amount_received
         );
-        let currency_code = await this.currencyCodeMap(
+        let currency_code = this.currencyCodeMap(
           updated_transaction_history.payload.transaction_history.currency
         );
 
