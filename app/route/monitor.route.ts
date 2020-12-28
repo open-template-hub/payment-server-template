@@ -12,5 +12,6 @@ export const publicRoutes = [subRoutes.alive];
 export const router = Router();
 
 router.get(subRoutes.alive, async (req: Request, res: Response) => {
+  // checks is alive
   res.status(ResponseCode.OK).send();
 });

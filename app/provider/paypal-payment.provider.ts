@@ -1,17 +1,34 @@
+/**
+ * @description holds Paypal payment provider
+ */
+
 import { PaymentMethod } from '../interface/payment-method.interface';
 import { PaymentMethodEnum } from '../wrapper/payment.wrapper';
-import paypal from '@paypal/checkout-server-sdk';
-import {
-  createReceipt,
-  getReceiptWithExternalTransactionId,
-} from '../repository/receipt.repository';
+import { ReceiptRepository } from '../repository/receipt.repository';
 import { CurrencyCode, ReceiptStatus } from '../constant';
 import { confirmed_external_transaction_ids } from '../store';
+import { PaymentConfig } from '../interface/payment-config.interface';
+import { Product } from '../interface/product.interface';
+
+// can not use import because @types/@paypal/checkout-server-sdk not exists
+const paypal = require('@paypal/checkout-server-sdk');
 
 export class PayPalPayment implements PaymentMethod {
   private readonly SUCCESS_STATUS = 'APPROVED';
 
-  init = async (dbConn, paymentConfig, product, quantity) => {
+  /**
+   * initializes paypal payment provider
+   * @param dbConn db connection
+   * @param paymentConfig payment config
+   * @param product product
+   * @param quantity quantity
+   */
+  init = async (
+    dbConn: any,
+    paymentConfig: PaymentConfig,
+    product: Product,
+    quantity: number
+  ) => {
     const paypalClient = this.getPayPalClient(paymentConfig);
 
     const request = new paypal.orders.OrdersCreateRequest();
@@ -39,14 +56,28 @@ export class PayPalPayment implements PaymentMethod {
     return { history: order.result, id: order.result.id };
   };
 
-  build = async (paymentConfig, external_transaction) => {
+  /**
+   * builds payload
+   * @param paymentConfig payment config
+   * @param external_transaction external transaction
+   */
+  build = async (paymentConfig: PaymentConfig, external_transaction: any) => {
     return {
       method: PaymentMethodEnum.PayPal,
       payload: { id: external_transaction.id },
     };
   };
 
-  getTransactionHistory = async (paymentConfig, external_transaction_id) => {
+  /**
+   * gets transaction history
+   * @param paymentConfig payment config
+   * @param external_transaction_id external transaction id
+   * @returns transaction history
+   */
+  getTransactionHistory = async (
+    paymentConfig: PaymentConfig,
+    external_transaction_id: string
+  ) => {
     const paypalClient = this.getPayPalClient(paymentConfig);
 
     let request = new paypal.orders.OrdersGetRequest(external_transaction_id);
@@ -78,18 +109,33 @@ export class PayPalPayment implements PaymentMethod {
     return history;
   };
 
-  // only for admin usage, test purpose
-  confirmPayment = async (paymentConfig, external_transaction_id) => {
+  /**
+   * confirms payment
+   * only for admin usage, test purpose
+   * @param paymentConfig payment config
+   * @param external_transaction_id external transaction id
+   */
+  confirmPayment = async (
+    paymentConfig: PaymentConfig,
+    external_transaction_id: string
+  ) => {
     confirmed_external_transaction_ids.push(
       paymentConfig.payload.method + '_' + external_transaction_id
     );
   };
 
+  /**
+   * updates receipt status
+   * @param dbConn db connection
+   * @param paymentConfig payment config
+   * @param external_transaction_id external transaction id
+   * @param updated_transaction_history updated transaction history
+   */
   receiptStatusUpdate = async (
-    dbConn,
-    paymentConfig,
-    external_transaction_id,
-    updated_transaction_history
+    dbConn: any,
+    paymentConfig: PaymentConfig,
+    external_transaction_id: string,
+    updated_transaction_history: any
   ) => {
     console.log('receiptStatusUpdate: ');
     if (
@@ -98,8 +144,8 @@ export class PayPalPayment implements PaymentMethod {
       updated_transaction_history.payload.transaction_history.status ===
         this.SUCCESS_STATUS
     ) {
-      let created = await getReceiptWithExternalTransactionId(
-        dbConn,
+      const receiptRepository = new ReceiptRepository(dbConn);
+      let created = await receiptRepository.getReceiptWithExternalTransactionId(
         updated_transaction_history.username,
         external_transaction_id,
         updated_transaction_history.product_id,
@@ -124,10 +170,10 @@ export class PayPalPayment implements PaymentMethod {
           .length > 0
       ) {
         let amount: number = 0.0;
-        let currency_code = undefined;
+        let currency_code: any = undefined;
 
         await updated_transaction_history.payload.transaction_history.purchase_units.forEach(
-          (purchase_unit) => {
+          (purchase_unit: any) => {
             if (purchase_unit.amount?.value) {
               amount += purchase_unit.amount.value;
 
@@ -146,8 +192,7 @@ export class PayPalPayment implements PaymentMethod {
           }
         );
 
-        await createReceipt(
-          dbConn,
+        await receiptRepository.createReceipt(
           updated_transaction_history.username,
           external_transaction_id,
           updated_transaction_history.product_id,
@@ -161,14 +206,23 @@ export class PayPalPayment implements PaymentMethod {
     }
   };
 
-  currencyCodeMap = (currency_code) => {
+  /**
+   * gets mapped currency code
+   * @param currency_code currency code
+   */
+  currencyCodeMap = (currency_code: string) => {
     if (currency_code === 'USD') {
       return CurrencyCode.USD;
     }
     return currency_code;
   };
 
-  getPayPalClient(paymentConfig) {
+  /**
+   * gets paypal client
+   * @param paymentConfig payment config
+   * @returns paypal client
+   */
+  getPayPalClient(paymentConfig: PaymentConfig) {
     let paypalClient;
 
     if (paymentConfig.payload.env === 'sandbox') {
@@ -190,7 +244,12 @@ export class PayPalPayment implements PaymentMethod {
     return paypalClient;
   }
 
-  createProduct(amount: number, currency) {
+  /**
+   * creates product
+   * @param amount amount
+   * @param currency currency
+   */
+  createProduct = async (amount: number, currency: string) => {
     return { amount, currency };
-  }
+  };
 }

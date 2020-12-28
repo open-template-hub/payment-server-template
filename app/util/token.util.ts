@@ -1,12 +1,26 @@
 /**
- * @description holds token service
+ * @description holds token util
  */
 
-import { verify } from 'jsonwebtoken';
+import { TokenExpiredError, verify } from 'jsonwebtoken';
+import { ResponseCode } from '../constant';
 
-export class TokenService {
+export class TokenUtil {
+  /**
+   * verifies access token
+   * @param accessToken access token
+   */
   verifyAccessToken = async (accessToken: string) => {
-    const accessTokenSecret: string = process.env.ACCESS_TOKEN_SECRET as string;
-    return verify(accessToken, accessTokenSecret);
+    try {
+      return verify(accessToken, process.env.ACCESS_TOKEN_SECRET as string);
+    } catch (e) {
+      var ex = e;
+      if (e instanceof TokenExpiredError) {
+        ex.responseCode = ResponseCode.UNAUTHORIZED;
+      } else {
+        ex.responseCode = ResponseCode.FORBIDDEN;
+      }
+      throw ex;
+    }
   };
 }

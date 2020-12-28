@@ -1,17 +1,20 @@
 /**
- * @description holds providers connection provider
+ * @description holds mongodb connection provider
  */
 
 import mongoose, { Connection } from 'mongoose';
-import { Builder } from '../util/builder.util';
+import { BuilderUtil } from '../util/builder.util';
 
 export class MongoDbProvider {
   // mongoose connection
   private connection: Connection = mongoose.createConnection();
-  private builder: Builder = new Builder();
+  private builder: BuilderUtil = new BuilderUtil();
   private poolLimit: number = 1;
   private readonly preloadDataTemplatePath = './assets/sql/preload.data.json';
 
+  /**
+   * preloads connection provider
+   */
   preload = async () => {
     this.poolLimit =
       parseInt(<string>process.env.MONGODB_CONNECTION_LIMIT) || (1 as number);
@@ -19,6 +22,9 @@ export class MongoDbProvider {
     await this.createConnectionPool();
   };
 
+  /**
+   * create connection pool
+   */
   createConnectionPool = async () => {
     // close open connections
     await Promise.all(
@@ -48,6 +54,9 @@ export class MongoDbProvider {
       });
   };
 
+  /**
+   * @returns connection
+   */
   getConnection() {
     return this.connection;
   }

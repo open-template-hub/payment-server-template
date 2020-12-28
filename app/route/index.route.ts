@@ -15,13 +15,13 @@ import {
   router as monitorRouter,
   publicRoutes as monitorPublicRoutes,
 } from './monitor.route';
-import { preload } from '../util/preload.util';
+import { PreloadUtil } from '../util/preload.util';
 import { router as subscriptionRouter } from './subscription.route';
-import { Request, Response } from 'express';
-import { handle } from '../util/error-handler.util';
+import { NextFunction, Request, Response } from 'express';
+import { ErrorHandlerUtil } from '../util/error-handler.util';
 import { MongoDbProvider } from '../provider/mongo.provider';
 import { PostgreSqlProvider } from '../provider/postgre.provider';
-import { EncryptionService } from '../util/encryption.util';
+import { EncryptionUtil } from '../util/encryption.util';
 import { context } from '../context';
 
 const subRoutes = {
@@ -37,23 +37,27 @@ const subRoutes = {
 export module Routes {
   const mongodb_provider = new MongoDbProvider();
   const postgresql_provider = new PostgreSqlProvider();
+  const errorHandlerUtil = new ErrorHandlerUtil();
+
   var publicRoutes: string[] = [];
   var adminRoutes: string[] = [];
 
-  function populateRoutes(mainRoute, subRoutes) {
+  function populateRoutes(mainRoute: string, routes: Array<string>) {
     var populated = Array<string>();
-    for (var i = 0; i < subRoutes.length; i++) {
-      const s = subRoutes[i];
+    for (var i = 0; i < routes.length; i++) {
+      const s = routes[i];
       populated.push(mainRoute + (s === '/' ? '' : s));
     }
 
     return populated;
   }
 
-  export function mount(app) {
-    preload(mongodb_provider, postgresql_provider).then(() =>
-      console.log('DB preloads are completed.')
-    );
+  export function mount(app: any) {
+    const preloadUtil = new PreloadUtil();
+
+    preloadUtil
+      .preload(mongodb_provider, postgresql_provider)
+      .then(() => console.log('DB preloads are completed.'));
 
     publicRoutes = [
       ...populateRoutes(subRoutes.monitor, monitorPublicRoutes),
@@ -67,16 +71,20 @@ export module Routes {
     ];
     console.log('Admin Routes: ', adminRoutes);
 
-    const responseInterceptor = (req, res, next) => {
+    const responseInterceptor = (
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ) => {
       var originalSend = res.send;
-      const service = new EncryptionService();
+      const encryptionUtil = new EncryptionUtil();
       res.send = function () {
         console.log('Starting Encryption: ', new Date());
-        let encrypted_arguments = service.encrypt(arguments);
+        let encrypted_arguments = encryptionUtil.encrypt(arguments);
         console.log('Encryption Completed: ', new Date());
 
-        originalSend.apply(res, encrypted_arguments);
-      };
+        originalSend.apply(res, encrypted_arguments as any);
+      } as any;
 
       next();
     };
@@ -88,7 +96,7 @@ export module Routes {
     app.use(subRoutes.monitor, monitorRouter);
 
     // INFO: Keep this method at top at all times
-    app.all('/*', async (req: Request, res: Response, next) => {
+    app.all('/*', async (req: Request, res: Response, next: NextFunction) => {
       try {
         // create context
         res.locals.ctx = await context(
@@ -102,7 +110,7 @@ export module Routes {
         next();
       } catch (e) {
         console.log('error: ', e);
-        let error = handle(e);
+        let error = errorHandlerUtil.handle(e);
         res.status(error.code).json({ message: error.message });
       }
     });
@@ -115,8 +123,13 @@ export module Routes {
     app.use(subRoutes.subscription, subscriptionRouter);
 
     // Use for error handling
-    app.use(function (err, req, res, next) {
-      let error = handle(err);
+    app.use(function (
+      err: Error,
+      req: Request,
+      res: Response,
+      next: NextFunction
+    ) {
+      let error = errorHandlerUtil.handle(err);
       console.log(err);
       res.status(error.code).json({ message: error.message });
     });

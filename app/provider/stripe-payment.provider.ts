@@ -1,18 +1,33 @@
+/**
+ * @description holds Stripe payment provider
+ */
+
 import { PaymentMethod } from '../interface/payment-method.interface';
 import Stripe from 'stripe';
 import { ProductRepository } from '../repository/product.repository';
 import { PaymentMethodEnum } from '../wrapper/payment.wrapper';
-import {
-  createReceipt,
-  getReceiptWithExternalTransactionId,
-} from '../repository/receipt.repository';
+import { ReceiptRepository } from '../repository/receipt.repository';
 import { CurrencyCode, ReceiptStatus } from '../constant';
 import { confirmed_external_transaction_ids } from '../store';
+import { PaymentConfig } from '../interface/payment-config.interface';
+import { Product } from '../interface/product.interface';
 
 export class StripePayment implements PaymentMethod {
   private readonly SUCCESS_STATUS = 'succeeded';
 
-  init = async (dbConn, paymentConfig, product, quantity) => {
+  /**
+   * initializes stripe payment provider
+   * @param dbConn db connection
+   * @param paymentConfig payment config
+   * @param product product
+   * @param quantity quantity
+   */
+  init = async (
+    dbConn: any,
+    paymentConfig: PaymentConfig,
+    product: Product,
+    quantity: number
+  ) => {
     let stripe = new Stripe(
       paymentConfig.payload.secret,
       paymentConfig.payload.config
@@ -33,8 +48,9 @@ export class StripePayment implements PaymentMethod {
 
     const history = await this.getTransactionHistory(
       paymentConfig,
-      session.payment_intent
+      session.payment_intent as string
     );
+
     return {
       history: history,
       id: session.payment_intent,
@@ -42,7 +58,12 @@ export class StripePayment implements PaymentMethod {
     };
   };
 
-  build = async (paymentConfig, external_transaction) => {
+  /**
+   * builds payload
+   * @param paymentConfig payment config
+   * @param external_transaction external transaction
+   */
+  build = async (paymentConfig: PaymentConfig, external_transaction: any) => {
     let stripe = new Stripe(
       paymentConfig.payload.secret,
       paymentConfig.payload.config
@@ -53,7 +74,16 @@ export class StripePayment implements PaymentMethod {
     return { method: PaymentMethodEnum.Stripe, payload: session };
   };
 
-  getTransactionHistory = async (paymentConfig, external_transaction_id) => {
+  /**
+   * gets transaction history
+   * @param paymentConfig payment config
+   * @param external_transaction_id external transaction id
+   * @returns transaction history
+   */
+  getTransactionHistory = async (
+    paymentConfig: PaymentConfig,
+    external_transaction_id: string
+  ) => {
     let stripe = new Stripe(
       paymentConfig.payload.secret,
       paymentConfig.payload.config
@@ -79,17 +109,32 @@ export class StripePayment implements PaymentMethod {
     return intent;
   };
 
-  // only for admin usage, test purpose
-  confirmPayment = async (paymentConfig, external_transaction_id) => {
+  /**
+   * confirms payment
+   * only for admin usage, test purpose
+   * @param paymentConfig payment config
+   * @param external_transaction_id external transaction id
+   */
+  confirmPayment = async (
+    paymentConfig: PaymentConfig,
+    external_transaction_id: string
+  ) => {
     confirmed_external_transaction_ids.push(
       paymentConfig.payload.method + '_' + external_transaction_id
     );
   };
 
+  /**
+   * updates receipt status
+   * @param dbConn db connection
+   * @param paymentConfig payment config
+   * @param external_transaction_id external transaction id
+   * @param updated_transaction_history updated transaction history
+   */
   receiptStatusUpdate = async (
     dbConn: any,
-    paymentConfig: any,
-    external_transaction_id: any,
+    paymentConfig: PaymentConfig,
+    external_transaction_id: string,
     updated_transaction_history: any
   ) => {
     if (
@@ -98,8 +143,8 @@ export class StripePayment implements PaymentMethod {
       updated_transaction_history.payload.transaction_history.status ===
         this.SUCCESS_STATUS
     ) {
-      let created = await getReceiptWithExternalTransactionId(
-        dbConn,
+      const receiptRepository = new ReceiptRepository(dbConn);
+      let created = await receiptRepository.getReceiptWithExternalTransactionId(
         updated_transaction_history.username,
         external_transaction_id,
         updated_transaction_history.product_id,
@@ -111,12 +156,11 @@ export class StripePayment implements PaymentMethod {
           updated_transaction_history.payload.transaction_history
             .amount_received
         );
-        let currency_code = await this.currencyCodeMap(
+        let currency_code = this.currencyCodeMap(
           updated_transaction_history.payload.transaction_history.currency
         );
 
-        await createReceipt(
-          dbConn,
+        await receiptRepository.createReceipt(
           updated_transaction_history.username,
           external_transaction_id,
           updated_transaction_history.product_id,
@@ -130,28 +174,57 @@ export class StripePayment implements PaymentMethod {
     }
   };
 
-  calculateAmount = (amount) => {
+  /**
+   * calculates amount
+   * @param amount amount
+   * @returns calculated amount
+   */
+  calculateAmount = (amount: number) => {
     return amount / 100;
   };
 
-  currencyCodeMap = (currency_code) => {
+  /**
+   * gets mapped currency code
+   * @param currency_code currency code
+   */
+  currencyCodeMap = (currency_code: string) => {
     if (currency_code === 'usd') {
       return CurrencyCode.USD;
     }
     return currency_code;
   };
 
-  createProduct(amount: number, currency) {
+  /**
+   * creates product
+   * @param amount amount
+   * @param currency currency
+   */
+  createProduct = async (amount: number, currency: string) => {
     return { amount: Math.round(amount * 100), currency };
-  }
+  };
 
-  getPriceId = async (dbConn, paymentConfig, product) => {
+  /**
+   * gets created price id and updates product payload
+   * @param dbConn db connection
+   * @param paymentConfig payment config
+   * @param product product
+   * @returns price id
+   */
+  getPriceId = async (
+    dbConn: any,
+    paymentConfig: PaymentConfig,
+    product: Product
+  ) => {
     let stripe = new Stripe(
       paymentConfig.payload.secret,
       paymentConfig.payload.config
     );
     const stripeProductId = await this.getProductId(paymentConfig, product);
     if (!product.payload.stripe.external_price_id) {
+      console.log(
+        '> StripePayment:: getPriceId:: Product payload: ',
+        product.payload
+      );
       let price = await stripe.prices.create({
         product: stripeProductId,
         unit_amount: product.payload.stripe.amount,
@@ -163,7 +236,7 @@ export class StripePayment implements PaymentMethod {
         dbConn
       );
       await productRepository.updateProductPayload(
-        product.productId,
+        product.product_id,
         'payload.stripe',
         product.payload.stripe
       );
@@ -173,7 +246,12 @@ export class StripePayment implements PaymentMethod {
     }
   };
 
-  getProductId = async (paymentConfig, product) => {
+  /**
+   * gets created product or create if not exists
+   * @param paymentConfig payment config
+   * @param product product
+   */
+  getProductId = async (paymentConfig: PaymentConfig, product: Product) => {
     let stripe = new Stripe(
       paymentConfig.payload.secret,
       paymentConfig.payload.config
