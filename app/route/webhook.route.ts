@@ -5,7 +5,7 @@
 import Router from 'express-promise-router';
 import { Request, Response } from 'express';
 import { ResponseCode } from '../constant';
-import { refreshTransactionHistory } from '../controller/payment.controller';
+import { PaymentController } from '../controller/payment.controller';
 import { Context } from '../interface/context.interface';
 
 const subRoutes = {
@@ -23,11 +23,14 @@ export const publicRoutes = [
 
 export const router = Router();
 
+const paymentController = new PaymentController();
+
 router.post(subRoutes.coinbase, async (req: Request, res: Response) => {
+  // refreshes coinbase transaction history
   const external_transaction_id = req.body.event.data.id;
   const context = res.locals.ctx as Context;
 
-  await refreshTransactionHistory(
+  await paymentController.refreshTransactionHistory(
     context.mongodb_provider,
     context.postgresql_provider,
     req.query.key as string,
@@ -38,6 +41,7 @@ router.post(subRoutes.coinbase, async (req: Request, res: Response) => {
 });
 
 router.post(subRoutes.stripe, async (req: Request, res: Response) => {
+  // refreshes stripe transaction history
   if (
     req &&
     req.body &&
@@ -48,7 +52,7 @@ router.post(subRoutes.stripe, async (req: Request, res: Response) => {
     const external_transaction_id = req.body.data.object.id;
     const context = res.locals.ctx as Context;
 
-    await refreshTransactionHistory(
+    await paymentController.refreshTransactionHistory(
       context.mongodb_provider,
       context.postgresql_provider,
       req.query.key as string,
@@ -60,11 +64,12 @@ router.post(subRoutes.stripe, async (req: Request, res: Response) => {
 });
 
 router.post(subRoutes.paypal, async (req: Request, res: Response) => {
+  // refreshes paypal transaction history
   if (req.body.resource_type === 'checkout-order') {
     const external_transaction_id = req.body.resource.id;
     const context = res.locals.ctx as Context;
 
-    await refreshTransactionHistory(
+    await paymentController.refreshTransactionHistory(
       context.mongodb_provider,
       context.postgresql_provider,
       req.query.key as string,

@@ -5,11 +5,7 @@
 import Router from 'express-promise-router';
 import { Request, Response } from 'express';
 import { ResponseCode } from '../constant';
-import {
-  getSubscription,
-  saveSubscription,
-  getUserSubscriptions,
-} from '../controller/subscription.controller';
+import { SubscriptionController } from '../controller/subscription.controller';
 import { Context } from '../interface/context.interface';
 
 const subRoutes = {
@@ -19,11 +15,13 @@ const subRoutes = {
 
 export const router = Router();
 
+const subscriptionController = new SubscriptionController();
+
 router.post(subRoutes.root, async (req: Request, res: Response) => {
   // Create new subscription session
   const context = res.locals.ctx as Context;
 
-  let subscription_id = await saveSubscription(
+  let subscription_id = await subscriptionController.saveSubscription(
     context.mongodb_provider,
     context.username,
     req.body.payment_config_key,
@@ -36,7 +34,7 @@ router.get(subRoutes.root, async (req: Request, res: Response) => {
   // Get subscription with subscription id
   const context = res.locals.ctx as Context;
 
-  let subscriptionSession = await getSubscription(
+  let subscriptionSession = await subscriptionController.getSubscription(
     context.mongodb_provider,
     req.query.subscription_id as string
   );
@@ -47,7 +45,7 @@ router.get(subRoutes.me, async (req: Request, res: Response) => {
   // Get subscription with username
   const context = res.locals.ctx as Context;
 
-  let subscriptionSession = await getUserSubscriptions(
+  let subscriptionSession = await subscriptionController.getUserSubscriptions(
     context.mongodb_provider,
     context.username
   );

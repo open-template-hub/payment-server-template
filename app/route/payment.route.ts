@@ -5,11 +5,7 @@
 import Router from 'express-promise-router';
 import { Request, Response } from 'express';
 import { ResponseCode } from '../constant';
-import {
-  confirmPayment,
-  initPayment,
-  initPaymentWithExternalTransactionId,
-} from '../controller/payment.controller';
+import { PaymentController } from '../controller/payment.controller';
 import { Context } from '../interface/context.interface';
 
 const subRoutes = {
@@ -23,11 +19,13 @@ export const adminRoutes = [subRoutes.confirm];
 
 export const router = Router();
 
+const paymentController = new PaymentController();
+
 router.post(subRoutes.root, async (req: Request, res: Response) => {
   // Create new payment session
   const context = res.locals.ctx as Context;
 
-  let paymentSession = await initPayment(
+  let paymentSession = await paymentController.initPayment(
     context.mongodb_provider,
     context.username,
     req.body.payment_config_key,
@@ -41,7 +39,7 @@ router.post(subRoutes.confirm, async (req: Request, res: Response) => {
   // Create new payment session
   const context = res.locals.ctx as Context;
 
-  let external_transaction_id = await confirmPayment(
+  let external_transaction_id = await paymentController.confirmPayment(
     context.mongodb_provider,
     req.body.payment_config_key,
     req.body.external_transaction_id
@@ -56,7 +54,7 @@ router.post(
     // Init payment with external transaction id
     const context = res.locals.ctx as Context;
 
-    let paymentSession = await initPaymentWithExternalTransactionId(
+    let paymentSession = await paymentController.initPaymentWithExternalTransactionId(
       context.mongodb_provider,
       context.username,
       req.body.payment_config_key,
