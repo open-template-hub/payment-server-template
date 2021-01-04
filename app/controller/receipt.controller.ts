@@ -2,7 +2,7 @@
  * @description holds receipt controller
  */
 
-import { PostgreSqlProvider } from '../provider/postgre.provider';
+import { PostgreSqlProvider } from '@open-template-hub/common';
 import { ReceiptRepository } from '../repository/receipt.repository';
 
 export class ReceiptController {

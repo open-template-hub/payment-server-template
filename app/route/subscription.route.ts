@@ -4,9 +4,8 @@
 
 import Router from 'express-promise-router';
 import { Request, Response } from 'express';
-import { ResponseCode } from '../constant';
 import { SubscriptionController } from '../controller/subscription.controller';
-import { Context } from '../interface/context.interface';
+import { Context, ResponseCode } from '@open-template-hub/common';
 
 const subRoutes = {
   root: '/',

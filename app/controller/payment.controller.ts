@@ -6,8 +6,7 @@ import { PaymentConfigRepository } from '../repository/payment-config.repository
 import { TransactionHistoryRepository } from '../repository/transaction-history.repository';
 import { PaymentWrapper } from '../wrapper/payment.wrapper';
 import { ProductRepository } from '../repository/product.repository';
-import { MongoDbProvider } from '../provider/mongo.provider';
-import { PostgreSqlProvider } from '../provider/postgre.provider';
+import { MongoDbProvider, PostgreSqlProvider } from '@open-template-hub/common';
 
 export class PaymentController {
   /**

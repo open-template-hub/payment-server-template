@@ -15,14 +15,17 @@ import {
   router as monitorRouter,
   publicRoutes as monitorPublicRoutes,
 } from './monitor.route';
-import { PreloadUtil } from '../util/preload.util';
+import { PreloadUtil } from '@open-template-hub/common';
 import { router as subscriptionRouter } from './subscription.route';
 import { NextFunction, Request, Response } from 'express';
-import { ErrorHandlerUtil } from '../util/error-handler.util';
-import { MongoDbProvider } from '../provider/mongo.provider';
-import { PostgreSqlProvider } from '../provider/postgre.provider';
-import { EncryptionUtil } from '../util/encryption.util';
-import { context } from '../context';
+import {
+  ErrorHandlerUtil,
+  MongoDbProvider,
+  PostgreSqlProvider,
+  EncryptionUtil,
+  context,
+} from '@open-template-hub/common';
+import { Environment } from '../../environment';
 
 const subRoutes = {
   root: '/',
@@ -35,8 +38,9 @@ const subRoutes = {
 };
 
 export module Routes {
-  const mongodb_provider = new MongoDbProvider();
-  const postgresql_provider = new PostgreSqlProvider();
+  var mongodb_provider: MongoDbProvider;
+  var environment: Environment;
+  var postgresql_provider: PostgreSqlProvider;
   const errorHandlerUtil = new ErrorHandlerUtil();
 
   var publicRoutes: string[] = [];
@@ -54,6 +58,12 @@ export module Routes {
 
   export function mount(app: any) {
     const preloadUtil = new PreloadUtil();
+    environment = new Environment();
+    mongodb_provider = new MongoDbProvider(environment.args());
+    postgresql_provider = new PostgreSqlProvider(
+      environment.args(),
+      'PaymentServer'
+    );
 
     preloadUtil
       .preload(mongodb_provider, postgresql_provider)
@@ -77,7 +87,7 @@ export module Routes {
       next: NextFunction
     ) => {
       var originalSend = res.send;
-      const encryptionUtil = new EncryptionUtil();
+      const encryptionUtil = new EncryptionUtil(environment.args());
       res.send = function () {
         console.log('Starting Encryption: ', new Date());
         let encrypted_arguments = encryptionUtil.encrypt(arguments);
@@ -101,10 +111,11 @@ export module Routes {
         // create context
         res.locals.ctx = await context(
           req,
-          mongodb_provider,
-          postgresql_provider,
+          environment.args(),
           publicRoutes,
-          adminRoutes
+          adminRoutes,
+          mongodb_provider,
+          postgresql_provider
         );
 
         next();
