@@ -4,7 +4,7 @@
 
 import { PaymentMethodEnum, PaymentWrapper } from '../wrapper/payment.wrapper';
 import { ProductRepository } from '../repository/product.repository';
-import { MongoDbProvider } from '../provider/mongo.provider';
+import { MongoDbProvider } from '@open-template-hub/common';
 
 export class ProductController {
   /**

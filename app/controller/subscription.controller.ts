@@ -5,7 +5,7 @@
 import { PaymentConfigRepository } from '../repository/payment-config.repository';
 import { SubscriptionRepository } from '../repository/subscription.repository';
 import { v4 as uuidv4 } from 'uuid';
-import { MongoDbProvider } from '../provider/mongo.provider';
+import { MongoDbProvider } from '@open-template-hub/common';
 
 export class SubscriptionController {
   /**
