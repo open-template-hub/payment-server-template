@@ -1,6 +1,6 @@
 {
  "name": "payment-server",
- "version": "2.2.6",
+ "version": "2.2.7",
  "description": "Payment Server Template",
  "main": "payment-server.main.ts",
  "license": "MIT",
