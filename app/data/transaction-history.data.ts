@@ -5,7 +5,7 @@
 import mongoose from 'mongoose';
 
 export class TransactionHistoryDataModel {
-  private readonly collectionName: string = 'transaction-history';
+  private readonly collectionName: string = 'transaction_history';
   private dataSchema: mongoose.Schema;
 
   constructor() {

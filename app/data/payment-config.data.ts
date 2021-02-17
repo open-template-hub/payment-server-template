@@ -5,7 +5,7 @@
 import mongoose from 'mongoose';
 
 export class PaymentConfigDataModel {
-  private readonly collectionName: string = 'payment-config';
+  private readonly collectionName: string = 'payment_config';
   private dataSchema: mongoose.Schema;
 
   constructor() {
