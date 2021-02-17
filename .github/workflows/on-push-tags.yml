@@ -1,4 +1,5 @@
 name: On Push Tags Workflows
+
 on:
   push:
     tags:
@@ -6,11 +7,12 @@ on:
 
 jobs:
   tagged-release:
-    name: "Release"
+    name: "Tagged Release"
     runs-on: "ubuntu-latest"
 
     steps:
-      - uses: "marvinpinto/action-automatic-releases@latest"
+      - name: Generate Release From Tag
+        uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false 
+          prerelease: false
