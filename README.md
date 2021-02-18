@@ -74,6 +74,7 @@ REGRESSION={Set true if Start Purpose Is Regression}
 ```
 
 ### Example Product:
+
 ```json
     {
         "product_id" : "0276d8d1-0945-412b-92d1-084a6e3f7554",
@@ -99,6 +100,7 @@ REGRESSION={Set true if Start Purpose Is Regression}
 ### Payment Configurations
 
 #### Stripe Payment Config:
+
 ```json
   {
         "key": "STRIPE",
@@ -116,6 +118,7 @@ REGRESSION={Set true if Start Purpose Is Regression}
 ```
 
 #### Coinbase Payment Config:
+
 ```json
     {
         "key" : "COINBASE",
@@ -130,6 +133,7 @@ REGRESSION={Set true if Start Purpose Is Regression}
 ```
 
 #### PayPal Payment Config:
+
 ```json
     {
         "key" : "PAYPAL",

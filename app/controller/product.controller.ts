@@ -2,9 +2,9 @@
  * @description holds product controller
  */
 
-import { PaymentMethodEnum, PaymentWrapper } from '../wrapper/payment.wrapper';
-import { ProductRepository } from '../repository/product.repository';
 import { MongoDbProvider } from '@open-template-hub/common';
+import { ProductRepository } from '../repository/product.repository';
+import { PaymentMethodEnum, PaymentWrapper } from '../wrapper/payment.wrapper';
 
 export class ProductController {
   /**
@@ -18,40 +18,40 @@ export class ProductController {
    * @returns created product
    */
   createProduct = async (
-    mongodb_provider: MongoDbProvider,
-    product_id: string,
-    name: string,
-    description: string,
-    amount: number,
-    currency: string
+      mongodb_provider: MongoDbProvider,
+      product_id: string,
+      name: string,
+      description: string,
+      amount: number,
+      currency: string
   ) => {
-    const stripePaymentWrapper = new PaymentWrapper(PaymentMethodEnum.Stripe);
+    const stripePaymentWrapper = new PaymentWrapper( PaymentMethodEnum.Stripe );
     const coinbasePaymentWrapper = new PaymentWrapper(
-      PaymentMethodEnum.Coinbase
+        PaymentMethodEnum.Coinbase
     );
-    const googlePaymentWrapper = new PaymentWrapper(PaymentMethodEnum.Google);
-    const paypalPaymentWrapper = new PaymentWrapper(PaymentMethodEnum.PayPal);
+    const googlePaymentWrapper = new PaymentWrapper( PaymentMethodEnum.Google );
+    const paypalPaymentWrapper = new PaymentWrapper( PaymentMethodEnum.PayPal );
 
     const payload = {
-      stripe: await stripePaymentWrapper.createProduct(amount, currency),
-      coinbase: await coinbasePaymentWrapper.createProduct(amount, currency),
-      google: await googlePaymentWrapper.createProduct(amount, currency),
-      paypal: await paypalPaymentWrapper.createProduct(amount, currency),
+      stripe: await stripePaymentWrapper.createProduct( amount, currency ),
+      coinbase: await coinbasePaymentWrapper.createProduct( amount, currency ),
+      google: await googlePaymentWrapper.createProduct( amount, currency ),
+      paypal: await paypalPaymentWrapper.createProduct( amount, currency ),
     };
 
     try {
       const productRepository = await new ProductRepository().initialize(
-        mongodb_provider.getConnection()
+          mongodb_provider.getConnection()
       );
 
       return await productRepository.createProductDocument(
-        product_id,
-        name,
-        description,
-        payload
+          product_id,
+          name,
+          description,
+          payload
       );
-    } catch (error) {
-      console.error('> createProductDocument error: ', error);
+    } catch ( error ) {
+      console.error( '> createProductDocument error: ', error );
       throw error;
     }
   };
@@ -63,17 +63,17 @@ export class ProductController {
    * @returns deleted product
    */
   deleteProduct = async (
-    mongodb_provider: MongoDbProvider,
-    product_id: string
+      mongodb_provider: MongoDbProvider,
+      product_id: string
   ) => {
     try {
       const productRepository = await new ProductRepository().initialize(
-        mongodb_provider.getConnection()
+          mongodb_provider.getConnection()
       );
 
-      return await productRepository.deleteProductDocument(product_id);
-    } catch (error) {
-      console.error('> createProductDocument error: ', error);
+      return await productRepository.deleteProductDocument( product_id );
+    } catch ( error ) {
+      console.error( '> createProductDocument error: ', error );
       throw error;
     }
   };

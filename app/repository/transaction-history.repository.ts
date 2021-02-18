@@ -13,9 +13,9 @@ export class TransactionHistoryRepository {
    * @param connection connection
    * @returns transaction history repository
    */
-  initialize = async (connection: any) => {
+  initialize = async ( connection: any ) => {
     this.dataModel = await new TransactionHistoryDataModel().getDataModel(
-      connection
+        connection
     );
     return this;
   };
@@ -29,22 +29,22 @@ export class TransactionHistoryRepository {
    * @param transaction_history transaction history
    */
   createTransactionHistory = async (
-    payment_config_key: string,
-    username: string,
-    product_id: string,
-    external_transaction_id: string,
-    transaction_history: any
+      payment_config_key: string,
+      username: string,
+      product_id: string,
+      external_transaction_id: string,
+      transaction_history: any
   ) => {
     try {
-      await this.dataModel.create({
+      await this.dataModel.create( {
         payment_config_key,
         username,
         product_id,
         external_transaction_id,
         payload: { transaction_history },
-      });
-    } catch (error) {
-      console.error('> createTransactionHistory error: ', error);
+      } );
+    } catch ( error ) {
+      console.error( '> createTransactionHistory error: ', error );
       throw error;
     }
   };
@@ -57,18 +57,18 @@ export class TransactionHistoryRepository {
    * @returns updated transaction history
    */
   updateTransactionHistory = async (
-    paymentConfig: PaymentConfig,
-    external_transaction_id: string,
-    transaction_history: any
+      paymentConfig: PaymentConfig,
+      external_transaction_id: string,
+      transaction_history: any
   ) => {
     try {
       return await this.dataModel.findOneAndUpdate(
-        { payment_config_key: paymentConfig.key, external_transaction_id },
-        { 'payload.transaction_history': transaction_history },
-        { new: true }
+          { payment_config_key: paymentConfig.key, external_transaction_id },
+          { 'payload.transaction_history': transaction_history },
+          { new: true }
       );
-    } catch (error) {
-      console.error('> updateTransactionHistory error: ', error);
+    } catch ( error ) {
+      console.error( '> updateTransactionHistory error: ', error );
       throw error;
     }
   };

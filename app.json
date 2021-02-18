@@ -1,21 +1,21 @@
 {
- "name": "Payment Server Template",
- "description": "Payment Server Template in NodeJS Express.js",
- "repository": "https://github.com/open-template-hub/payment-server-template",
- "logo": "https://avatars2.githubusercontent.com/u/65504426?s=200&v=4",
- "keywords": [
-  "payment",
-  "server",
-  "template",
-  "nodejs",
-  "typescript",
-  "paypal",
-  "stripe",
-  "coinbase",
-  "paypal-checkout",
-  "paypal-express-checkout",
-  "stripe-checkout",
-  "stripe-payments",
-  "coinbase-commerce"
- ]
+  "name": "Payment Server Template",
+  "description": "Payment Server Template in NodeJS Express.js",
+  "repository": "https://github.com/open-template-hub/payment-server-template",
+  "logo": "https://avatars2.githubusercontent.com/u/65504426?s=200&v=4",
+  "keywords": [
+    "payment",
+    "server",
+    "template",
+    "nodejs",
+    "typescript",
+    "paypal",
+    "stripe",
+    "coinbase",
+    "paypal-checkout",
+    "paypal-express-checkout",
+    "stripe-checkout",
+    "stripe-payments",
+    "coinbase-commerce"
+  ]
 }

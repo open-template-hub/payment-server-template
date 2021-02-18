@@ -2,14 +2,14 @@
  * @description holds Coinbase payment provider
  */
 
-import { PaymentMethod } from '../interface/payment-method.interface';
-import { PaymentMethodEnum } from '../wrapper/payment.wrapper';
 import axios from 'axios';
-import { ReceiptRepository } from '../repository/receipt.repository';
 import { CurrencyCode, ReceiptStatus } from '../constant';
-import { confirmed_external_transaction_ids } from '../store';
-import { Product } from '../interface/product.interface';
 import { PaymentConfig } from '../interface/payment-config.interface';
+import { PaymentMethod } from '../interface/payment-method.interface';
+import { Product } from '../interface/product.interface';
+import { ReceiptRepository } from '../repository/receipt.repository';
+import { confirmed_external_transaction_ids } from '../store';
+import { PaymentMethodEnum } from '../wrapper/payment.wrapper';
 
 export class CoinbasePayment implements PaymentMethod {
   private readonly SUCCESS_STATUS = 'CONFIRMED';
@@ -22,10 +22,10 @@ export class CoinbasePayment implements PaymentMethod {
    * @param quantity quantity
    */
   init = async (
-    dbConn: any,
-    paymentConfig: PaymentConfig,
-    product: Product,
-    quantity: number
+      dbConn: any,
+      paymentConfig: PaymentConfig,
+      product: Product,
+      quantity: number
   ) => {
     const charge = {
       name: product.name,
@@ -46,9 +46,9 @@ export class CoinbasePayment implements PaymentMethod {
     };
 
     const response = await axios.post<any>(
-      paymentConfig.payload.charge_url,
-      charge,
-      { headers: headers }
+        paymentConfig.payload.charge_url,
+        charge,
+        { headers: headers }
     );
 
     return { history: response.data.data, id: response.data.data.id };
@@ -59,7 +59,7 @@ export class CoinbasePayment implements PaymentMethod {
    * @param paymentConfig payment config
    * @param external_transaction external transaction
    */
-  build = async (paymentConfig: PaymentConfig, external_transaction: any) => {
+  build = async ( paymentConfig: PaymentConfig, external_transaction: any ) => {
     return {
       method: PaymentMethodEnum.Coinbase,
       payload: { id: external_transaction.history.code },
@@ -73,11 +73,11 @@ export class CoinbasePayment implements PaymentMethod {
    * @param external_transaction_id external transaction id
    */
   confirmPayment = async (
-    paymentConfig: PaymentConfig,
-    external_transaction_id: string
+      paymentConfig: PaymentConfig,
+      external_transaction_id: string
   ) => {
     confirmed_external_transaction_ids.push(
-      paymentConfig.payload.method + '_' + external_transaction_id
+        paymentConfig.payload.method + '_' + external_transaction_id
     );
   };
 
@@ -88,8 +88,8 @@ export class CoinbasePayment implements PaymentMethod {
    * @returns transaction history
    */
   getTransactionHistory = async (
-    paymentConfig: PaymentConfig,
-    external_transaction_id: string
+      paymentConfig: PaymentConfig,
+      external_transaction_id: string
   ) => {
     const headers = {
       'X-CC-Api-Key': paymentConfig.payload.secret,
@@ -97,31 +97,31 @@ export class CoinbasePayment implements PaymentMethod {
     };
 
     const response = await axios.get<any>(
-      `${paymentConfig.payload.charge_url}/${external_transaction_id}`,
-      { headers: headers }
+        `${ paymentConfig.payload.charge_url }/${ external_transaction_id }`,
+        { headers: headers }
     );
 
     const isRegression = process.env.REGRESSION || false;
 
     console.log(
-      'Coinbase.getTransactionHistory > isRegression: ',
-      isRegression
+        'Coinbase.getTransactionHistory > isRegression: ',
+        isRegression
     );
 
     const history = response.data.data;
 
     if (
-      confirmed_external_transaction_ids.indexOf(
-        paymentConfig.payload.method + '_' + external_transaction_id
-      ) !== -1 &&
-      isRegression
+        confirmed_external_transaction_ids.indexOf(
+            paymentConfig.payload.method + '_' + external_transaction_id
+        ) !== -1 &&
+        isRegression
     ) {
       console.log(
-        'Coinbase.getTransactionHistory > Setting stripe status to success'
+          'Coinbase.getTransactionHistory > Setting stripe status to success'
       );
-      history.payments.push({
+      history.payments.push( {
         status: this.SUCCESS_STATUS,
-      });
+      } );
     }
 
     return history;
@@ -135,59 +135,59 @@ export class CoinbasePayment implements PaymentMethod {
    * @param updated_transaction_history updated transaction history
    */
   receiptStatusUpdate = async (
-    dbConn: any,
-    paymentConfig: PaymentConfig,
-    external_transaction_id: string,
-    updated_transaction_history: any
+      dbConn: any,
+      paymentConfig: PaymentConfig,
+      external_transaction_id: string,
+      updated_transaction_history: any
   ) => {
     if (
-      updated_transaction_history &&
-      updated_transaction_history.payload.transaction_history &&
-      updated_transaction_history.payload.transaction_history.payments &&
-      updated_transaction_history.payload.transaction_history.payments.length >
+        updated_transaction_history &&
+        updated_transaction_history.payload.transaction_history &&
+        updated_transaction_history.payload.transaction_history.payments &&
+        updated_transaction_history.payload.transaction_history.payments.length >
         0
     ) {
       let confirmed = false;
 
       await updated_transaction_history.payload.transaction_history.payments.forEach(
-        (payment: any) => {
-          if (payment.status === this.SUCCESS_STATUS) {
-            confirmed = true;
+          ( payment: any ) => {
+            if ( payment.status === this.SUCCESS_STATUS ) {
+              confirmed = true;
+            }
           }
-        }
       );
 
-      if (confirmed) {
-        const receiptRepository = new ReceiptRepository(dbConn);
+      if ( confirmed ) {
+        const receiptRepository = new ReceiptRepository( dbConn );
         let created = await receiptRepository.getReceiptWithExternalTransactionId(
-          updated_transaction_history.username,
-          external_transaction_id,
-          updated_transaction_history.product_id,
-          paymentConfig.key
-        );
-
-        if (
-          !created &&
-          updated_transaction_history.payload.transaction_history.pricing &&
-          updated_transaction_history.payload.transaction_history.pricing.local
-        ) {
-          let amount: number =
-            updated_transaction_history.payload.transaction_history.pricing
-              .local.amount;
-          let currency_code = this.currencyCodeMap(
-            updated_transaction_history.payload.transaction_history.pricing
-              .local.currency
-          );
-
-          await receiptRepository.createReceipt(
             updated_transaction_history.username,
             external_transaction_id,
             updated_transaction_history.product_id,
-            paymentConfig.key,
-            new Date(),
-            amount,
-            currency_code,
-            ReceiptStatus.SUCCESS
+            paymentConfig.key
+        );
+
+        if (
+            !created &&
+            updated_transaction_history.payload.transaction_history.pricing &&
+            updated_transaction_history.payload.transaction_history.pricing.local
+        ) {
+          let amount: number =
+              updated_transaction_history.payload.transaction_history.pricing
+                  .local.amount;
+          let currency_code = this.currencyCodeMap(
+              updated_transaction_history.payload.transaction_history.pricing
+                  .local.currency
+          );
+
+          await receiptRepository.createReceipt(
+              updated_transaction_history.username,
+              external_transaction_id,
+              updated_transaction_history.product_id,
+              paymentConfig.key,
+              new Date(),
+              amount,
+              currency_code,
+              ReceiptStatus.SUCCESS
           );
         }
       }
@@ -198,8 +198,8 @@ export class CoinbasePayment implements PaymentMethod {
    * gets mapped currency code
    * @param currency_code currency code
    */
-  currencyCodeMap = (currency_code: string) => {
-    if (currency_code === 'USD') {
+  currencyCodeMap = ( currency_code: string ) => {
+    if ( currency_code === 'USD' ) {
       return CurrencyCode.USD;
     }
     return currency_code;
@@ -210,7 +210,7 @@ export class CoinbasePayment implements PaymentMethod {
    * @param amount amount
    * @param currency currency
    */
-  createProduct = async (amount: number, currency: string) => {
+  createProduct = async ( amount: number, currency: string ) => {
     return { amount, currency };
   };
 }

@@ -2,11 +2,11 @@
  * @description holds payment controller
  */
 
+import { MongoDbProvider, PostgreSqlProvider } from '@open-template-hub/common';
 import { PaymentConfigRepository } from '../repository/payment-config.repository';
+import { ProductRepository } from '../repository/product.repository';
 import { TransactionHistoryRepository } from '../repository/transaction-history.repository';
 import { PaymentWrapper } from '../wrapper/payment.wrapper';
-import { ProductRepository } from '../repository/product.repository';
-import { MongoDbProvider, PostgreSqlProvider } from '@open-template-hub/common';
 
 export class PaymentController {
   /**
@@ -19,56 +19,56 @@ export class PaymentController {
    * @returns payment session
    */
   initPayment = async (
-    mongodb_provider: MongoDbProvider,
-    username: string,
-    payment_config_key: string,
-    product_id: string,
-    quantity: number
+      mongodb_provider: MongoDbProvider,
+      username: string,
+      payment_config_key: string,
+      product_id: string,
+      quantity: number
   ) => {
     let paymentSession = null;
 
     try {
       const paymentConfigRepository = await new PaymentConfigRepository().initialize(
-        mongodb_provider.getConnection()
+          mongodb_provider.getConnection()
       );
 
       let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
-        payment_config_key
+          payment_config_key
       );
 
-      if (paymentConfig === null)
-        throw new Error('Payment method can not be found');
+      if ( paymentConfig === null )
+        throw new Error( 'Payment method can not be found' );
 
-      const paymentWrapper = new PaymentWrapper(paymentConfig.payload.method);
+      const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
 
       const productRepository = await new ProductRepository().initialize(
-        mongodb_provider.getConnection()
+          mongodb_provider.getConnection()
       );
 
       let product: any = await productRepository.getProductByProductId(
-        product_id
+          product_id
       );
-      if (product === null) throw new Error('Product can not be found');
+      if ( product === null ) throw new Error( 'Product can not be found' );
 
       let external_transaction = await paymentWrapper.init(
-        mongodb_provider.getConnection(),
-        paymentConfig,
-        product,
-        quantity
+          mongodb_provider.getConnection(),
+          paymentConfig,
+          product,
+          quantity
       );
-      if (external_transaction === null)
-        throw new Error('Payment can not be initiated');
+      if ( external_transaction === null )
+        throw new Error( 'Payment can not be initiated' );
 
       const transactionHistoryRepository = await new TransactionHistoryRepository().initialize(
-        mongodb_provider.getConnection()
+          mongodb_provider.getConnection()
       );
 
       await transactionHistoryRepository.createTransactionHistory(
-        payment_config_key,
-        username,
-        product_id,
-        external_transaction.id,
-        external_transaction.history
+          payment_config_key,
+          username,
+          product_id,
+          external_transaction.id,
+          external_transaction.history
       );
 
       /** build method is important because other providers might have special build
@@ -76,11 +76,11 @@ export class PaymentController {
        * that's why build is attached
        */
       paymentSession = await paymentWrapper.build(
-        paymentConfig,
-        external_transaction
+          paymentConfig,
+          external_transaction
       );
-    } catch (error) {
-      console.error('> initPayment error: ', error);
+    } catch ( error ) {
+      console.error( '> initPayment error: ', error );
       throw error;
     }
 
@@ -97,28 +97,28 @@ export class PaymentController {
    * @returns external transaction id
    */
   initPaymentWithExternalTransactionId = async (
-    mongodb_provider: MongoDbProvider,
-    username: string,
-    payment_config_key: string,
-    product_id: string,
-    external_transaction_id: string
+      mongodb_provider: MongoDbProvider,
+      username: string,
+      payment_config_key: string,
+      product_id: string,
+      external_transaction_id: string
   ) => {
     try {
       const transactionHistoryRepository = await new TransactionHistoryRepository().initialize(
-        mongodb_provider.getConnection()
+          mongodb_provider.getConnection()
       );
       await transactionHistoryRepository.createTransactionHistory(
-        payment_config_key,
-        username,
-        product_id,
-        external_transaction_id,
-        {}
+          payment_config_key,
+          username,
+          product_id,
+          external_transaction_id,
+          {}
       );
       return {
         external_transaction_id: external_transaction_id,
       };
-    } catch (error) {
-      console.error('> initPaymentWithExternalTransactionId error: ', error);
+    } catch ( error ) {
+      console.error( '> initPaymentWithExternalTransactionId error: ', error );
       throw error;
     }
   };
@@ -131,47 +131,47 @@ export class PaymentController {
    * @param external_transaction_id external transaction id
    */
   refreshTransactionHistory = async (
-    mongodb_provider: MongoDbProvider,
-    postgresql_provider: PostgreSqlProvider,
-    payment_config_key: string,
-    external_transaction_id: string
+      mongodb_provider: MongoDbProvider,
+      postgresql_provider: PostgreSqlProvider,
+      payment_config_key: string,
+      external_transaction_id: string
   ) => {
     try {
       const paymentConfigRepository = await new PaymentConfigRepository().initialize(
-        mongodb_provider.getConnection()
+          mongodb_provider.getConnection()
       );
 
       let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
-        payment_config_key
+          payment_config_key
       );
 
-      if (paymentConfig === null)
-        throw new Error('Payment method can not be found');
-      const paymentWrapper = new PaymentWrapper(paymentConfig.payload.method);
+      if ( paymentConfig === null )
+        throw new Error( 'Payment method can not be found' );
+      const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
 
       const transaction_history = await paymentWrapper.getTransactionHistory(
-        paymentConfig,
-        external_transaction_id
+          paymentConfig,
+          external_transaction_id
       );
 
       const transactionHistoryRepository = await new TransactionHistoryRepository().initialize(
-        mongodb_provider.getConnection()
+          mongodb_provider.getConnection()
       );
 
       const updated_transaction_history = await transactionHistoryRepository.updateTransactionHistory(
-        paymentConfig,
-        external_transaction_id,
-        transaction_history
+          paymentConfig,
+          external_transaction_id,
+          transaction_history
       );
 
       await paymentWrapper.receiptStatusUpdate(
-        postgresql_provider,
-        paymentConfig,
-        external_transaction_id,
-        updated_transaction_history
+          postgresql_provider,
+          paymentConfig,
+          external_transaction_id,
+          updated_transaction_history
       );
-    } catch (error) {
-      console.error('> refreshTransactionHistory error: ', error);
+    } catch ( error ) {
+      console.error( '> refreshTransactionHistory error: ', error );
       throw error;
     }
   };
@@ -185,31 +185,31 @@ export class PaymentController {
    * @returns external transaction id
    */
   confirmPayment = async (
-    mongodb_provider: MongoDbProvider,
-    payment_config_key: string,
-    external_transaction_id: string
+      mongodb_provider: MongoDbProvider,
+      payment_config_key: string,
+      external_transaction_id: string
   ) => {
     try {
       const paymentConfigRepository = await new PaymentConfigRepository().initialize(
-        mongodb_provider.getConnection()
+          mongodb_provider.getConnection()
       );
 
       let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
-        payment_config_key
+          payment_config_key
       );
 
-      if (paymentConfig === null)
-        throw new Error('Payment method can not be found');
-      const paymentWrapper = new PaymentWrapper(paymentConfig.payload.method);
+      if ( paymentConfig === null )
+        throw new Error( 'Payment method can not be found' );
+      const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
 
       await paymentWrapper.confirmPayment(
-        paymentConfig,
-        external_transaction_id
+          paymentConfig,
+          external_transaction_id
       );
 
       return external_transaction_id;
-    } catch (error) {
-      console.error('> refreshTransactionHistory error: ', error);
+    } catch ( error ) {
+      console.error( '> refreshTransactionHistory error: ', error );
       throw error;
     }
   };

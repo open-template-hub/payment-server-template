@@ -18,8 +18,10 @@ export enum PaymentMethodEnum {
 }
 
 export class PaymentWrapper implements PaymentMethod {
-  constructor(method: PaymentMethodEnum | undefined) {
-    switch (method) {
+  paymentMethod: PaymentMethod | undefined;
+
+  constructor( method: PaymentMethodEnum | undefined ) {
+    switch ( method ) {
       case PaymentMethodEnum.Google:
         this.paymentMethod = new GooglePayment();
         break;
@@ -37,8 +39,6 @@ export class PaymentWrapper implements PaymentMethod {
     }
   }
 
-  paymentMethod: PaymentMethod | undefined;
-
   /**
    * initializes payment method
    * @param dbConn db connection
@@ -47,17 +47,17 @@ export class PaymentWrapper implements PaymentMethod {
    * @param quantity quantity
    */
   init = async (
-    dbConn: any,
-    paymentConfig: PaymentConfig,
-    product: Product,
-    quantity: number
+      dbConn: any,
+      paymentConfig: PaymentConfig,
+      product: Product,
+      quantity: number
   ) => {
-    if (this.paymentMethod === undefined) return null;
+    if ( this.paymentMethod === undefined ) return null;
     return await this.paymentMethod.init(
-      dbConn,
-      paymentConfig,
-      product,
-      quantity
+        dbConn,
+        paymentConfig,
+        product,
+        quantity
     );
   };
 
@@ -67,11 +67,11 @@ export class PaymentWrapper implements PaymentMethod {
    * @param external_transaction external transaction
    */
   build = async (
-    paymentConfig: PaymentConfig,
-    external_transaction: string
+      paymentConfig: PaymentConfig,
+      external_transaction: string
   ) => {
-    if (this.paymentMethod === undefined) return null;
-    return await this.paymentMethod.build(paymentConfig, external_transaction);
+    if ( this.paymentMethod === undefined ) return null;
+    return await this.paymentMethod.build( paymentConfig, external_transaction );
   };
 
   /**
@@ -80,13 +80,13 @@ export class PaymentWrapper implements PaymentMethod {
    * @param external_transaction_id external transaction id
    */
   getTransactionHistory = async (
-    paymentConfig: PaymentConfig,
-    external_transaction_id: string
+      paymentConfig: PaymentConfig,
+      external_transaction_id: string
   ) => {
-    if (this.paymentMethod === undefined) return null;
+    if ( this.paymentMethod === undefined ) return null;
     return await this.paymentMethod.getTransactionHistory(
-      paymentConfig,
-      external_transaction_id
+        paymentConfig,
+        external_transaction_id
     );
   };
 
@@ -98,17 +98,17 @@ export class PaymentWrapper implements PaymentMethod {
    * @param updated_transaction_history updated transaction history
    */
   receiptStatusUpdate = async (
-    dbConn: any,
-    paymentConfig: PaymentConfig,
-    external_transaction_id: string,
-    updated_transaction_history: any
+      dbConn: any,
+      paymentConfig: PaymentConfig,
+      external_transaction_id: string,
+      updated_transaction_history: any
   ) => {
-    if (this.paymentMethod === undefined) return;
+    if ( this.paymentMethod === undefined ) return;
     await this.paymentMethod.receiptStatusUpdate(
-      dbConn,
-      paymentConfig,
-      external_transaction_id,
-      updated_transaction_history
+        dbConn,
+        paymentConfig,
+        external_transaction_id,
+        updated_transaction_history
     );
   };
 
@@ -117,9 +117,9 @@ export class PaymentWrapper implements PaymentMethod {
    * @param amount product amount
    * @param currency product currency
    */
-  createProduct = async (amount: number, currency: string) => {
-    if (this.paymentMethod === undefined) return null;
-    return this.paymentMethod.createProduct(amount, currency);
+  createProduct = async ( amount: number, currency: string ) => {
+    if ( this.paymentMethod === undefined ) return null;
+    return this.paymentMethod.createProduct( amount, currency );
   };
 
   /**
@@ -129,13 +129,13 @@ export class PaymentWrapper implements PaymentMethod {
    * @param external_transaction_id external transaction id
    */
   confirmPayment = async (
-    paymentConfig: PaymentConfig,
-    external_transaction_id: string
+      paymentConfig: PaymentConfig,
+      external_transaction_id: string
   ) => {
-    if (this.paymentMethod === undefined) return;
+    if ( this.paymentMethod === undefined ) return;
     await this.paymentMethod.confirmPayment(
-      paymentConfig,
-      external_transaction_id
+        paymentConfig,
+        external_transaction_id
     );
   };
 }

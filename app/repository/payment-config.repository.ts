@@ -12,9 +12,9 @@ export class PaymentConfigRepository {
    * @param connection db connection
    * @returns payment config repository
    */
-  initialize = async (connection: any) => {
+  initialize = async ( connection: any ) => {
     this.dataModel = await new PaymentConfigDataModel().getDataModel(
-      connection
+        connection
     );
     return this;
   };
@@ -24,11 +24,11 @@ export class PaymentConfigRepository {
    * @param key key
    * @returns payment config
    */
-  getPaymentConfigByKey = async (key: string) => {
+  getPaymentConfigByKey = async ( key: string ) => {
     try {
-      return await this.dataModel.findOne({ key });
-    } catch (error) {
-      console.error('> getPaymentConfigByKey error: ', error);
+      return await this.dataModel.findOne( { key } );
+    } catch ( error ) {
+      console.error( '> getPaymentConfigByKey error: ', error );
       throw error;
     }
   };

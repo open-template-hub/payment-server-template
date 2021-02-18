@@ -12,8 +12,8 @@ export class ProductRepository {
    * @param connection db connection
    * @returns product repository
    */
-  initialize = async (connection: any) => {
-    this.dataModel = await new ProductDataModel().getDataModel(connection);
+  initialize = async ( connection: any ) => {
+    this.dataModel = await new ProductDataModel().getDataModel( connection );
     return this;
   };
 
@@ -26,20 +26,20 @@ export class ProductRepository {
    * @returns created product
    */
   createProductDocument = async (
-    product_id: string,
-    name: string,
-    description: string,
-    payload: any
+      product_id: string,
+      name: string,
+      description: string,
+      payload: any
   ) => {
     try {
-      return await this.dataModel.create({
+      return await this.dataModel.create( {
         product_id,
         name,
         description,
         payload,
-      });
-    } catch (error) {
-      console.error('> createProductDocument error: ', error);
+      } );
+    } catch ( error ) {
+      console.error( '> createProductDocument error: ', error );
       throw error;
     }
   };
@@ -49,11 +49,11 @@ export class ProductRepository {
    * @param product_id product id
    * @returns deleted product
    */
-  deleteProductDocument = async (product_id: string) => {
+  deleteProductDocument = async ( product_id: string ) => {
     try {
-      return await this.dataModel.findOneAndRemove({ product_id });
-    } catch (error) {
-      console.error('> getProductByProductId error: ', error);
+      return await this.dataModel.findOneAndRemove( { product_id } );
+    } catch ( error ) {
+      console.error( '> getProductByProductId error: ', error );
       throw error;
     }
   };
@@ -63,11 +63,11 @@ export class ProductRepository {
    * @param product_id product id
    * @returns product
    */
-  getProductByProductId = async (product_id: string) => {
+  getProductByProductId = async ( product_id: string ) => {
     try {
-      return await this.dataModel.findOne({ product_id });
-    } catch (error) {
-      console.error('> getProductByProductId error: ', error);
+      return await this.dataModel.findOne( { product_id } );
+    } catch ( error ) {
+      console.error( '> getProductByProductId error: ', error );
       throw error;
     }
   };
@@ -80,20 +80,20 @@ export class ProductRepository {
    * @returns updated product
    */
   updateProductPayload = async (
-    product_id: string,
-    payloadName: string,
-    payload: any
+      product_id: string,
+      payloadName: string,
+      payload: any
   ) => {
     let obj = {} as any;
-    obj[payloadName] = payload;
-    console.log('updateProductPayload::PayloadObject: ', obj);
+    obj[ payloadName ] = payload;
+    console.log( 'updateProductPayload::PayloadObject: ', obj );
 
     try {
-      return await this.dataModel.findOneAndUpdate({ product_id }, obj, {
+      return await this.dataModel.findOneAndUpdate( { product_id }, obj, {
         new: true,
-      });
-    } catch (error) {
-      console.error('> updateProductPayload error: ', error);
+      } );
+    } catch ( error ) {
+      console.error( '> updateProductPayload error: ', error );
       throw error;
     }
   };

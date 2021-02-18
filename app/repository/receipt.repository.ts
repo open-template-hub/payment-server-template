@@ -5,7 +5,8 @@
 import { ReceiptStatus } from '../constant';
 
 export class ReceiptRepository {
-  constructor(private connection: any) {}
+  constructor( private connection: any ) {
+  }
 
   /**
    * gets receipt with external transaction id
@@ -16,22 +17,22 @@ export class ReceiptRepository {
    * @returns receipt
    */
   getReceiptWithExternalTransactionId = async (
-    username: string,
-    external_transaction_id: string,
-    product_id: string,
-    payment_config_key: string
+      username: string,
+      external_transaction_id: string,
+      product_id: string,
+      payment_config_key: string
   ) => {
     let res;
     try {
       res = await this.connection.query(
-        'SELECT * FROM receipts WHERE username = $1 and external_transaction_id = $2 and product_id = $3 and payment_config_key = $4',
-        [username, external_transaction_id, product_id, payment_config_key]
+          'SELECT * FROM receipts WHERE username = $1 and external_transaction_id = $2 and product_id = $3 and payment_config_key = $4',
+          [ username, external_transaction_id, product_id, payment_config_key ]
       );
-    } catch (error) {
-      console.error('> getReceiptWithExternalTransactionId error: ', error);
+    } catch ( error ) {
+      console.error( '> getReceiptWithExternalTransactionId error: ', error );
       throw error;
     }
-    return res.rows[0];
+    return res.rows[ 0 ];
   };
 
   /**
@@ -41,19 +42,19 @@ export class ReceiptRepository {
    * @returns successful receipts
    */
   getSuccessfulReceiptsWithUsernameAndProductId = async (
-    username: string,
-    product_id: string
+      username: string,
+      product_id: string
   ) => {
     let res;
     try {
       res = await this.connection.query(
-        'SELECT * FROM receipts WHERE username = $1 and product_id = $2 and status = $3',
-        [username, product_id, ReceiptStatus.SUCCESS]
+          'SELECT * FROM receipts WHERE username = $1 and product_id = $2 and status = $3',
+          [ username, product_id, ReceiptStatus.SUCCESS ]
       );
-    } catch (error) {
+    } catch ( error ) {
       console.error(
-        '> getSuccessfulReceiptsWithUsernameAndProductId error: ',
-        error
+          '> getSuccessfulReceiptsWithUsernameAndProductId error: ',
+          error
       );
       throw error;
     }
@@ -72,31 +73,31 @@ export class ReceiptRepository {
    * @param status receipt status
    */
   createReceipt = async (
-    username: string,
-    external_transaction_id: string,
-    product_id: string,
-    payment_config_key: string,
-    created_time: Date,
-    total_amount: number,
-    currency_code: string,
-    status: string
+      username: string,
+      external_transaction_id: string,
+      product_id: string,
+      payment_config_key: string,
+      created_time: Date,
+      total_amount: number,
+      currency_code: string,
+      status: string
   ) => {
     try {
       await this.connection.query(
-        'INSERT INTO receipts(username, external_transaction_id, product_id, payment_config_key, created_time, total_amount, currency_code, status) VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
-        [
-          username,
-          external_transaction_id,
-          product_id,
-          payment_config_key,
-          created_time,
-          total_amount,
-          currency_code,
-          status,
-        ]
+          'INSERT INTO receipts(username, external_transaction_id, product_id, payment_config_key, created_time, total_amount, currency_code, status) VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
+          [
+            username,
+            external_transaction_id,
+            product_id,
+            payment_config_key,
+            created_time,
+            total_amount,
+            currency_code,
+            status,
+          ]
       );
-    } catch (error) {
-      console.error('> createReceipt error: ', error);
+    } catch ( error ) {
+      console.error( '> createReceipt error: ', error );
       throw error;
     }
   };

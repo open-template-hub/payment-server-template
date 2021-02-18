@@ -1,7 +1,7 @@
 import { EnvArgs } from '@open-template-hub/common';
 
 export class Environment {
-  constructor(private _args: EnvArgs = {} as EnvArgs) {
+  constructor( private _args: EnvArgs = {} as EnvArgs ) {
     this._args = {
       accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
       mongoDbConnectionLimit: process.env.MONGODB_CONNECTION_LIMIT,

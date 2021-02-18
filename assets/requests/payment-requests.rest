@@ -4,9 +4,9 @@ Content-Type: application/json
 Authorization: Bearer token
 
 {
- "payment_config_key": "STRIPE",
- "product_id": "Product Id",
- "quantity": 1
+  "payment_config_key": "STRIPE",
+  "product_id": "Product Id",
+  "quantity": 1
 }
 
 ### Init Payment With External Transaction Id
@@ -15,7 +15,7 @@ Content-Type: application/json
 Authorization: Bearer token
 
 {
- "payment_config_key": "STRIPE",
- "external_transaction_id": "cs_test_transaction_id",
- "product_id": "Product Id"
+  "payment_config_key": "STRIPE",
+  "external_transaction_id": "cs_test_transaction_id",
+  "product_id": "Product Id"
 }

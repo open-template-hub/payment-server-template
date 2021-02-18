@@ -12,8 +12,8 @@ export class SubscriptionRepository {
    * @param connection connection
    * @returns subscription repository
    */
-  initialize = async (connection: any) => {
-    this.dataModel = await new SubscriptionDataModel().getDataModel(connection);
+  initialize = async ( connection: any ) => {
+    this.dataModel = await new SubscriptionDataModel().getDataModel( connection );
     return this;
   };
 
@@ -26,20 +26,20 @@ export class SubscriptionRepository {
    * @returns created subscription
    */
   createSubscription = async (
-    subscription_id: string,
-    key: string,
-    username: string,
-    payload: any
+      subscription_id: string,
+      key: string,
+      username: string,
+      payload: any
   ) => {
     try {
-      return await this.dataModel.create({
+      return await this.dataModel.create( {
         subscription_id,
         key,
         username,
         payload,
-      });
-    } catch (error) {
-      console.error('> createSubscription error: ', error);
+      } );
+    } catch ( error ) {
+      console.error( '> createSubscription error: ', error );
       throw error;
     }
   };
@@ -49,11 +49,11 @@ export class SubscriptionRepository {
    * @param subscription_id subscription id
    * @returns subscription
    */
-  getSubscription = async (subscription_id: string) => {
+  getSubscription = async ( subscription_id: string ) => {
     try {
-      return await this.dataModel.findOne({ subscription_id });
-    } catch (error) {
-      console.error('> getSubscription error: ', error);
+      return await this.dataModel.findOne( { subscription_id } );
+    } catch ( error ) {
+      console.error( '> getSubscription error: ', error );
       throw error;
     }
   };
@@ -63,11 +63,11 @@ export class SubscriptionRepository {
    * @param username username
    * @returns subscriptions
    */
-  getUserSubscriptions = async (username: string) => {
+  getUserSubscriptions = async ( username: string ) => {
     try {
-      return await this.dataModel.find({ username });
-    } catch (error) {
-      console.error('> getUserSubscriptions error: ', error);
+      return await this.dataModel.find( { username } );
+    } catch ( error ) {
+      console.error( '> getUserSubscriptions error: ', error );
       throw error;
     }
   };
