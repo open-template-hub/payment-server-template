@@ -179,15 +179,16 @@ export class CoinbasePayment implements PaymentMethod {
                   .local.currency
           );
 
-          await receiptRepository.createReceipt(
-              updated_transaction_history.username,
-              external_transaction_id,
-              updated_transaction_history.product_id,
-              paymentConfig.key,
-              new Date(),
-              amount,
-              currency_code,
-              ReceiptStatus.SUCCESS
+          await receiptRepository.createReceipt( {
+                username: updated_transaction_history.username,
+                external_transaction_id,
+                product_id: updated_transaction_history.product_id,
+                payment_config_key: paymentConfig.key,
+                created_time: new Date(),
+                total_amount: amount,
+                currency_code,
+                status: ReceiptStatus.SUCCESS
+              }
           );
         }
       }

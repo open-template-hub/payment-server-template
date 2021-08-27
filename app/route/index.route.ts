@@ -25,7 +25,7 @@ const subRoutes = {
   subscription: '/subscription',
 };
 
-export module Routes {
+export namespace Routes {
   var mongodb_provider: MongoDbProvider;
   var environment: Environment;
   var postgresql_provider: PostgreSqlProvider;
@@ -36,8 +36,7 @@ export module Routes {
 
   function populateRoutes( mainRoute: string, routes: Array<string> ) {
     var populated = Array<string>();
-    for ( var i = 0; i < routes.length; i++ ) {
-      const s = routes[ i ];
+    for ( const s of routes ) {
       populated.push( mainRoute + ( s === '/' ? '' : s ) );
     }
 

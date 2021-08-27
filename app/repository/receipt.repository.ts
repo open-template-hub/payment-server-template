@@ -63,36 +63,38 @@ export class ReceiptRepository {
 
   /**
    * creates a receipt
-   * @param username username
-   * @param external_transaction_id external transaction id
-   * @param product_id product id
-   * @param payment_config_key payment config key
-   * @param created_time created time
-   * @param total_amount total amount
-   * @param currency_code currency code
-   * @param status receipt status
+   * @param receiptObject
+   *  username
+   *  external_transaction_id external transaction id
+   *  product_id product id
+   *  payment_config_key payment config key
+   *  created_time created time
+   *  total_amount total amount
+   *  currency_code currency code
+   *  status receipt status
    */
-  createReceipt = async (
-      username: string,
-      external_transaction_id: string,
-      product_id: string,
-      payment_config_key: string,
-      created_time: Date,
-      total_amount: number,
-      currency_code: string,
-      status: string
+  createReceipt = async ( receiptObject: {
+        username: string,
+        external_transaction_id: string,
+        product_id: string,
+        payment_config_key: string,
+        created_time: Date,
+        total_amount: number,
+        currency_code: string,
+        status: string
+      }
   ) => {
     try {
       await this.connection.query(
           'INSERT INTO receipts(username, external_transaction_id, product_id, payment_config_key, created_time, total_amount, currency_code, status) VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
           [
-            username,
-            external_transaction_id,
-            product_id,
-            payment_config_key,
-            created_time,
-            total_amount,
-            currency_code,
+            receiptObject.username,
+            receiptObject.external_transaction_id,
+            receiptObject.product_id,
+            receiptObject.payment_config_key,
+            receiptObject.created_time,
+            receiptObject.total_amount,
+            receiptObject.currency_code,
             status,
           ]
       );

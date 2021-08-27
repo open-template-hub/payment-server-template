@@ -58,6 +58,7 @@ export class GooglePayment implements PaymentMethod {
       external_transaction_id: string,
       updated_transaction_history: any
   ) => {
+    // Todo: Implement
   };
 
   /**
@@ -79,5 +80,6 @@ export class GooglePayment implements PaymentMethod {
       paymentConfig: PaymentConfig,
       external_transaction_id: string
   ) => {
+    // Todo: Implement
   };
 }

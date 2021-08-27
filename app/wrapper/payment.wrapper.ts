@@ -53,7 +53,7 @@ export class PaymentWrapper implements PaymentMethod {
       quantity: number
   ) => {
     if ( this.paymentMethod === undefined ) return null;
-    return await this.paymentMethod.init(
+    return this.paymentMethod.init(
         dbConn,
         paymentConfig,
         product,
@@ -71,7 +71,7 @@ export class PaymentWrapper implements PaymentMethod {
       external_transaction: string
   ) => {
     if ( this.paymentMethod === undefined ) return null;
-    return await this.paymentMethod.build( paymentConfig, external_transaction );
+    return this.paymentMethod.build( paymentConfig, external_transaction );
   };
 
   /**
@@ -84,7 +84,7 @@ export class PaymentWrapper implements PaymentMethod {
       external_transaction_id: string
   ) => {
     if ( this.paymentMethod === undefined ) return null;
-    return await this.paymentMethod.getTransactionHistory(
+    return this.paymentMethod.getTransactionHistory(
         paymentConfig,
         external_transaction_id
     );

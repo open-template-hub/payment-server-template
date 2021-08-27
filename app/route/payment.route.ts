@@ -2,7 +2,7 @@
  * @description holds payment routes
  */
 
-import { Context, ResponseCode } from '@open-template-hub/common';
+import { ResponseCode } from '@open-template-hub/common';
 import { Request, Response } from 'express';
 import Router from 'express-promise-router';
 import { PaymentController } from '../controller/payment.controller';
@@ -22,7 +22,7 @@ const paymentController = new PaymentController();
 
 router.post( subRoutes.root, async ( req: Request, res: Response ) => {
   // Create new payment session
-  const context = res.locals.ctx as Context;
+  const context = res.locals.ctx;
 
   let paymentSession = await paymentController.initPayment(
       context.mongodb_provider,
@@ -36,7 +36,7 @@ router.post( subRoutes.root, async ( req: Request, res: Response ) => {
 
 router.post( subRoutes.confirm, async ( req: Request, res: Response ) => {
   // Create new payment session
-  const context = res.locals.ctx as Context;
+  const context = res.locals.ctx;
 
   let external_transaction_id = await paymentController.confirmPayment(
       context.mongodb_provider,
@@ -51,7 +51,7 @@ router.post(
     subRoutes.initWithExternalTransactionId,
     async ( req: Request, res: Response ) => {
       // Init payment with external transaction id
-      const context = res.locals.ctx as Context;
+      const context = res.locals.ctx;
 
       let paymentSession = await paymentController.initPaymentWithExternalTransactionId(
           context.mongodb_provider,

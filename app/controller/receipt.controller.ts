@@ -19,7 +19,7 @@ export class ReceiptController {
       product_id: string
   ) => {
     const receiptRepository = new ReceiptRepository( postgresql_provider );
-    return await receiptRepository.getSuccessfulReceiptsWithUsernameAndProductId(
+    return receiptRepository.getSuccessfulReceiptsWithUsernameAndProductId(
         username,
         product_id
     );
