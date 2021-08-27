@@ -1,5 +1,5 @@
 {
-  "name": "payment-server",
+  "name": "payment-server-template",
   "version": "2.2.8",
   "description": "Payment Server Template",
   "main": "payment-server.main.ts",
