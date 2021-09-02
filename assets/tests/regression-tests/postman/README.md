@@ -1,6 +1,7 @@
 # POSTMAN REGRESSION TESTS
 
 ## Prerequisite
+
 To run all the scenarios, these items must be configured:
 
 * Stripe Payment Config

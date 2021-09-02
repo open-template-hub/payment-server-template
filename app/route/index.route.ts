@@ -1,31 +1,19 @@
 import {
-  router as productRouter,
-  adminRoutes as productAdminRoutes,
-} from './product.route';
-import {
-  router as webhookRouter,
-  publicRoutes as webhookPublicRoutes,
-} from './webhook.route';
-import { router as receiptRouter } from './receipt.route';
-import {
-  router as paymentRouter,
-  adminRoutes as paymentAdminRoutes,
-} from './payment.route';
-import {
-  router as monitorRouter,
-  publicRoutes as monitorPublicRoutes,
-} from './monitor.route';
-import { PreloadUtil } from '@open-template-hub/common';
-import { router as subscriptionRouter } from './subscription.route';
-import { NextFunction, Request, Response } from 'express';
-import {
+  context,
+  EncryptionUtil,
   ErrorHandlerUtil,
   MongoDbProvider,
   PostgreSqlProvider,
-  EncryptionUtil,
-  context,
+  PreloadUtil
 } from '@open-template-hub/common';
+import { NextFunction, Request, Response } from 'express';
 import { Environment } from '../../environment';
+import { publicRoutes as monitorPublicRoutes, router as monitorRouter, } from './monitor.route';
+import { adminRoutes as paymentAdminRoutes, router as paymentRouter, } from './payment.route';
+import { adminRoutes as productAdminRoutes, router as productRouter, } from './product.route';
+import { router as receiptRouter } from './receipt.route';
+import { router as subscriptionRouter } from './subscription.route';
+import { publicRoutes as webhookPublicRoutes, router as webhookRouter, } from './webhook.route';
 
 const subRoutes = {
   root: '/',
@@ -37,7 +25,7 @@ const subRoutes = {
   subscription: '/subscription',
 };
 
-export module Routes {
+export namespace Routes {
   var mongodb_provider: MongoDbProvider;
   var environment: Environment;
   var postgresql_provider: PostgreSqlProvider;
@@ -46,103 +34,102 @@ export module Routes {
   var publicRoutes: string[] = [];
   var adminRoutes: string[] = [];
 
-  function populateRoutes(mainRoute: string, routes: Array<string>) {
+  function populateRoutes( mainRoute: string, routes: Array<string> ) {
     var populated = Array<string>();
-    for (var i = 0; i < routes.length; i++) {
-      const s = routes[i];
-      populated.push(mainRoute + (s === '/' ? '' : s));
+    for ( const s of routes ) {
+      populated.push( mainRoute + ( s === '/' ? '' : s ) );
     }
 
     return populated;
   }
 
-  export function mount(app: any) {
+  export function mount( app: any ) {
     const preloadUtil = new PreloadUtil();
     environment = new Environment();
-    mongodb_provider = new MongoDbProvider(environment.args());
+    mongodb_provider = new MongoDbProvider( environment.args() );
     postgresql_provider = new PostgreSqlProvider(
-      environment.args(),
-      'PaymentServer'
+        environment.args(),
+        'PaymentServer'
     );
 
     preloadUtil
-      .preload(mongodb_provider, postgresql_provider)
-      .then(() => console.log('DB preloads are completed.'));
+    .preload( mongodb_provider, postgresql_provider )
+    .then( () => console.log( 'DB preloads are completed.' ) );
 
     publicRoutes = [
-      ...populateRoutes(subRoutes.monitor, monitorPublicRoutes),
-      ...populateRoutes(subRoutes.webhook, webhookPublicRoutes),
+      ...populateRoutes( subRoutes.monitor, monitorPublicRoutes ),
+      ...populateRoutes( subRoutes.webhook, webhookPublicRoutes ),
     ];
-    console.log('Public Routes: ', publicRoutes);
+    console.log( 'Public Routes: ', publicRoutes );
 
     adminRoutes = [
-      ...populateRoutes(subRoutes.product, productAdminRoutes),
-      ...populateRoutes(subRoutes.payment, paymentAdminRoutes),
+      ...populateRoutes( subRoutes.product, productAdminRoutes ),
+      ...populateRoutes( subRoutes.payment, paymentAdminRoutes ),
     ];
-    console.log('Admin Routes: ', adminRoutes);
+    console.log( 'Admin Routes: ', adminRoutes );
 
     const responseInterceptor = (
-      req: Request,
-      res: Response,
-      next: NextFunction
+        req: Request,
+        res: Response,
+        next: NextFunction
     ) => {
       var originalSend = res.send;
-      const encryptionUtil = new EncryptionUtil(environment.args());
+      const encryptionUtil = new EncryptionUtil( environment.args() );
       res.send = function () {
-        console.log('Starting Encryption: ', new Date());
-        let encrypted_arguments = encryptionUtil.encrypt(arguments);
-        console.log('Encryption Completed: ', new Date());
+        console.log( 'Starting Encryption: ', new Date() );
+        let encrypted_arguments = encryptionUtil.encrypt( arguments );
+        console.log( 'Encryption Completed: ', new Date() );
 
-        originalSend.apply(res, encrypted_arguments as any);
+        originalSend.apply( res, encrypted_arguments as any );
       } as any;
 
       next();
     };
 
     // Use this interceptor before routes
-    app.use(responseInterceptor);
+    app.use( responseInterceptor );
 
     // Monitor router should be called before context creation
-    app.use(subRoutes.monitor, monitorRouter);
+    app.use( subRoutes.monitor, monitorRouter );
 
     // INFO: Keep this method at top at all times
-    app.all('/*', async (req: Request, res: Response, next: NextFunction) => {
+    app.all( '/*', async ( req: Request, res: Response, next: NextFunction ) => {
       try {
         // create context
         res.locals.ctx = await context(
-          req,
-          environment.args(),
-          publicRoutes,
-          adminRoutes,
-          mongodb_provider,
-          postgresql_provider
+            req,
+            environment.args(),
+            publicRoutes,
+            adminRoutes,
+            mongodb_provider,
+            postgresql_provider
         );
 
         next();
-      } catch (e) {
-        console.log('error: ', e);
-        let error = errorHandlerUtil.handle(e);
-        res.status(error.code).json({ message: error.message });
+      } catch ( e ) {
+        console.log( 'error: ', e );
+        let error = errorHandlerUtil.handle( e );
+        res.status( error.code ).json( { message: error.message } );
       }
-    });
+    } );
 
     // INFO: Add your routes here
-    app.use(subRoutes.payment, paymentRouter);
-    app.use(subRoutes.product, productRouter);
-    app.use(subRoutes.webhook, webhookRouter);
-    app.use(subRoutes.receipt, receiptRouter);
-    app.use(subRoutes.subscription, subscriptionRouter);
+    app.use( subRoutes.payment, paymentRouter );
+    app.use( subRoutes.product, productRouter );
+    app.use( subRoutes.webhook, webhookRouter );
+    app.use( subRoutes.receipt, receiptRouter );
+    app.use( subRoutes.subscription, subscriptionRouter );
 
     // Use for error handling
-    app.use(function (
-      err: Error,
-      req: Request,
-      res: Response,
-      next: NextFunction
+    app.use( function (
+        err: Error,
+        req: Request,
+        res: Response,
+        next: NextFunction
     ) {
-      let error = errorHandlerUtil.handle(err);
-      console.log(err);
-      res.status(error.code).json({ message: error.message });
-    });
+      let error = errorHandlerUtil.handle( err );
+      console.log( err );
+      res.status( error.code ).json( { message: error.message } );
+    } );
   }
 }

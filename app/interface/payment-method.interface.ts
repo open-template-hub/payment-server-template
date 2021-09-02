@@ -14,10 +14,10 @@ export interface PaymentMethod {
    * @param quantity quantity
    */
   init(
-    dbConn: any,
-    paymentConfig: PaymentConfig,
-    product: Product,
-    quantity: number
+      dbConn: any,
+      paymentConfig: PaymentConfig,
+      product: Product,
+      quantity: number
   ): Promise<any>;
 
   /**
@@ -25,7 +25,7 @@ export interface PaymentMethod {
    * @param paymentConfig payment config
    * @param external_transaction external transaction
    */
-  build(paymentConfig: PaymentConfig, external_transaction: any): Promise<any>;
+  build( paymentConfig: PaymentConfig, external_transaction: any ): Promise<any>;
 
   /**
    * gets transaction history by external transaction id
@@ -33,8 +33,8 @@ export interface PaymentMethod {
    * @param external_transaction_id external transaction id
    */
   getTransactionHistory(
-    paymentConfig: PaymentConfig,
-    external_transaction_id: string
+      paymentConfig: PaymentConfig,
+      external_transaction_id: string
   ): Promise<any>;
 
   /**
@@ -45,10 +45,10 @@ export interface PaymentMethod {
    * @param updated_transaction_history updated transaction history
    */
   receiptStatusUpdate(
-    dbConn: any,
-    paymentConfig: PaymentConfig,
-    external_transaction_id: string,
-    updated_transaction_history: any
+      dbConn: any,
+      paymentConfig: PaymentConfig,
+      external_transaction_id: string,
+      updated_transaction_history: any
   ): Promise<void>;
 
   /**
@@ -56,7 +56,7 @@ export interface PaymentMethod {
    * @param amount product amount
    * @param currency product currency
    */
-  createProduct(amount: number, currency: string): Promise<any>;
+  createProduct( amount: number, currency: string ): Promise<any>;
 
   /**
    * confirms payment internally
@@ -65,7 +65,7 @@ export interface PaymentMethod {
    * @param external_transaction_id external transaction id
    */
   confirmPayment(
-    paymentConfig: PaymentConfig,
-    external_transaction_id: string
+      paymentConfig: PaymentConfig,
+      external_transaction_id: string
   ): Promise<void>;
 }

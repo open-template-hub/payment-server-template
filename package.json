@@ -1,40 +1,54 @@
 {
- "name": "payment-server",
- "version": "2.2.8",
- "description": "Payment Server Template",
- "main": "payment-server.main.ts",
- "license": "MIT",
- "homepage": "https://github.com/open-template-hub/payment-server-template#readme",
- "repository": {
-  "type": "git",
-  "url": "git+https://github.com/open-template-hub/payment-server-template.git"
- },
- "scripts": {
-  "start": "ts-node payment-server.main.ts",
-  "devStart": "nodemon --exec DEBUG=* ts-node payment-server.main.ts"
- },
- "dependencies": {
-  "@open-template-hub/common": "^1.0.7",
-  "@paypal/checkout-server-sdk": "^1.0.2",
-  "@types/cors": "^2.8.9",
-  "@types/dotenv": "^8.2.0",
-  "@types/express": "^4.17.6",
-  "@types/mongoose": "^5.5.34",
-  "@types/uuid": "^8.0.0",
-  "axios": "^0.21.1",
-  "body-parser": "^1.19.0",
-  "cors": "^2.8.5",
-  "dotenv": "^8.2.0",
-  "express": "^4.17.1",
-  "express-promise-router": "^3.0.3",
-  "mongoose": "^5.8.2",
-  "stripe": "^8.56.0",
-  "ts-node": "^8.1.0",
-  "typescript": "^3.4.5",
-  "uuid": "^8.3.2"
- },
- "devDependencies": {
-  "@types/cors": "^2.8.9",
-  "nodemon": "^2.0.2"
- }
+  "name": "payment-server-template",
+  "description": "Payment Server template integrated with Stripe and Coinbase Commerce payment systems",
+  "version": "2.2.8",
+  "license": "MIT",
+  "main": "payment-server.main.ts",
+  "scripts": {
+    "start": "ts-node payment-server.main.ts",
+    "startLocal": "nodemon --exec DEBUG=* ts-node payment-server.main.ts"
+  },
+  "dependencies": {
+    "@open-template-hub/common": "^2.0.2",
+    "@paypal/checkout-server-sdk": "^1.0.2",
+    "@types/cors": "^2.8.9",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.6",
+    "@types/mongoose": "^5.5.34",
+    "@types/uuid": "^8.0.0",
+    "axios": "^0.21.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-promise-router": "^3.0.3",
+    "mongoose": "^5.8.2",
+    "stripe": "^8.56.0",
+    "ts-node": "^8.1.0",
+    "typescript": "^3.4.5",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.9",
+    "nodemon": "^2.0.2"
+  },
+  "git repository": "https://github.com/open-template-hub/payment-server-template",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/open-template-hub/payment-server-template.git"
+  },
+  "keywords": [
+    "payment",
+    "server",
+    "template",
+    "nodejs",
+    "typescript",
+    "paypal",
+    "stripe",
+    "coinbase",
+    "stripe-checkout",
+    "stripe-payments",
+    "coinbase-commerce",
+    "open-template-hub"
+  ]
 }

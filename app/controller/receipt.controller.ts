@@ -14,14 +14,14 @@ export class ReceiptController {
    * @returns successful receipts
    */
   getSuccesfulReceipts = async (
-    postgresql_provider: PostgreSqlProvider,
-    username: string,
-    product_id: string
+      postgresql_provider: PostgreSqlProvider,
+      username: string,
+      product_id: string
   ) => {
-    const receiptRepository = new ReceiptRepository(postgresql_provider);
-    return await receiptRepository.getSuccessfulReceiptsWithUsernameAndProductId(
-      username,
-      product_id
+    const receiptRepository = new ReceiptRepository( postgresql_provider );
+    return receiptRepository.getSuccessfulReceiptsWithUsernameAndProductId(
+        username,
+        product_id
     );
   };
 }

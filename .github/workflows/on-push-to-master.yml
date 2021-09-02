@@ -1,17 +1,25 @@
 name: On Push to Master Workflows
+
 on:
   push:
     branches:
       - "master"
 
 jobs:
-  build:
-    name: "CI"
+  continuous-integration:
+    name: "Npm Continuous Integration"
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Install Node
+        uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: npm install
-      - run: npm ci
+
+      - name: NPM Install
+        run: npm install
+      - name: NPM Continous Integration
+        run: npm ci

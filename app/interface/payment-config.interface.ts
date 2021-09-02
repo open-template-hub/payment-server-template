@@ -1,5 +1,5 @@
 /**
- * @description holds payment config interface 
+ * @description holds payment config interface
  */
 
 export interface PaymentConfig {

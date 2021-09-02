@@ -1,22 +1,22 @@
 <p align="center">
-  <a href="https://www.linkedin.com/company/open-template-hub">
-    <img src="https://avatars2.githubusercontent.com/u/65504426?s=200&v=4" alt="Logo">
+   <a href="https://opentemplatehub.com">
+    <img src="https://github.com/open-template-hub/open-template-hub.github.io/blob/master/assets/logo/servers/payment-server-logo.png?raw=true" alt="Logo" width=200>
   </a>
 </p>
 
 <h1 align="center">
-Payment Server Template
+Open Template Hub - Payment Server Template v2
 </h1>
 
-[![License](https://img.shields.io/github/license/open-template-hub/payment-server-template?color=2F7488&style=for-the-badge)](LICENSE)
-[![Issues](https://img.shields.io/github/issues/open-template-hub/payment-server-template?color=2F7488&style=for-the-badge)](https://github.com/open-template-hub/payment-server-template/issues)
-[![PRCLosed](https://img.shields.io/github/issues-pr-closed-raw/open-template-hub/payment-server-template?color=2F7488&style=for-the-badge)](https://github.com/open-template-hub/payment-server-template/pulls?q=is%3Apr+is%3Aclosed)
-[![LastCommit](https://img.shields.io/github/last-commit/open-template-hub/payment-server-template?color=2F7488&style=for-the-badge)](https://github.com/open-template-hub/payment-server-template/commits/master)
-[![Release](https://img.shields.io/github/release/open-template-hub/payment-server-template?include_prereleases&color=2F7488&style=for-the-badge)](https://github.com/open-template-hub/payment-server-template/releases)
+[![License](https://img.shields.io/github/license/open-template-hub/payment-server-template?color=43b043&style=for-the-badge)](LICENSE)
+[![Issues](https://img.shields.io/github/issues/open-template-hub/payment-server-template?color=43b043&style=for-the-badge)](https://github.com/open-template-hub/payment-server-template/issues)
+[![PRCLosed](https://img.shields.io/github/issues-pr-closed-raw/open-template-hub/payment-server-template?color=43b043&style=for-the-badge)](https://github.com/open-template-hub/payment-server-template/pulls?q=is%3Apr+is%3Aclosed)
+[![LastCommit](https://img.shields.io/github/last-commit/open-template-hub/payment-server-template?color=43b043&style=for-the-badge)](https://github.com/open-template-hub/payment-server-template/commits/master)
+[![Release](https://img.shields.io/github/release/open-template-hub/payment-server-template?include_prereleases&color=43b043&style=for-the-badge)](https://github.com/open-template-hub/payment-server-template/releases)
 [![SonarCloud](https://img.shields.io/sonar/quality_gate/open-template-hub_payment-server-template?server=https%3A%2F%2Fsonarcloud.io&label=Sonar%20Cloud&style=for-the-badge&logo=sonarcloud)](https://sonarcloud.io/dashboard?id=open-template-hub_payment-server-template)
 [![BTC](https://img.shields.io/badge/Donate-BTC-ORANGE?color=F5922F&style=for-the-badge&logo=bitcoin)](https://commerce.coinbase.com/checkout/8313af5f-de48-498d-b2cb-d98819ca7d5e)
 
-Payment Server Template in NodeJS, Express.js
+Payment Server template integrated with Stripe and Coinbase Commerce payment systems
 
 ## Ways to Begin
 
@@ -74,6 +74,7 @@ REGRESSION={Set true if Start Purpose Is Regression}
 ```
 
 ### Example Product:
+
 ```json
     {
         "product_id" : "0276d8d1-0945-412b-92d1-084a6e3f7554",
@@ -99,6 +100,7 @@ REGRESSION={Set true if Start Purpose Is Regression}
 ### Payment Configurations
 
 #### Stripe Payment Config:
+
 ```json
   {
         "key": "STRIPE",
@@ -116,6 +118,7 @@ REGRESSION={Set true if Start Purpose Is Regression}
 ```
 
 #### Coinbase Payment Config:
+
 ```json
     {
         "key" : "COINBASE",
@@ -130,6 +133,7 @@ REGRESSION={Set true if Start Purpose Is Regression}
 ```
 
 #### PayPal Payment Config:
+
 ```json
     {
         "key" : "PAYPAL",

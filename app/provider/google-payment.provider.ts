@@ -15,10 +15,10 @@ export class GooglePayment implements PaymentMethod {
    * @param quantity quantity
    */
   init = async (
-    dbConn: any,
-    paymentConfig: PaymentConfig,
-    product: Product,
-    quantity: number
+      dbConn: any,
+      paymentConfig: PaymentConfig,
+      product: Product,
+      quantity: number
   ) => {
     return null;
   };
@@ -28,7 +28,7 @@ export class GooglePayment implements PaymentMethod {
    * @param paymentConfig payment config
    * @param external_transaction external transaction
    */
-  build = async (paymentConfig: PaymentConfig, external_transaction: any) => {
+  build = async ( paymentConfig: PaymentConfig, external_transaction: any ) => {
     return null;
   };
 
@@ -39,8 +39,8 @@ export class GooglePayment implements PaymentMethod {
    * @returns transaction history
    */
   getTransactionHistory = async (
-    paymentConfig: PaymentConfig,
-    external_transaction_id: string
+      paymentConfig: PaymentConfig,
+      external_transaction_id: string
   ) => {
     return {};
   };
@@ -53,18 +53,20 @@ export class GooglePayment implements PaymentMethod {
    * @param updated_transaction_history updated transaction history
    */
   receiptStatusUpdate = async (
-    dbConn: any,
-    paymentConfig: PaymentConfig,
-    external_transaction_id: string,
-    updated_transaction_history: any
-  ) => {};
+      dbConn: any,
+      paymentConfig: PaymentConfig,
+      external_transaction_id: string,
+      updated_transaction_history: any
+  ) => {
+    // Todo: Implement
+  };
 
   /**
    * creates a product
    * @param amount amount
    * @param currency currency
    */
-  createProduct = async (amount: number, currency: string) => {
+  createProduct = async ( amount: number, currency: string ) => {
     return {};
   };
 
@@ -75,7 +77,9 @@ export class GooglePayment implements PaymentMethod {
    * @param external_transaction_id external transaction id
    */
   confirmPayment = async (
-    paymentConfig: PaymentConfig,
-    external_transaction_id: string
-  ) => {};
+      paymentConfig: PaymentConfig,
+      external_transaction_id: string
+  ) => {
+    // Todo: Implement
+  };
 }
