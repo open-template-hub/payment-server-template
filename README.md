@@ -71,6 +71,8 @@ MONGODB_CONNECTION_LIMIT={MongoDB Open Connection Limit}
 POSTGRESQL_CONNECTION_LIMIT={PostgreSQL Open Connection Limit}
 
 REGRESSION={Set true if Start Purpose Is Regression}
+
+ORCHESTRATION_SERVER_QUEUE_CHANNEL= {Orchestration Server MQ Channel Name}
 ```
 
 ### Example Product:
