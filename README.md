@@ -16,7 +16,7 @@ Open Template Hub - Payment Server Template v2
 [![SonarCloud](https://img.shields.io/sonar/quality_gate/open-template-hub_payment-server-template?server=https%3A%2F%2Fsonarcloud.io&label=Sonar%20Cloud&style=for-the-badge&logo=sonarcloud)](https://sonarcloud.io/dashboard?id=open-template-hub_payment-server-template)
 [![BTC](https://img.shields.io/badge/Donate-BTC-ORANGE?color=F5922F&style=for-the-badge&logo=bitcoin)](https://commerce.coinbase.com/checkout/8313af5f-de48-498d-b2cb-d98819ca7d5e)
 
-Payment Server template integrated with Stripe and Coinbase Commerce payment systems
+Payment Server Template is an open source payment server that has simple and generic design to be able to integrated with payment solution providers like Stripe or Coinbase
 
 ## Ways to Begin
 
