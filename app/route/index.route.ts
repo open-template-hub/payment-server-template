@@ -72,11 +72,11 @@ export namespace Routes {
     const channelTag = new Environment().args().mqArgs
       ?.paymentServerMessageQueueChannel as string;
     message_queue_provider.getChannel(channelTag).then((channel: any) => {
-      const authQueueConsumer = new PaymentQueueConsumer(channel);
+      const paymentQueueConsumer = new PaymentQueueConsumer(channel);
       message_queue_provider.consume(
         channel,
         channelTag,
-        authQueueConsumer.onMessage,
+        paymentQueueConsumer.onMessage,
         1
       );
     });
