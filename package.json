@@ -1,7 +1,7 @@
 {
   "name": "payment-server-template",
   "description": "Payment Server template integrated with Stripe and Coinbase Commerce payment systems",
-  "version": "2.2.10",
+  "version": "2.2.11",
   "license": "MIT",
   "main": "payment-server.main.ts",
   "scripts": {
