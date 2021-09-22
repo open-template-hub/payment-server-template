@@ -9,7 +9,7 @@
     "startLocal": "nodemon --exec DEBUG=* ts-node payment-server.main.ts"
   },
   "dependencies": {
-    "@open-template-hub/common": "^2.0.2",
+    "@open-template-hub/common": "^2.1.12",
     "@paypal/checkout-server-sdk": "^1.0.2",
     "@types/cors": "^2.8.9",
     "@types/dotenv": "^8.2.0",
