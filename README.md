@@ -147,8 +147,8 @@ RESPONSE_ENCRYPTION_SECRET={Response Encryption Secret}
             "env" : "sandbox",
             "secret" : "{Your Payment Secret on PayPal}",
             "client_id" : "{Your Client Id on PayPal}",
-            "success_url" : "https://basic-angular-ui-template-st.herokuapp.com/success",
-            "cancel_url" : "https://basic-angular-ui-template-st.herokuapp.com/cancel"
+            "success_url" : "https://oth-ui-web-dev.herokuapp.com/success",
+            "cancel_url" : "https://oth-ui-web-dev.herokuapp.com/cancel"
         }
     }
 ```
