@@ -1,6 +1,6 @@
 {
   "name": "Payment Server Template",
-  "description": "Payment Server template integrated with Stripe and Coinbase Commerce payment systems",
+  "description": "Payment Server Template is an open source payment server that has simple and generic design to be able to integrated with payment solution providers like Stripe or Coinbase",
   "repository": "https://github.com/open-template-hub/payment-server-template",
   "logo": "https://raw.githubusercontent.com/open-template-hub/open-template-hub.github.io/master/assets/logo/brand-logo.png",
   "keywords": [
