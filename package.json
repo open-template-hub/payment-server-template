@@ -6,7 +6,8 @@
   "main": "payment-server.main.ts",
   "scripts": {
     "start": "ts-node payment-server.main.ts",
-    "startLocal": "nodemon --exec DEBUG=* ts-node payment-server.main.ts"
+    "startLocal": "nodemon --exec DEBUG=* ts-node payment-server.main.ts",
+    "outdated": "node dependency-checker.ts > docs/OUTDATED.md"
   },
   "dependencies": {
     "@open-template-hub/common": "^2.1.15",
