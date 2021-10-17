@@ -1,12 +1,13 @@
 {
   "name": "payment-server-template",
   "description": "Payment Server template integrated with Stripe and Coinbase Commerce payment systems",
-  "version": "2.2.12",
+  "version": "3.0.0",
   "license": "MIT",
   "main": "payment-server.main.ts",
   "scripts": {
     "start": "ts-node payment-server.main.ts",
-    "startLocal": "nodemon --exec DEBUG=* ts-node payment-server.main.ts"
+    "startLocal": "nodemon --exec DEBUG=* ts-node payment-server.main.ts",
+    "outdated": "node dependency-checker.ts > docs/OUTDATED.md"
   },
   "dependencies": {
     "@open-template-hub/common": "^2.1.15",
