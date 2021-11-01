@@ -16,7 +16,7 @@ Following packages are not updated in the develop branch yet. So, if you want to
 | Package                     | Current    | Wanted   | Latest   | Location |
 | --- | --- | --- | --- | --- |
 | @open-template-hub/common   |  2.1.15    | 2.1.15   |  3.0.1   | payment-server-template |
-| axios                       |  0.21.4    | 0.21.4   | 0.23.0   | payment-server-template |
+| axios                       |  0.21.4    | 0.21.4   | 0.24.0   | payment-server-template |
 | dotenv                      |   8.6.0    |  8.6.0   | 10.0.0   | payment-server-template |
 | express-promise-router      |   3.0.3    |  3.0.3   |  4.1.0   | payment-server-template |
 | mongoose                    | 5.13.12  5 | .13.12   | 6.0.12   | payment-server-template |
