@@ -19,7 +19,7 @@ Following packages are not updated in the develop branch yet. So, if you want to
 | axios                       |  0.21.4    | 0.21.4   | 0.24.0   | payment-server-template |
 | dotenv                      |   8.6.0    |  8.6.0   | 10.0.0   | payment-server-template |
 | express-promise-router      |   3.0.3    |  3.0.3   |  4.1.0   | payment-server-template |
-| mongoose                    | 5.13.12  5 | .13.12   | 6.0.12   | payment-server-template |
+| mongoose                    | 5.13.13  5 | .13.13   | 6.0.12   | payment-server-template |
 | ts-node                     |  8.10.2    | 8.10.2   | 10.4.0   | payment-server-template |
 | typescript                  |  3.9.10    | 3.9.10   |  4.4.4   | payment-server-template |
 
