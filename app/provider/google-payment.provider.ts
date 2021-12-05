@@ -7,6 +7,8 @@ import { PaymentMethod } from '../interface/payment-method.interface';
 import { Product } from '../interface/product.interface';
 
 export class GooglePayment implements PaymentMethod {
+  private readonly SUCCESS_STATUS = 'succeeded';
+
   /**
    * initializes google payment provider
    * @param dbConn db connection
@@ -18,7 +20,8 @@ export class GooglePayment implements PaymentMethod {
       dbConn: any,
       paymentConfig: PaymentConfig,
       product: Product,
-      quantity: number
+      quantity: number,
+      transaction_id: string
   ) => {
     return null;
   };
@@ -82,4 +85,8 @@ export class GooglePayment implements PaymentMethod {
   ) => {
     // Todo: Implement
   };
+
+  getSuccessStatus() {
+    return this.SUCCESS_STATUS
+  }
 }
