@@ -95,7 +95,7 @@ export class ReceiptRepository {
             receiptObject.created_time,
             receiptObject.total_amount,
             receiptObject.currency_code,
-            status,
+            receiptObject.status
           ]
       );
     } catch ( error ) {

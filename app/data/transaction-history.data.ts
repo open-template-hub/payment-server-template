@@ -15,7 +15,7 @@ export class TransactionHistoryDataModel {
     const schema: mongoose.SchemaDefinition = {
       payment_config_key: { type: String, required: true },
       username: { type: String, required: true },
-      external_transaction_id: { type: String, required: true },
+      external_transaction_id: { type: String },
       product_id: { type: String, required: true },
       payload: { type: Object },
     };

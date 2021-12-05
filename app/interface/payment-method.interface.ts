@@ -17,7 +17,8 @@ export interface PaymentMethod {
       dbConn: any,
       paymentConfig: PaymentConfig,
       product: Product,
-      quantity: number
+      quantity: number,
+      transaction_id: string
   ): Promise<any>;
 
   /**
@@ -68,4 +69,6 @@ export interface PaymentMethod {
       paymentConfig: PaymentConfig,
       external_transaction_id: string
   ): Promise<void>;
+
+  getSuccessStatus(): string;
 }

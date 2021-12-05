@@ -27,7 +27,8 @@ export class PayPalPayment implements PaymentMethod {
       dbConn: any,
       paymentConfig: PaymentConfig,
       product: Product,
-      quantity: number
+      quantity: number,
+      transaction_id: string
   ) => {
     const paypalClient = this.getPayPalClient( paymentConfig );
 
@@ -254,4 +255,8 @@ export class PayPalPayment implements PaymentMethod {
   createProduct = async ( amount: number, currency: string ) => {
     return { amount, currency };
   };
+
+  getSuccessStatus() {
+    return this.SUCCESS_STATUS
+  }
 }
