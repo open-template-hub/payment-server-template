@@ -21,7 +21,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "express-promise-router": "^3.0.3",
+    "express-promise-router": "^4.1.1",
     "mongoose": "^6.0.8",
     "stripe": "^8.56.0",
     "ts-node": "^10.3.0",
