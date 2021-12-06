@@ -25,7 +25,8 @@ export class CoinbasePayment implements PaymentMethod {
       dbConn: any,
       paymentConfig: PaymentConfig,
       product: Product,
-      quantity: number
+      quantity: number,
+      transaction_id: string
   ) => {
     const charge = {
       name: product.name,
@@ -214,4 +215,8 @@ export class CoinbasePayment implements PaymentMethod {
   createProduct = async ( amount: number, currency: string ) => {
     return { amount, currency };
   };
+
+  getSuccessStatus() {
+    return this.SUCCESS_STATUS
+  }
 }

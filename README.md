@@ -5,7 +5,7 @@
 </p>
 
 <h1 align="center">
-Open Template Hub - Payment Server Template v2
+Open Template Hub - Payment Server Template v3
 </h1>
 
 [![License](https://img.shields.io/github/license/open-template-hub/payment-server-template?color=43b043&style=for-the-badge)](LICENSE)
@@ -16,7 +16,7 @@ Open Template Hub - Payment Server Template v2
 [![SonarCloud](https://img.shields.io/sonar/quality_gate/open-template-hub_payment-server-template?server=https%3A%2F%2Fsonarcloud.io&label=Sonar%20Cloud&style=for-the-badge&logo=sonarcloud)](https://sonarcloud.io/dashboard?id=open-template-hub_payment-server-template)
 [![BTC](https://img.shields.io/badge/Donate-BTC-ORANGE?color=F5922F&style=for-the-badge&logo=bitcoin)](https://commerce.coinbase.com/checkout/8313af5f-de48-498d-b2cb-d98819ca7d5e)
 
-Payment Server Template is an open source payment server that has simple and generic design to be able to integrated with payment solution providers like Stripe or Coinbase
+Payment Server Template is a generic open source payment server that has simple yet powerful design to connect your business with third party payment solution provider companies (like Stripe or Coinbase).
 
 ## Ways to Begin
 
@@ -56,23 +56,26 @@ Check project's current **nodejs** and **npm** version from **[package.json](pac
 If you don't give **RESPONSE_ENCRYPTION_SECRET**, response encryption mechanism will be disabled automatically.
 
 ```applescript
-PORT={Server Port}
+PORT=4003
+
+PROJECT=OTH
+MODULE=PaymentServer
+ENVIRONMENT=Local
+
+MONGODB_URI={Database Connection Url}
+MONGODB_CONNECTION_LIMIT={MongoDB Connection Limit}
+
+DATABASE_URL={Database Connection Url}
+POSTGRESQL_CONNECTION_LIMIT={Postgresql Connection Limit}
+
+CLOUDAMQP_APIKEY={MQ Api Key}
+CLOUDAMQP_URL={MQ Connection Url}
+
+PAYMENT_SERVER_QUEUE_CHANNEL=oth_payment_queue
+ORCHESTRATION_SERVER_QUEUE_CHANNEL=oth_orchestration_queue
 
 ACCESS_TOKEN_SECRET={Access Token Secret}
-
-DATABASE_URL={PostgreSQL Connection String}
-
-MONGODB_URI={MongoDB Connection String}
-
 RESPONSE_ENCRYPTION_SECRET={Response Encryption Secret}
-
-MONGODB_CONNECTION_LIMIT={MongoDB Open Connection Limit}
-
-POSTGRESQL_CONNECTION_LIMIT={PostgreSQL Open Connection Limit}
-
-REGRESSION={Set true if Start Purpose Is Regression}
-
-ORCHESTRATION_SERVER_QUEUE_CHANNEL= {Orchestration Server MQ Channel Name}
 ```
 
 ### Example Product:
@@ -144,8 +147,8 @@ ORCHESTRATION_SERVER_QUEUE_CHANNEL= {Orchestration Server MQ Channel Name}
             "env" : "sandbox",
             "secret" : "{Your Payment Secret on PayPal}",
             "client_id" : "{Your Client Id on PayPal}",
-            "success_url" : "https://basic-angular-ui-template-st.herokuapp.com/success",
-            "cancel_url" : "https://basic-angular-ui-template-st.herokuapp.com/cancel"
+            "success_url" : "https://oth-ui-web-dev.herokuapp.com/success",
+            "cancel_url" : "https://oth-ui-web-dev.herokuapp.com/cancel"
         }
     }
 ```
@@ -172,11 +175,15 @@ You can find list of available http request in the [requests](assets/requests) d
 
 ## Contributing
 
-* Fork it
-* Create your update branch (git checkout -b my-feature-branch)
-* Commit your changes (git commit -am 'Add some features')
-* Push to the branch (git push origin my-feature-branch)
-* Create new Pull Request
+Refer to **[CONTRIBUTING.md](https://github.com/open-template-hub/.github/blob/master/docs/CONTRIBUTING.md)** to see how to contribute to Open Template Hub.
+
+<br/>
+
+## Code of Conduct
+
+Refer to **[CODE_OF_CONDUCT.md](https://github.com/open-template-hub/.github/blob/master/docs/CODE_OF_CONDUCT.md)** to see contributor covenant code of conduct.
+
+<br/>
 
 ## LICENSE
 

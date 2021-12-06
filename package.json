@@ -1,12 +1,13 @@
 {
   "name": "payment-server-template",
-  "description": "Payment Server template integrated with Stripe and Coinbase Commerce payment systems",
-  "version": "2.2.11",
+  "description": "Payment Server Template is a generic open source payment server that has simple yet powerful design to connect your business with third party payment solution provider companies (like Stripe or Coinbase).",
+  "version": "3.0.1",
   "license": "MIT",
   "main": "payment-server.main.ts",
   "scripts": {
     "start": "ts-node payment-server.main.ts",
-    "startLocal": "nodemon --exec DEBUG=* ts-node payment-server.main.ts"
+    "startLocal": "nodemon --exec DEBUG=* ts-node payment-server.main.ts",
+    "outdated": "node dependency-checker.ts > docs/OUTDATED.md"
   },
   "dependencies": {
     "@open-template-hub/common": "^3.0.1",
