@@ -50,30 +50,6 @@ export class TransactionHistoryRepository {
   };
 
   /**
-   * updates transaction history
-   * @param paymentConfig payment config
-   * @param external_transaction_id external transaction id
-   * @param transaction_history transaction history
-   * @returns updated transaction history
-   */
-  updateTransactionHistory = async (
-      paymentConfig: PaymentConfig,
-      external_transaction_id: string,
-      transaction_history: any
-  ) => {
-    try {
-      return await this.dataModel.findOneAndUpdate(
-          { payment_config_key: paymentConfig.key, external_transaction_id },
-          { 'payload.transaction_history': transaction_history },
-          { new: true }
-      );
-    } catch ( error ) {
-      console.error( '> updateTransactionHistory error: ', error );
-      throw error;
-    }
-  };
-
-  /**
    * updates transaction history with id
    * id
    * external_transaction_id
@@ -114,7 +90,7 @@ export class TransactionHistoryRepository {
           { new: true }
       );
     } catch ( error ) {
-      console.error( '> updateTransactionHistory error: ', error );
+      console.error( '> updateTransactionHistoryWithExternalId error: ', error );
       throw error;
     }
   };

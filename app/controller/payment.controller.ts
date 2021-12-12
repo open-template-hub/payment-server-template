@@ -250,7 +250,7 @@ export class PaymentController {
           mongodb_provider.getConnection()
       );
 
-      const updated_transaction_history = await transactionHistoryRepository.updateTransactionHistory(
+      const updated_transaction_history = await transactionHistoryRepository.updateTransactionHistoryWithExternalId(
           paymentConfig,
           external_transaction_id,
           transaction_history
