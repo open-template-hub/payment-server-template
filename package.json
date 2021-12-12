@@ -10,7 +10,7 @@
     "outdated": "node dependency-checker.ts > docs/OUTDATED.md"
   },
   "dependencies": {
-    "@open-template-hub/common": "^3.0.1",
+    "@open-template-hub/common": "^3.0.3",
     "@paypal/checkout-server-sdk": "^1.0.2",
     "@types/cors": "^2.8.9",
     "@types/dotenv": "^8.2.0",

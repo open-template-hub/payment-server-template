@@ -1,5 +1,5 @@
 import {
-  context,
+  context, DebugLogUtil,
   EncryptionUtil,
   ErrorHandlerUtil,
   MessageQueueProvider,
@@ -43,8 +43,9 @@ export namespace Routes {
   var mongodb_provider: MongoDbProvider;
   var message_queue_provider: MessageQueueProvider;
   var environment: Environment;
+  const debugLogUtil = new DebugLogUtil();
   var postgresql_provider: PostgreSqlProvider;
-  const errorHandlerUtil = new ErrorHandlerUtil();
+  let errorHandlerUtil: ErrorHandlerUtil;
 
   var publicRoutes: string[] = [];
   var adminRoutes: string[] = [];
@@ -61,6 +62,7 @@ export namespace Routes {
   export function mount(app: any) {
     const preloadUtil = new PreloadUtil();
     environment = new Environment();
+    errorHandlerUtil = new ErrorHandlerUtil( debugLogUtil, environment.args() );
     mongodb_provider = new MongoDbProvider(environment.args());
     postgresql_provider = new PostgreSqlProvider(
       environment.args(),
