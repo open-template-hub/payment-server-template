@@ -26,7 +26,8 @@ export class StripePayment implements PaymentMethod {
       dbConn: any,
       paymentConfig: PaymentConfig,
       product: Product,
-      quantity: number
+      quantity: number,
+      transaction_id: string
   ) => {
     let stripe = new Stripe(
         paymentConfig.payload.secret,
@@ -42,8 +43,8 @@ export class StripePayment implements PaymentMethod {
         },
       ],
       mode: paymentConfig.payload.mode,
-      success_url: paymentConfig.payload.success_url,
-      cancel_url: paymentConfig.payload.cancel_url,
+      success_url: paymentConfig.payload.success_url + `&id=${ product.product_id }` + `&transaction_id=${ transaction_id }`,
+      cancel_url: paymentConfig.payload.cancel_url + `&id=${ product.product_id }`
     } );
 
     const history = await this.getTransactionHistory(
@@ -137,12 +138,8 @@ export class StripePayment implements PaymentMethod {
       external_transaction_id: string,
       updated_transaction_history: any
   ) => {
-    if (
-        updated_transaction_history &&
-        updated_transaction_history.payload.transaction_history &&
-        updated_transaction_history.payload.transaction_history.status ===
-        this.SUCCESS_STATUS
-    ) {
+    if ( updated_transaction_history?.payload?.transaction_history?.status === this.SUCCESS_STATUS ) {
+
       const receiptRepository = new ReceiptRepository( dbConn );
       let created = await receiptRepository.getReceiptWithExternalTransactionId(
           updated_transaction_history.username,
@@ -160,8 +157,7 @@ export class StripePayment implements PaymentMethod {
             updated_transaction_history.payload.transaction_history.currency
         );
 
-        await receiptRepository.createReceipt(
-            {
+        await receiptRepository.createReceipt( {
               username: updated_transaction_history.username,
               external_transaction_id,
               product_id: updated_transaction_history.product_id,
@@ -170,8 +166,7 @@ export class StripePayment implements PaymentMethod {
               total_amount: amount,
               currency_code,
               status: ReceiptStatus.SUCCESS
-            }
-        );
+        } );
       }
     }
   };
@@ -267,4 +262,8 @@ export class StripePayment implements PaymentMethod {
       return product.payload.stripe.external_product_id;
     }
   };
+
+  getSuccessStatus() {
+    return this.SUCCESS_STATUS
+  }
 }

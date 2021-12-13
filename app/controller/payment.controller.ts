@@ -3,6 +3,7 @@
  */
 
 import { MongoDbProvider, PostgreSqlProvider } from '@open-template-hub/common';
+import mongoose from 'mongoose';
 import { PaymentConfigRepository } from '../repository/payment-config.repository';
 import { ProductRepository } from '../repository/product.repository';
 import { TransactionHistoryRepository } from '../repository/transaction-history.repository';
@@ -36,8 +37,9 @@ export class PaymentController {
           payment_config_key
       );
 
-      if ( paymentConfig === null )
+      if ( paymentConfig === null ) {
         throw new Error( 'Payment method can not be found' );
+      }
 
       const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
 
@@ -48,25 +50,34 @@ export class PaymentController {
       let product: any = await productRepository.getProductByProductId(
           product_id
       );
-      if ( product === null ) throw new Error( 'Product can not be found' );
-
-      let external_transaction = await paymentWrapper.init(
-          mongodb_provider.getConnection(),
-          paymentConfig,
-          product,
-          quantity
-      );
-      if ( external_transaction === null )
-        throw new Error( 'Payment can not be initiated' );
+      if ( product === null ) {
+        throw new Error( 'Product not found' );
+      }
 
       const transactionHistoryRepository = await new TransactionHistoryRepository().initialize(
           mongodb_provider.getConnection()
       );
 
-      await transactionHistoryRepository.createTransactionHistory(
+      let transaction_history = await transactionHistoryRepository.createTransactionHistory(
           payment_config_key,
           username,
-          product_id,
+          product_id
+      );
+
+      let external_transaction = await paymentWrapper.init(
+          mongodb_provider.getConnection(),
+          paymentConfig,
+          product,
+          quantity,
+          transaction_history._id
+      );
+
+      if ( external_transaction === null ) {
+        throw new Error( 'Payment can not be initiated' );
+      }
+
+      await transactionHistoryRepository.updateTransactionHistoryWithId(
+          transaction_history._id,
           external_transaction.id,
           external_transaction.history
       );
@@ -85,6 +96,87 @@ export class PaymentController {
     }
 
     return paymentSession;
+  };
+
+  /**
+   * refreshes transaction history with transaction id
+   * returns refreshed transaction history
+   * @param mongodb_provider
+   * @param postgresql_provider
+   * @param username
+   * @param payment_config_key
+   * @param transaction_history_id
+   */
+  verifyPayment = async (
+      mongodb_provider: MongoDbProvider,
+      postgresql_provider: PostgreSqlProvider,
+      username: string,
+      payment_config_key: string,
+      transaction_history_id: string
+  ) => {
+    try {
+      const paymentConfigRepository = await new PaymentConfigRepository().initialize(
+          mongodb_provider.getConnection()
+      );
+
+      let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
+          payment_config_key
+      );
+
+      if ( paymentConfig === null )
+        throw new Error( 'Payment method can not be found' );
+
+      const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
+
+      if ( !mongoose.isValidObjectId( transaction_history_id ) ) {
+        throw new Error( 'transaction not found' )
+      }
+
+      const transactionHistoryRepository = await new TransactionHistoryRepository().initialize(
+          mongodb_provider.getConnection()
+      );
+
+      const transaction_history = await transactionHistoryRepository.findTransactionHistory( transaction_history_id )
+
+      if ( !transaction_history ) {
+        throw new Error( 'transaction not found' )
+      }
+
+      if ( transaction_history.username !== username ) {
+        throw new Error( 'Bad request' );
+      }
+
+      // if current status is succeeded, do not check it again from payment provider
+      if ( transaction_history.payload.transaction_history.status === paymentWrapper.paymentMethod?.getSuccessStatus() ) {
+        return;
+      }
+
+      const refreshed_transaction_history = await paymentWrapper.getTransactionHistory(
+          paymentConfig,
+          transaction_history.external_transaction_id
+      );
+
+      const updated_transaction_history = await transactionHistoryRepository.updateTransactionHistoryWithExternalId(
+          paymentConfig,
+          transaction_history.external_transaction_id,
+          refreshed_transaction_history
+      );
+
+      await paymentWrapper.receiptStatusUpdate(
+          postgresql_provider,
+          paymentConfig,
+          transaction_history.external_transaction_id,
+          updated_transaction_history
+      );
+
+      if ( updated_transaction_history.payload.transaction_history.status !== paymentWrapper.paymentMethod?.getSuccessStatus() ) {
+        throw new Error( 'Payment not found' )
+      }
+
+    } catch ( error ) {
+      console.error( '> refreshTransactionHistoryWithTransactionId error: ', error );
+      throw error;
+    }
   };
 
   /**
@@ -158,7 +250,7 @@ export class PaymentController {
           mongodb_provider.getConnection()
       );
 
-      const updated_transaction_history = await transactionHistoryRepository.updateTransactionHistory(
+      const updated_transaction_history = await transactionHistoryRepository.updateTransactionHistoryWithExternalId(
           paymentConfig,
           external_transaction_id,
           transaction_history

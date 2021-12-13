@@ -32,11 +32,11 @@ export class TransactionHistoryRepository {
       payment_config_key: string,
       username: string,
       product_id: string,
-      external_transaction_id: string,
-      transaction_history: any
+      external_transaction_id?: string,
+      transaction_history?: any
   ) => {
     try {
-      await this.dataModel.create( {
+      return await this.dataModel.create( {
         payment_config_key,
         username,
         product_id,
@@ -50,13 +50,35 @@ export class TransactionHistoryRepository {
   };
 
   /**
-   * updates transaction history
+   * updates transaction history with id
+   * id
+   * external_transaction_id
+   * payload
+   */
+  updateTransactionHistoryWithId = async (
+      id: string,
+      external_transaction_id: string,
+      transaction_history: any
+  ) => {
+    try {
+      return await this.dataModel.findOneAndUpdate(
+          { _id: id },
+          { external_transaction_id, payload: { transaction_history } }
+      )
+    } catch ( error ) {
+      console.error( '> updateTransactionHistoryWithId error: ', error );
+      throw error;
+    }
+  }
+
+  /**
+   * updates transaction history with external transaction id
    * @param paymentConfig payment config
    * @param external_transaction_id external transaction id
    * @param transaction_history transaction history
    * @returns updated transaction history
    */
-  updateTransactionHistory = async (
+  updateTransactionHistoryWithExternalId = async (
       paymentConfig: PaymentConfig,
       external_transaction_id: string,
       transaction_history: any
@@ -68,8 +90,20 @@ export class TransactionHistoryRepository {
           { new: true }
       );
     } catch ( error ) {
-      console.error( '> updateTransactionHistory error: ', error );
+      console.error( '> updateTransactionHistoryWithExternalId error: ', error );
       throw error;
     }
   };
+
+  /**
+   * finds transaction history using document_id
+   * @param id
+   */
+  findTransactionHistory = async (
+      _id: string
+  ) => {
+    return await this.dataModel.findOne(
+        { _id }
+    )
+  }
 }

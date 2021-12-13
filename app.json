@@ -1,0 +1,21 @@
+{
+  "name": "payment-server-template",
+  "description": "Payment Server Template is a generic open-source payment server that has a simple yet powerful design to connect your business with third-party payment solution provider companies (like Stripe or Coinbase).",
+  "website": "https://opentemplatehub.com/product/server/payment-server-template",
+  "repository": "https://github.com/open-template-hub/payment-server-template",
+  "logo": "https://raw.githubusercontent.com/open-template-hub/open-template-hub.github.io/master/assets/logo/server/payment-server-logo.png",
+  "keywords": [
+    "payment",
+    "server",
+    "template",
+    "nodejs",
+    "typescript",
+    "paypal",
+    "stripe",
+    "coinbase",
+    "stripe-checkout",
+    "stripe-payments",
+    "coinbase-commerce",
+    "open-template-hub"
+  ]
+}

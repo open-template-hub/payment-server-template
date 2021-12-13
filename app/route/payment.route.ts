@@ -34,6 +34,20 @@ router.post( subRoutes.root, async ( req: Request, res: Response ) => {
   res.status( ResponseCode.CREATED ).json( paymentSession );
 } );
 
+router.post( subRoutes.verify, async ( req: Request, res: Response ) => {
+  const context = res.locals.ctx;
+
+  await paymentController.verifyPayment(
+      context.mongodb_provider,
+      context.postgresql_provider,
+      context.username,
+      req.body.payment_config_key,
+      req.body.transaction_history_id
+  );
+
+  res.status( ResponseCode.OK ).send()
+} );
+
 router.post( subRoutes.confirm, async ( req: Request, res: Response ) => {
   // Create new payment session
   const context = res.locals.ctx;

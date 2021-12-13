@@ -50,14 +50,16 @@ export class PaymentWrapper implements PaymentMethod {
       dbConn: any,
       paymentConfig: PaymentConfig,
       product: Product,
-      quantity: number
+      quantity: number,
+      transaction_id: string
   ) => {
     if ( this.paymentMethod === undefined ) return null;
     return this.paymentMethod.init(
         dbConn,
         paymentConfig,
         product,
-        quantity
+        quantity,
+        transaction_id
     );
   };
 
@@ -138,4 +140,9 @@ export class PaymentWrapper implements PaymentMethod {
         external_transaction_id
     );
   };
+
+  getSuccessStatus(): string {
+    if ( this.paymentMethod === undefined ) return '';
+    return this.paymentMethod.getSuccessStatus()
+  }
 }
