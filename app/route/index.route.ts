@@ -1,5 +1,6 @@
 import {
-  context, DebugLogUtil,
+  context,
+  DebugLogUtil,
   EncryptionUtil,
   ErrorHandlerUtil,
   MessageQueueProvider,
@@ -10,24 +11,12 @@ import {
 import { NextFunction, Request, Response } from 'express';
 import { Environment } from '../../environment';
 import { PaymentQueueConsumer } from '../consumer/payment-queue.consumer';
-import {
-  publicRoutes as monitorPublicRoutes,
-  router as monitorRouter,
-} from './monitor.route';
-import {
-  adminRoutes as paymentAdminRoutes,
-  router as paymentRouter,
-} from './payment.route';
-import {
-  adminRoutes as productAdminRoutes,
-  router as productRouter,
-} from './product.route';
+import { router as monitorRouter } from './monitor.route';
+import { router as paymentRouter } from './payment.route';
+import { router as productRouter } from './product.route';
 import { router as receiptRouter } from './receipt.route';
 import { router as subscriptionRouter } from './subscription.route';
-import {
-  publicRoutes as webhookPublicRoutes,
-  router as webhookRouter,
-} from './webhook.route';
+import { router as webhookRouter } from './webhook.route';
 
 const subRoutes = {
   root: '/',
@@ -47,22 +36,10 @@ export namespace Routes {
   var postgresql_provider: PostgreSqlProvider;
   let errorHandlerUtil: ErrorHandlerUtil;
 
-  var publicRoutes: string[] = [];
-  var adminRoutes: string[] = [];
-
-  function populateRoutes(mainRoute: string, routes: Array<string>) {
-    var populated = Array<string>();
-    for (const s of routes) {
-      populated.push(mainRoute + (s === '/' ? '' : s));
-    }
-
-    return populated;
-  }
-
   export function mount(app: any) {
     const preloadUtil = new PreloadUtil();
     environment = new Environment();
-    errorHandlerUtil = new ErrorHandlerUtil( debugLogUtil, environment.args() );
+    errorHandlerUtil = new ErrorHandlerUtil(debugLogUtil, environment.args());
     mongodb_provider = new MongoDbProvider(environment.args());
     postgresql_provider = new PostgreSqlProvider(
       environment.args(),
@@ -86,18 +63,6 @@ export namespace Routes {
     preloadUtil
       .preload(mongodb_provider, postgresql_provider)
       .then(() => console.log('DB preloads are completed.'));
-
-    publicRoutes = [
-      ...populateRoutes(subRoutes.monitor, monitorPublicRoutes),
-      ...populateRoutes(subRoutes.webhook, webhookPublicRoutes),
-    ];
-    console.log('Public Routes: ', publicRoutes);
-
-    adminRoutes = [
-      ...populateRoutes(subRoutes.product, productAdminRoutes),
-      ...populateRoutes(subRoutes.payment, paymentAdminRoutes),
-    ];
-    console.log('Admin Routes: ', adminRoutes);
 
     const responseInterceptor = (
       req: Request,
@@ -130,8 +95,6 @@ export namespace Routes {
         res.locals.ctx = await context(
           req,
           environment.args(),
-          publicRoutes,
-          adminRoutes,
           mongodb_provider,
           postgresql_provider
         );
