@@ -1,7 +1,14 @@
 import { PaymentActionType } from '@open-template-hub/common';
 
 export class PaymentQueueConsumer {
-  constructor(private channel: any) {}
+  private channel: any;
+
+  constructor() {}
+
+  init = (channel: string) => {
+    this.channel = channel;
+    return this;
+  };
 
   onMessage = async (msg: any) => {
     if (msg !== null) {
