@@ -1,33 +1,19 @@
 import {
-  context, DebugLogUtil,
-  EncryptionUtil,
-  ErrorHandlerUtil,
-  MessageQueueProvider,
-  MongoDbProvider,
-  PostgreSqlProvider,
-  PreloadUtil,
+  ContextArgs,
+  MountArgs,
+  MountAssets,
+  Route,
+  RouteArgs,
+  mount as mountApp,
 } from '@open-template-hub/common';
-import { NextFunction, Request, Response } from 'express';
 import { Environment } from '../../environment';
 import { PaymentQueueConsumer } from '../consumer/payment-queue.consumer';
-import {
-  publicRoutes as monitorPublicRoutes,
-  router as monitorRouter,
-} from './monitor.route';
-import {
-  adminRoutes as paymentAdminRoutes,
-  router as paymentRouter,
-} from './payment.route';
-import {
-  adminRoutes as productAdminRoutes,
-  router as productRouter,
-} from './product.route';
+import { router as monitorRouter } from './monitor.route';
+import { router as paymentRouter } from './payment.route';
+import { router as productRouter } from './product.route';
 import { router as receiptRouter } from './receipt.route';
 import { router as subscriptionRouter } from './subscription.route';
-import {
-  publicRoutes as webhookPublicRoutes,
-  router as webhookRouter,
-} from './webhook.route';
+import { router as webhookRouter } from './webhook.route';
 
 const subRoutes = {
   root: '/',
@@ -40,127 +26,42 @@ const subRoutes = {
 };
 
 export namespace Routes {
-  var mongodb_provider: MongoDbProvider;
-  var message_queue_provider: MessageQueueProvider;
-  var environment: Environment;
-  const debugLogUtil = new DebugLogUtil();
-  var postgresql_provider: PostgreSqlProvider;
-  let errorHandlerUtil: ErrorHandlerUtil;
-
-  var publicRoutes: string[] = [];
-  var adminRoutes: string[] = [];
-
-  function populateRoutes(mainRoute: string, routes: Array<string>) {
-    var populated = Array<string>();
-    for (const s of routes) {
-      populated.push(mainRoute + (s === '/' ? '' : s));
-    }
-
-    return populated;
-  }
-
   export function mount(app: any) {
-    const preloadUtil = new PreloadUtil();
-    environment = new Environment();
-    errorHandlerUtil = new ErrorHandlerUtil( debugLogUtil, environment.args() );
-    mongodb_provider = new MongoDbProvider(environment.args());
-    postgresql_provider = new PostgreSqlProvider(
-      environment.args(),
-      'PaymentServer'
-    );
+    const envArgs = new Environment().args();
 
-    message_queue_provider = new MessageQueueProvider(environment.args());
+    const ctxArgs = {
+      envArgs,
+      providerAvailability: {
+        mongo_enabled: true,
+        postgre_enabled: true,
+        mq_enabled: true,
+      },
+    } as ContextArgs;
 
-    const channelTag = new Environment().args().mqArgs
-      ?.paymentServerMessageQueueChannel as string;
-    message_queue_provider.getChannel(channelTag).then((channel: any) => {
-      const paymentQueueConsumer = new PaymentQueueConsumer(channel);
-      message_queue_provider.consume(
-        channel,
-        channelTag,
-        paymentQueueConsumer.onMessage,
-        1
-      );
-    });
+    const assets = {
+      mqChannelTag: envArgs.mqArgs?.paymentServerMessageQueueChannel as string,
+      queueConsumer: new PaymentQueueConsumer(),
+      applicationName: 'PaymentServer',
+    } as MountAssets;
 
-    preloadUtil
-      .preload(mongodb_provider, postgresql_provider)
-      .then(() => console.log('DB preloads are completed.'));
+    var routes: Array<Route> = [];
 
-    publicRoutes = [
-      ...populateRoutes(subRoutes.monitor, monitorPublicRoutes),
-      ...populateRoutes(subRoutes.webhook, webhookPublicRoutes),
-    ];
-    console.log('Public Routes: ', publicRoutes);
+    routes.push({ name: subRoutes.monitor, router: monitorRouter });
+    routes.push({ name: subRoutes.payment, router: paymentRouter });
+    routes.push({ name: subRoutes.product, router: productRouter });
+    routes.push({ name: subRoutes.webhook, router: webhookRouter });
+    routes.push({ name: subRoutes.receipt, router: receiptRouter });
+    routes.push({ name: subRoutes.subscription, router: subscriptionRouter });
 
-    adminRoutes = [
-      ...populateRoutes(subRoutes.product, productAdminRoutes),
-      ...populateRoutes(subRoutes.payment, paymentAdminRoutes),
-    ];
-    console.log('Admin Routes: ', adminRoutes);
+    const routeArgs = { routes } as RouteArgs;
 
-    const responseInterceptor = (
-      req: Request,
-      res: Response,
-      next: NextFunction
-    ) => {
-      var originalSend = res.send;
-      const encryptionUtil = new EncryptionUtil(environment.args());
-      res.send = function () {
-        console.log('Starting Encryption: ', new Date());
-        let encrypted_arguments = encryptionUtil.encrypt(arguments);
-        console.log('Encryption Completed: ', new Date());
+    const args = {
+      app,
+      ctxArgs,
+      routeArgs,
+      assets,
+    } as MountArgs;
 
-        originalSend.apply(res, encrypted_arguments as any);
-      } as any;
-
-      next();
-    };
-
-    // Use this interceptor before routes
-    app.use(responseInterceptor);
-
-    // Monitor router should be called before context creation
-    app.use(subRoutes.monitor, monitorRouter);
-
-    // INFO: Keep this method at top at all times
-    app.all('/*', async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        // create context
-        res.locals.ctx = await context(
-          req,
-          environment.args(),
-          publicRoutes,
-          adminRoutes,
-          mongodb_provider,
-          postgresql_provider
-        );
-
-        next();
-      } catch (e) {
-        console.log('error: ', e);
-        let error = errorHandlerUtil.handle(e);
-        res.status(error.code).json({ message: error.message });
-      }
-    });
-
-    // INFO: Add your routes here
-    app.use(subRoutes.payment, paymentRouter);
-    app.use(subRoutes.product, productRouter);
-    app.use(subRoutes.webhook, webhookRouter);
-    app.use(subRoutes.receipt, receiptRouter);
-    app.use(subRoutes.subscription, subscriptionRouter);
-
-    // Use for error handling
-    app.use(function (
-      err: Error,
-      req: Request,
-      res: Response,
-      next: NextFunction
-    ) {
-      let error = errorHandlerUtil.handle(err);
-      console.log(err);
-      res.status(error.code).json({ message: error.message });
-    });
+    mountApp(args);
   }
 }
