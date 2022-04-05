@@ -34,7 +34,7 @@ router.post(subRoutes.coinbase, async (req: Request, res: Response) => {
 });
 
 router.post(subRoutes.stripe, async (req: Request, res: Response) => {
-  // refreshes stripe transaction history
+  // refreshes Stripe transaction history
   if (
     req &&
     req.body &&
@@ -57,7 +57,7 @@ router.post(subRoutes.stripe, async (req: Request, res: Response) => {
 });
 
 router.post(subRoutes.paypal, async (req: Request, res: Response) => {
-  // refreshes paypal transaction history
+  // refreshes PayPal transaction history
   if (req.body.resource_type === 'checkout-order') {
     const external_transaction_id = req.body.resource.id;
     const context = res.locals.ctx;

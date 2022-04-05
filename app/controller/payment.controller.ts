@@ -146,7 +146,7 @@ export class PaymentController {
         throw new Error( 'Bad request' );
       }
 
-      // if current status is succeeded, do not check it again from payment provider
+      // If current status is succeeded, do not check it again from payment provider
       if ( transaction_history.payload.transaction_history.status === paymentWrapper.paymentMethod?.getSuccessStatus() ) {
         return;
       }
