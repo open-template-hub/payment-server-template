@@ -119,6 +119,7 @@ export class PaymentController {
    * returns refreshed transaction history
    * @param mongodb_provider
    * @param postgresql_provider
+   * @param message_queue_provider
    * @param username
    * @param payment_config_key
    * @param transaction_history_id
@@ -126,6 +127,7 @@ export class PaymentController {
   verifyPayment = async (
       mongodb_provider: MongoDbProvider,
       postgresql_provider: PostgreSqlProvider,
+      message_queue_provider: MessageQueueProvider,
       username: string,
       payment_config_key: string,
       transaction_history_id: string
@@ -178,12 +180,20 @@ export class PaymentController {
           refreshed_transaction_history
       );
 
-      await paymentWrapper.receiptStatusUpdate(
+      const status = await paymentWrapper.receiptStatusUpdate(
           postgresql_provider,
           paymentConfig,
           transaction_history.external_transaction_id,
           updated_transaction_history
       );
+
+      if ( status && ReceiptStatus.SUCCESS === status ) {
+        await this.sendPaymentSuccessNotificationToQueue( message_queue_provider, {
+          timestamp: new Date().getTime(),
+          username: updated_transaction_history.username,
+          message: 'Product paid successfully'
+        } );
+      }
 
       if ( updated_transaction_history.payload.transaction_history.status !== paymentWrapper.paymentMethod?.getSuccessStatus() ) {
         throw new Error( 'Payment not found' );

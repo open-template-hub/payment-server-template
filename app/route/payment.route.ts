@@ -51,6 +51,7 @@ router.post(
     await paymentController.verifyPayment(
       context.mongodb_provider,
       context.postgresql_provider,
+      context.message_queue_provider,
       context.username,
       req.body.payment_config_key,
       req.body.transaction_history_id
