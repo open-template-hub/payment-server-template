@@ -26,7 +26,7 @@ router.get(
     // gets successful receipts
     const context = res.locals.ctx;
 
-    const successful_receipts = await receiptController.getSuccesfulReceipts(
+    const successful_receipts = await receiptController.getSuccessfulReceipts(
       context.postgresql_provider,
       context.username,
       req.query.product_id as string

@@ -137,7 +137,8 @@ export class StripePayment implements PaymentMethod {
       paymentConfig: PaymentConfig,
       external_transaction_id: string,
       updated_transaction_history: any
-  ) => {
+  ): Promise<string> => {
+
     if ( updated_transaction_history?.payload?.transaction_history?.status === this.SUCCESS_STATUS ) {
 
       const receiptRepository = new ReceiptRepository( dbConn );
@@ -157,6 +158,8 @@ export class StripePayment implements PaymentMethod {
             updated_transaction_history.payload.transaction_history.currency
         );
 
+        const success = ReceiptStatus.SUCCESS;
+
         await receiptRepository.createReceipt( {
               username: updated_transaction_history.username,
               external_transaction_id,
@@ -167,8 +170,12 @@ export class StripePayment implements PaymentMethod {
               currency_code,
               status: ReceiptStatus.SUCCESS
         } );
+
+        return success;
       }
     }
+
+    return '';
   };
 
   /**

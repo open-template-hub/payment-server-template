@@ -137,8 +137,8 @@ export class PayPalPayment implements PaymentMethod {
       paymentConfig: PaymentConfig,
       external_transaction_id: string,
       updated_transaction_history: any
-  ) => {
-    console.log( 'receiptStatusUpdate: ' );
+  ): Promise<string> => {
+
     if (
         updated_transaction_history &&
         updated_transaction_history.payload.transaction_history &&
@@ -193,6 +193,8 @@ export class PayPalPayment implements PaymentMethod {
             }
         );
 
+        const success = ReceiptStatus.SUCCESS;
+
         await receiptRepository.createReceipt(
             {
               username: updated_transaction_history.username,
@@ -202,11 +204,15 @@ export class PayPalPayment implements PaymentMethod {
               created_time: new Date(),
               total_amount: amount,
               currency_code,
-              status: ReceiptStatus.SUCCESS
+              status: success
             }
         );
+
+        return success;
       }
     }
+
+    return '';
   };
 
   /**

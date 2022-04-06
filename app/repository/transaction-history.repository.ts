@@ -97,7 +97,7 @@ export class TransactionHistoryRepository {
 
   /**
    * finds transaction history using document_id
-   * @param id
+   * @param _id
    */
   findTransactionHistory = async (
       _id: string

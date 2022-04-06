@@ -60,8 +60,9 @@ export class GooglePayment implements PaymentMethod {
       paymentConfig: PaymentConfig,
       external_transaction_id: string,
       updated_transaction_history: any
-  ) => {
+  ): Promise<string> => {
     // Todo: Implement
+    return '';
   };
 
   /**

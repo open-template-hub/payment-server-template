@@ -20,14 +20,14 @@ const subRoutes = {
 
 export const router = Router();
 
-const paymentController = new PaymentController();
-
 router.post(
   subRoutes.root,
   authorizedBy([UserRole.ADMIN, UserRole.DEFAULT]),
   async (req: Request, res: Response) => {
     // Create new payment session
     const context = res.locals.ctx;
+
+    const paymentController = new PaymentController();
 
     let paymentSession = await paymentController.initPayment(
       context.mongodb_provider,
@@ -45,6 +45,8 @@ router.post(
   authorizedBy([UserRole.ADMIN, UserRole.DEFAULT]),
   async (req: Request, res: Response) => {
     const context = res.locals.ctx;
+
+    const paymentController = new PaymentController();
 
     await paymentController.verifyPayment(
       context.mongodb_provider,
@@ -65,6 +67,8 @@ router.post(
     // Create new payment session
     const context = res.locals.ctx;
 
+    const paymentController = new PaymentController();
+
     let external_transaction_id = await paymentController.confirmPayment(
       context.mongodb_provider,
       req.body.payment_config_key,
@@ -81,6 +85,8 @@ router.post(
   async (req: Request, res: Response) => {
     // Init payment with external transaction id
     const context = res.locals.ctx;
+
+    const paymentController = new PaymentController();
 
     let paymentSession =
       await paymentController.initPaymentWithExternalTransactionId(
