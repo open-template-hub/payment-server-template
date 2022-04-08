@@ -13,7 +13,7 @@ export class ReceiptController {
    * @param product_id product id
    * @returns successful receipts
    */
-  getSuccesfulReceipts = async (
+  getSuccessfulReceipts = async (
       postgresql_provider: PostgreSqlProvider,
       username: string,
       product_id: string

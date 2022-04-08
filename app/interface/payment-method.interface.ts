@@ -50,7 +50,7 @@ export interface PaymentMethod {
       paymentConfig: PaymentConfig,
       external_transaction_id: string,
       updated_transaction_history: any
-  ): Promise<void>;
+  ): Promise<string>;
 
   /**
    * creates a product

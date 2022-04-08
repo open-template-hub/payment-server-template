@@ -6,7 +6,7 @@
 
 
 <h1 align="center">
-Open Template Hub - Payment Server Template v3
+Open Template Hub - Payment Server Template v4
   <br/>
 (outdated packages)
 </h1>

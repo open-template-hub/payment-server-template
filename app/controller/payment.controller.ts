@@ -2,14 +2,30 @@
  * @description holds payment controller
  */
 
-import { MongoDbProvider, PostgreSqlProvider } from '@open-template-hub/common';
+import {
+  BusinessLogicActionType,
+  MessageQueueChannelType,
+  MessageQueueProvider,
+  MongoDbProvider,
+  NotificationParams,
+  PostgreSqlProvider,
+  QueueMessage
+} from '@open-template-hub/common';
 import mongoose from 'mongoose';
+import { Environment } from '../../environment';
+import { ReceiptStatus } from '../constant';
 import { PaymentConfigRepository } from '../repository/payment-config.repository';
 import { ProductRepository } from '../repository/product.repository';
 import { TransactionHistoryRepository } from '../repository/transaction-history.repository';
 import { PaymentWrapper } from '../wrapper/payment.wrapper';
 
 export class PaymentController {
+  constructor(
+      private environment = new Environment()
+  ) {
+    // intentionally blank
+  }
+
   /**
    * initializes a payment
    * @param mongodb_provider mongodb provider
@@ -103,6 +119,7 @@ export class PaymentController {
    * returns refreshed transaction history
    * @param mongodb_provider
    * @param postgresql_provider
+   * @param message_queue_provider
    * @param username
    * @param payment_config_key
    * @param transaction_history_id
@@ -110,6 +127,7 @@ export class PaymentController {
   verifyPayment = async (
       mongodb_provider: MongoDbProvider,
       postgresql_provider: PostgreSqlProvider,
+      message_queue_provider: MessageQueueProvider,
       username: string,
       payment_config_key: string,
       transaction_history_id: string
@@ -129,24 +147,24 @@ export class PaymentController {
       const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
 
       if ( !mongoose.isValidObjectId( transaction_history_id ) ) {
-        throw new Error( 'transaction not found' )
+        throw new Error( 'transaction not found' );
       }
 
       const transactionHistoryRepository = await new TransactionHistoryRepository().initialize(
           mongodb_provider.getConnection()
       );
 
-      const transaction_history = await transactionHistoryRepository.findTransactionHistory( transaction_history_id )
+      const transaction_history = await transactionHistoryRepository.findTransactionHistory( transaction_history_id );
 
       if ( !transaction_history ) {
-        throw new Error( 'transaction not found' )
+        throw new Error( 'transaction not found' );
       }
 
       if ( transaction_history.username !== username ) {
         throw new Error( 'Bad request' );
       }
 
-      // if current status is succeeded, do not check it again from payment provider
+      // If current status is succeeded, do not check it again from payment provider
       if ( transaction_history.payload.transaction_history.status === paymentWrapper.paymentMethod?.getSuccessStatus() ) {
         return;
       }
@@ -162,15 +180,23 @@ export class PaymentController {
           refreshed_transaction_history
       );
 
-      await paymentWrapper.receiptStatusUpdate(
+      const status = await paymentWrapper.receiptStatusUpdate(
           postgresql_provider,
           paymentConfig,
           transaction_history.external_transaction_id,
           updated_transaction_history
       );
 
+      if ( status && ReceiptStatus.SUCCESS === status ) {
+        await this.sendPaymentSuccessNotificationToQueue( message_queue_provider, {
+          timestamp: new Date().getTime(),
+          username: updated_transaction_history.username,
+          message: 'Product paid successfully'
+        } );
+      }
+
       if ( updated_transaction_history.payload.transaction_history.status !== paymentWrapper.paymentMethod?.getSuccessStatus() ) {
-        throw new Error( 'Payment not found' )
+        throw new Error( 'Payment not found' );
       }
 
     } catch ( error ) {
@@ -219,12 +245,14 @@ export class PaymentController {
    * refreshes transaction history
    * @param mongodb_provider mongodb provider
    * @param postgresql_provider postgresql provider
+   * @param message_queue_provider
    * @param payment_config_key payment config key
    * @param external_transaction_id external transaction id
    */
   refreshTransactionHistory = async (
       mongodb_provider: MongoDbProvider,
       postgresql_provider: PostgreSqlProvider,
+      message_queue_provider: MessageQueueProvider,
       payment_config_key: string,
       external_transaction_id: string
   ) => {
@@ -256,12 +284,21 @@ export class PaymentController {
           transaction_history
       );
 
-      await paymentWrapper.receiptStatusUpdate(
+      const status: string = await paymentWrapper.receiptStatusUpdate(
           postgresql_provider,
           paymentConfig,
           external_transaction_id,
           updated_transaction_history
       );
+
+      if ( status && ReceiptStatus.SUCCESS === status ) {
+        await this.sendPaymentSuccessNotificationToQueue(message_queue_provider, {
+          timestamp: new Date().getTime(),
+          username: updated_transaction_history.username,
+          message: 'Product paid successfully'
+        });
+      }
+
     } catch ( error ) {
       console.error( '> refreshTransactionHistory error: ', error );
       throw error;
@@ -305,4 +342,26 @@ export class PaymentController {
       throw error;
     }
   };
+
+  private async sendPaymentSuccessNotificationToQueue(
+      messageQueueProvider: MessageQueueProvider,
+      notificationParams: NotificationParams
+  ) {
+    const orchestrationChannelTag = this.environment.args().mqArgs?.orchestrationServerMessageQueueChannel;
+
+    const message = {
+      sender: MessageQueueChannelType.PAYMENT,
+      receiver: MessageQueueChannelType.BUSINESS_LOGIC,
+      message: {
+        notification: {
+          params: notificationParams
+        }
+      } as BusinessLogicActionType,
+    } as QueueMessage;
+
+    await messageQueueProvider.publish(
+        message,
+        orchestrationChannelTag as string
+    );
+  }
 }

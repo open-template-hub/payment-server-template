@@ -104,9 +104,11 @@ export class PaymentWrapper implements PaymentMethod {
       paymentConfig: PaymentConfig,
       external_transaction_id: string,
       updated_transaction_history: any
-  ) => {
-    if ( this.paymentMethod === undefined ) return;
-    await this.paymentMethod.receiptStatusUpdate(
+  ): Promise<string> => {
+    if ( this.paymentMethod === undefined ) {
+      return '';
+    }
+    return await this.paymentMethod.receiptStatusUpdate(
         dbConn,
         paymentConfig,
         external_transaction_id,
