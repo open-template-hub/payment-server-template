@@ -13,11 +13,28 @@ import { ProductController } from '../controller/product.controller';
 
 const subRoutes = {
   root: '/',
+  all: '/all'
 };
 
 export const router = Router();
 
 const productController = new ProductController();
+
+router.get(
+  subRoutes.root,
+  authorizedBy([UserRole.DEFAULT, UserRole.ADMIN]),
+  async (req: Request, res: Response) => {
+    const context = res.locals.ctx;
+    const product = await productController.getProduct(
+      context.mongodb_provider,
+      context.postgresql_provider,
+      req.query.product_id as string,
+      context.username
+    );
+
+    res.status(ResponseCode.OK).json(product);
+  }
+);
 
 router.post(
   subRoutes.root,
@@ -52,3 +69,35 @@ router.delete(
     res.status(ResponseCode.OK).json(product);
   }
 );
+
+router.get(
+  subRoutes.all,
+  authorizedBy([UserRole.ADMIN]),
+  async (req: Request, res: Response) => {
+    const context = res.locals.ctx;
+    const product = await productController.getAllProducts(
+      context.mongodb_provider,
+      req.query.name as string,
+      +(req.query.offset as string),
+      +(req.query.limit as string)
+    )
+
+    res.status(ResponseCode.OK).json(product)
+  }
+)
+
+router.put(
+  subRoutes.root,
+  authorizedBy([UserRole.ADMIN]),
+  async (req: Request, res: Response) => {
+    const context = res.locals.ctx;
+    await productController.updateProduct(
+      context.mongodb_provider,
+      req.body.productId as string,
+      req.body.name as string,
+      req.body.description as string
+    )
+
+    res.status(ResponseCode.CREATED).json( { } );
+  }
+)
