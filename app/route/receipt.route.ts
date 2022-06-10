@@ -17,8 +17,6 @@ const subRoutes = {
 
 export const router = Router();
 
-const receiptController = new ReceiptController();
-
 router.get(
   subRoutes.root,
   authorizedBy([UserRole.ADMIN, UserRole.DEFAULT]),
@@ -26,7 +24,7 @@ router.get(
     // gets successful receipts
     const context = res.locals.ctx;
 
-    const successful_receipts = await receiptController.getSuccessfulReceipts(
+    const successful_receipts = await ReceiptController.getSuccessfulReceipts(
       context.postgresql_provider,
       context.username,
       req.query.product_id as string

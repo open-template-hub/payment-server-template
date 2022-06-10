@@ -97,4 +97,56 @@ export class ProductRepository {
       throw error;
     }
   };
+
+  getAllProducts = async (name: string, skip: number, limit: number) => {
+    try {
+      let matchObject: any = { }
+
+      if(name !== '') {
+        matchObject = {
+          $or: [
+            {name: {$regex : `^${name}`, $options: 'i' } },
+            {product_id: {$regex : `^${name}`, $options: 'i' }}
+          ]
+        }
+      }
+
+      const response = await this.dataModel.aggregate([
+        {
+          $facet: {
+            products: [
+              { $match: matchObject },
+              { $skip: skip },
+              { $limit: limit } 
+            ],
+            meta: [
+              { $count: "count" }
+            ]
+          }
+        }
+      ]);
+
+      return response[0];
+    } catch ( error ) {
+      console.error( '> getAllProducts error: ', error );
+      throw error;
+    }
+  }
+
+  async updateProduct(productId: string, name: string, description: string) {
+    try {
+      await this.dataModel.updateOne(
+        { product_id: productId },
+        {
+          $set: {
+            name: name,
+            description: description
+          }
+        }
+      )
+    } catch(error) {
+      console.error( '> updateProductError: ', error );
+      throw error; 
+    }
+  }
 }

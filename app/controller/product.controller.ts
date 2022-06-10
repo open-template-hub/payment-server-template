@@ -2,9 +2,10 @@
  * @description holds product controller
  */
 
-import { MongoDbProvider } from '@open-template-hub/common';
+import { MongoDbProvider, PostgreSqlProvider, ResponseCode } from '@open-template-hub/common';
 import { ProductRepository } from '../repository/product.repository';
 import { PaymentMethodEnum, PaymentWrapper } from '../wrapper/payment.wrapper';
+import { ReceiptController } from './receipt.controller';
 
 export class ProductController {
   /**
@@ -77,4 +78,100 @@ export class ProductController {
       throw error;
     }
   };
+
+  getProduct = async (
+    mongodb_provider: MongoDbProvider,
+    postgresql_provider: PostgreSqlProvider,
+    product_id: string,
+    username: string
+  ) => {
+    try {
+      const receiptData = await ReceiptController.getSuccessfulReceipts(postgresql_provider, username, product_id);
+      
+      let hasAccess = false;
+
+      if(receiptData?.successful_receipts?.length > 0) {
+        receiptData.successful_receipts.array.forEach((receipt: any) => {
+          if(receipt.status === 'SUCCESS') {
+            hasAccess = true;
+          }
+        });
+      }
+
+      if(hasAccess) {
+        const productRepository = await new ProductRepository().initialize(
+          mongodb_provider.getConnection()
+        );
+        const productData = await productRepository.getProductByProductId(product_id);
+
+        return {
+          status: ResponseCode.OK,
+          data: {
+            product_id: productData.product_id,
+            name: productData.name,
+            description: productData.description,
+            payload: productData.payload,
+          },
+        }
+      }
+      
+      return {
+        status: ResponseCode.OK,
+        data: {
+          product_id: product_id
+        }
+      }
+
+    } catch(error) {
+      console.error( '> getProductDocument error: ', error );
+      throw error;
+    }
+  }
+
+  getAllProducts = async (
+    mongodb_provider: MongoDbProvider,
+    name?: string,
+    offset?: number,
+    limit?: number
+  ) => {
+
+    if(!offset) {
+      offset = 0;
+    }
+
+    if(!limit) {
+      limit = 20;
+    }
+
+    try {
+      const productRepository = await new ProductRepository().initialize(
+        mongodb_provider.getConnection()
+      );
+
+      let productsResponse = await productRepository.getAllProducts( name ?? '', offset, limit );
+
+      productsResponse.meta = productsResponse.meta[0];
+
+      productsResponse.meta.offset = offset
+      productsResponse.meta.limit = limit;
+
+      return productsResponse
+    } catch(error) {
+      console.error( '> getAllProducts error: ', error );
+      throw error;
+    }
+  }
+
+  async updateProduct(
+    mongodb_provider: MongoDbProvider,
+    productId: string,
+    name: string,
+    description: string
+  ) {
+    const productRepository = await new ProductRepository().initialize(
+      mongodb_provider.getConnection()
+    ); 
+
+    await productRepository.updateProduct(productId, name, description);
+  }
 }
