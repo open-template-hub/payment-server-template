@@ -14,13 +14,6 @@ import { PaymentMethodEnum } from '../wrapper/payment.wrapper';
 export class CoinbasePayment implements PaymentMethod {
   private readonly SUCCESS_STATUS = 'CONFIRMED';
 
-  /**
-   * initializes coinbase payment provider
-   * @param dbConn db connection
-   * @param paymentConfig payment config
-   * @param product product
-   * @param quantity quantity
-   */
   init = async (
       dbConn: any,
       paymentConfig: PaymentConfig,
