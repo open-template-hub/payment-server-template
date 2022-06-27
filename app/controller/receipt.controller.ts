@@ -23,5 +23,5 @@ export class ReceiptController {
         username,
         product_id
     );
-  };
+  }
 }

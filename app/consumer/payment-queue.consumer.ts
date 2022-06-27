@@ -5,10 +5,9 @@ import {
 } from '@open-template-hub/common';
 
 export class PaymentQueueConsumer implements QueueConsumer {
+
   private channel: any;
   private ctxArgs: ContextArgs = {} as ContextArgs;
-
-  constructor() {}
 
   init = (channel: string, ctxArgs: ContextArgs) => {
     this.channel = channel;
@@ -27,7 +26,7 @@ export class PaymentQueueConsumer implements QueueConsumer {
       let requeue = false;
 
       if (message.example) {
-        var exampleHook = async () => {
+        const exampleHook = async () => {
           console.log('Payment server example');
         };
 

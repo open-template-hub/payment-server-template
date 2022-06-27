@@ -9,13 +9,6 @@ import { Product } from '../interface/product.interface';
 export class GooglePayment implements PaymentMethod {
   private readonly SUCCESS_STATUS = 'succeeded';
 
-  /**
-   * initializes google payment provider
-   * @param dbConn db connection
-   * @param paymentConfig payment config
-   * @param product product
-   * @param quantity quantity
-   */
   init = async (
       dbConn: any,
       paymentConfig: PaymentConfig,

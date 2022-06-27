@@ -6,12 +6,14 @@ import { PaymentConfig } from './payment-config.interface';
 import { Product } from './product.interface';
 
 export interface PaymentMethod {
+
   /**
    * initializes payment method
    * @param dbConn db connection
    * @param paymentConfig payment config
    * @param product product
    * @param quantity quantity
+   * @param transaction_id transaction_id
    */
   init(
       dbConn: any,

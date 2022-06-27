@@ -15,13 +15,6 @@ import { PaymentMethodEnum } from '../wrapper/payment.wrapper';
 export class StripePayment implements PaymentMethod {
   private readonly SUCCESS_STATUS = 'succeeded';
 
-  /**
-   * initializes stripe payment provider
-   * @param dbConn db connection
-   * @param paymentConfig payment config
-   * @param product product
-   * @param quantity quantity
-   */
   init = async (
       dbConn: any,
       paymentConfig: PaymentConfig,

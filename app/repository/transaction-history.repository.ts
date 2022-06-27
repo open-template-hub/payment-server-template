@@ -64,12 +64,12 @@ export class TransactionHistoryRepository {
       return await this.dataModel.findOneAndUpdate(
           { _id: id },
           { external_transaction_id, payload: { transaction_history } }
-      )
+      );
     } catch ( error ) {
       console.error( '> updateTransactionHistoryWithId error: ', error );
       throw error;
     }
-  }
+  };
 
   /**
    * updates transaction history with external transaction id
@@ -102,8 +102,8 @@ export class TransactionHistoryRepository {
   findTransactionHistory = async (
       _id: string
   ) => {
-    return await this.dataModel.findOne(
+    return this.dataModel.findOne(
         { _id }
-    )
-  }
+    );
+  };
 }
