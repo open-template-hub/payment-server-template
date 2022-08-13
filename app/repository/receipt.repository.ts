@@ -81,12 +81,14 @@ export class ReceiptRepository {
         created_time: Date,
         total_amount: number,
         currency_code: string,
-        status: string
+        status: string,
+        external_customer_id?: string,
+        expire_date?: string
       }
   ) => {
     try {
       await this.connection.query(
-          'INSERT INTO receipts(username, external_transaction_id, product_id, payment_config_key, created_time, total_amount, currency_code, status) VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
+          'INSERT INTO receipts(username, external_transaction_id, product_id, payment_config_key, created_time, total_amount, currency_code, status, customer_id, expire_date) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
           [
             receiptObject.username,
             receiptObject.external_transaction_id,
@@ -95,7 +97,9 @@ export class ReceiptRepository {
             receiptObject.created_time,
             receiptObject.total_amount,
             receiptObject.currency_code,
-            receiptObject.status
+            receiptObject.status,
+            receiptObject.external_customer_id,
+            receiptObject.expire_date
           ]
       );
     } catch ( error ) {

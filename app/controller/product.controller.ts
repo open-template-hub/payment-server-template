@@ -90,10 +90,19 @@ export class ProductController {
       
       let hasAccess = false;
 
-      if(receiptData?.successful_receipts?.length > 0) {
-        receiptData.successful_receipts.array.forEach((receipt: any) => {
+      if(receiptData?.length > 0) {
+        receiptData.forEach((receipt: any) => {
           if(receipt.status === 'SUCCESS') {
-            hasAccess = true;
+            if(receipt.expire_date) {
+              const expireDate = new Date(receipt.expire_date * 1000)
+              if(expireDate < new Date()) {
+                hasAccess = false
+              } else {
+                hasAccess = true
+              }
+            } else {
+              hasAccess = true;
+            }            
           }
         });
       }

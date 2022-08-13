@@ -16,6 +16,7 @@ const subRoutes = {
   verify: '/verify',
   initWithExternalTransactionId: '/init-with-external-transaction-id',
   confirm: '/confirm',
+  portal: '/portal'
 };
 
 export const router = Router();
@@ -34,7 +35,8 @@ router.post(
       context.username,
       req.body.payment_config_key,
       req.body.product_id,
-      req.body.quantity
+      req.body.quantity,
+      req.body.origin
     );
     res.status(ResponseCode.CREATED).json(paymentSession);
   }
@@ -100,3 +102,23 @@ router.post(
     res.status(ResponseCode.CREATED).json(paymentSession);
   }
 );
+
+router.post(
+  subRoutes.portal,
+  authorizedBy([UserRole.ADMIN, UserRole.DEFAULT]),
+  async(req: Request, res: Response) => {
+    const context = res.locals.ctx;
+
+    const paymentController = new PaymentController();
+
+    let portalSession = await paymentController.createPortalSession(
+      context.mongodb_provider,
+      context.username,
+      req.body.payment_config_key,
+      req.body.product_id,
+      req.body.origin
+    );
+
+    res.status(ResponseCode.CREATED).json(portalSession);
+  }
+)
