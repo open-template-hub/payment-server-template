@@ -55,7 +55,7 @@ router.get(
 router.get(
   subRoutes.me,
   authorizedBy([UserRole.ADMIN, UserRole.DEFAULT]),
-  async (req: Request, res: Response) => {
+  async (_req: Request, res: Response) => {
     // Get subscription with username
     const context = res.locals.ctx;
 

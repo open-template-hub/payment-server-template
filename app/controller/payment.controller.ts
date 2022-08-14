@@ -22,10 +22,11 @@ import { TransactionHistoryRepository } from '../repository/transaction-history.
 import { PaymentWrapper } from '../wrapper/payment.wrapper';
 
 export class PaymentController {
-  constructor(
-      private environment = new Environment()
-  ) {
-    // intentionally blank
+
+  environment: Environment;
+
+  constructor() {
+    this.environment = new Environment();
   }
 
   /**
@@ -429,11 +430,11 @@ export class PaymentController {
       );
 
       if ( status && ReceiptStatus.SUCCESS === status ) {
-        await this.sendPaymentSuccessNotificationToQueue(message_queue_provider, {
+        await this.sendPaymentSuccessNotificationToQueue( message_queue_provider, {
           timestamp: new Date().getTime(),
           username: updated_transaction_history.username,
           message: 'Product paid successfully'
-        });
+        } );
       }
 
     } catch ( error ) {
