@@ -36,6 +36,9 @@ router.post( subRoutes.coinbase, async ( req: Request, res: Response ) => {
 
 router.post( subRoutes.stripe, async ( req: Request, res: Response ) => {
   // refreshes Stripe transaction history
+  const paymentController = new PaymentController();
+  const context = res.locals.ctx;
+
   if (
       req &&
       req.body &&
@@ -44,9 +47,6 @@ router.post( subRoutes.stripe, async ( req: Request, res: Response ) => {
       req.body.data.object.object === 'payment_intent'
   ) {
     const external_transaction_id = req.body.data.object.id;
-    const context = res.locals.ctx;
-
-    const paymentController = new PaymentController();
 
     await paymentController.refreshTransactionHistory(
         context.mongodb_provider,
@@ -55,6 +55,14 @@ router.post( subRoutes.stripe, async ( req: Request, res: Response ) => {
         req.query.key as string,
         external_transaction_id
     );
+  }
+
+  if(req?.body?.object?.object === "subscription") {
+    await paymentController.updateCustomerActivity(context.mongodb_provider, req.body.object)
+  }
+
+  if(req?.body?.object?.object === "invoice") {
+    await paymentController.createInvoiceForSubscription(context.mongodb_provider, context.postgresql_provider, "STRIPE", req.body.object)
   }
 
   res.status( ResponseCode.OK ).send();

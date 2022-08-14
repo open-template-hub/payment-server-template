@@ -2,6 +2,7 @@
  * @description holds Coinbase payment provider
  */
 
+import { MongoDbProvider } from '@open-template-hub/common';
 import axios from 'axios';
 import { CurrencyCode, ReceiptStatus } from '../constant';
 import { PaymentConfig } from '../interface/payment-config.interface';
@@ -217,5 +218,29 @@ export class CoinbasePayment implements PaymentMethod {
 
   getSuccessStatus() {
     return this.SUCCESS_STATUS
+  }
+
+  initOneTimePayment(dbConn: any, paymentConfig: PaymentConfig, product: Product, quantity: number, transaction_id: string, origin: string): Promise<any> {
+    throw new Error('Method not implemented.');
+  }
+
+  createCustomer(paymentConfig: any, username: string) {
+    throw new Error('Method not implemented.');
+  }
+
+  initSubscription(dbConn: any, paymentConfig: PaymentConfig, product: Product, customerId: string, origin: string) {
+    throw new Error('Method not implemented.');
+  }
+
+  getModeFromProduct(payload: any): string {
+    throw new Error('Method not implemented.');
+  }
+
+  getUsernameByExternalCustomerId(mongodb_provider: MongoDbProvider, externalCustomerId: string): Promise<string> {
+    throw new Error('Method not implemented.');
+  }
+
+  createPortalSession(paymentConfig: PaymentConfig, customerId: string, origin: string) {
+    throw new Error('Method not implemented.');
   }
 }

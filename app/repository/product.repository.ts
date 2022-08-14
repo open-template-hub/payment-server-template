@@ -72,6 +72,16 @@ export class ProductRepository {
     }
   };
 
+  async getProductByExternalStripeProductId(
+    externalProductId: string
+  ) {
+    try {
+      return await this.dataModel.findOne( { "payload.stripe.external_product_id": externalProductId } );
+    } catch(error) {
+      console.error( '> getProductByExternalStripeProductId error: ', error );
+    }
+  }
+
   /**
    * updates product payload
    * @param product_id product id

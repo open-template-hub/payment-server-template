@@ -2,11 +2,13 @@
  * @description holds Stripe payment provider
  */
 
+import { MongoDbProvider } from '@open-template-hub/common';
 import Stripe from 'stripe';
 import { CurrencyCode, ReceiptStatus } from '../constant';
 import { PaymentConfig } from '../interface/payment-config.interface';
 import { PaymentMethod } from '../interface/payment-method.interface';
 import { Product } from '../interface/product.interface';
+import { CustomerActivityRepository } from '../repository/customer-activity.repository';
 import { ProductRepository } from '../repository/product.repository';
 import { ReceiptRepository } from '../repository/receipt.repository';
 import { confirmed_external_transaction_ids } from '../store';
@@ -15,17 +17,29 @@ import { PaymentMethodEnum } from '../wrapper/payment.wrapper';
 export class StripePayment implements PaymentMethod {
   private readonly SUCCESS_STATUS = 'succeeded';
 
-  init = async (
+  /**
+   * initializes stripe payment provider
+   * @param dbConn db connection
+   * @param paymentConfig payment config
+   * @param product product
+   * @param quantity quantity
+   */
+  initOneTimePayment = async (
       dbConn: any,
       paymentConfig: PaymentConfig,
       product: Product,
       quantity: number,
-      transaction_id: string
+      transaction_id: string,
+      origin: string
   ) => {
     let stripe = new Stripe(
         paymentConfig.payload.secret,
         paymentConfig.payload.config
     );
+
+    const successUrl = origin + "/callback/stripe?status=success";
+    const cancelUrl = origin + "/callback/stripe?status=cancel";
+
     const priceId = await this.getPriceId( dbConn, paymentConfig, product );
     const session = await stripe.checkout.sessions.create( {
       payment_method_types: paymentConfig.payload.payment_method_types,
@@ -35,22 +49,97 @@ export class StripePayment implements PaymentMethod {
           quantity: quantity,
         },
       ],
-      mode: paymentConfig.payload.mode,
-      success_url: paymentConfig.payload.success_url + `&id=${ product.product_id }` + `&transaction_id=${ transaction_id }`,
-      cancel_url: paymentConfig.payload.cancel_url + `&id=${ product.product_id }`
+      mode: product.payload?.stripe?.mode,
+      success_url: successUrl + `&id=${ product.product_id }` + `&transaction_id=${ transaction_id }&mode=payment`,
+      cancel_url: cancelUrl + `&id=${ product.product_id }&mode=payment`
     } );
 
-    const history = await this.getTransactionHistory(
+    let history: any = undefined;
+    
+    if(session.payment_intent) {
+      history = await this.getTransactionHistory(
         paymentConfig,
         session.payment_intent as string
-    );
-
+      );
+    }
+    
     return {
       history: history,
       id: session.payment_intent,
       session_id: session.id,
     };
   };
+
+  initSubscription = async(
+    dbConn: any,
+    paymentConfig: PaymentConfig,
+    product: Product,
+    customerId: string,
+    origin: string
+    ) => {
+    let stripe = new Stripe(
+      paymentConfig.payload.secret,
+      paymentConfig.payload.config
+    );
+
+    const successUrl = origin + "/callback/stripe?status=success&mode=subscription";
+    const cancelUrl = origin + "/callback/stripe?status=cancel&mode=subscription";
+    
+    const priceId = await this.getPriceId( dbConn, paymentConfig, product );
+    const session = await stripe.checkout.sessions.create( {
+      payment_method_types: paymentConfig.payload.payment_method_types,
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1
+        },
+      ],
+      mode: "subscription",
+      success_url: successUrl + `&id=${ product.product_id }`,
+      cancel_url: cancelUrl + `&id=${ product.product_id }`,
+      customer: customerId
+    } );
+
+    return {
+      session_id: session.id
+    }
+  }
+
+  async createPortalSession(
+    paymentConfig: PaymentConfig,
+    customerId: string,
+    origin: string
+  ) {
+    const returnUrl = origin + "/callback/stripe?status=success&mode=subscription";
+
+    let stripe = new Stripe(
+      paymentConfig.payload.secret,
+      paymentConfig.payload.config
+    );
+
+    const portalSession = await stripe.billingPortal.sessions.create({
+      customer: customerId,
+      return_url: returnUrl
+    });
+
+    return { url: portalSession.url }; 
+  }
+
+  async createCustomer(
+    paymentConfig: PaymentConfig,
+    username: string
+  ) {
+    let stripe = new Stripe(
+      paymentConfig.payload.secret,
+      paymentConfig.payload.config
+    );
+
+    const customerObject = {
+      name: username
+    }
+
+    return stripe.customers.create(customerObject)
+  }
 
   /**
    * builds payload
@@ -171,6 +260,17 @@ export class StripePayment implements PaymentMethod {
     return '';
   };
 
+  async getUsernameByExternalCustomerId(mongodb_provider: MongoDbProvider, externalCustomerId: string): Promise<string> {
+    const customerActivityRepository = await new CustomerActivityRepository().initialize(
+      mongodb_provider.getConnection()
+    );
+    const customerActivity = await customerActivityRepository.getCustomerActivityByExternalStripeCustomerId(
+      externalCustomerId
+    );
+
+    return customerActivity?.username;
+  }
+
   /**
    * calculates amount
    * @param amount amount
@@ -265,5 +365,9 @@ export class StripePayment implements PaymentMethod {
 
   getSuccessStatus() {
     return this.SUCCESS_STATUS
+  }
+
+  getModeFromProduct(payload: any): string {
+    return payload.stripe.mode
   }
 }
