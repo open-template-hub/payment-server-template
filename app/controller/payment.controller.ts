@@ -11,7 +11,7 @@ import {
   PostgreSqlProvider,
   QueueMessage
 } from '@open-template-hub/common';
-import mongoose, { mongo } from 'mongoose';
+import mongoose from 'mongoose';
 import { Environment } from '../../environment';
 import { ReceiptStatus } from '../constant';
 import { CustomerActivityRepository } from '../repository/customer-activity.repository';
@@ -237,10 +237,6 @@ export class PaymentController {
     }
 
     const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
-
-    const customerActivityRepository = await new CustomerActivityRepository().initialize(
-      mongodb_provider.getConnection()
-    );
 
     let customerActivity = await this.getCustomerActivityWithUsername(mongodb_provider, username);
 
