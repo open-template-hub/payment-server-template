@@ -26,9 +26,7 @@ router.get(
   async (req: Request, res: Response) => {
     const context = res.locals.ctx;
     const product = await productController.getProduct(
-      context.mongodb_provider,
       context.postgresql_provider,
-      req.query.product_id as string,
       context.username
     );
 

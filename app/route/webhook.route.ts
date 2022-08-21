@@ -58,11 +58,22 @@ router.post( subRoutes.stripe, async ( req: Request, res: Response ) => {
   }
 
   if(req?.body?.object?.object === "subscription") {
-    await paymentController.updateCustomerActivity(context.mongodb_provider, req.body.object)
+    await paymentController.updateCustomerActivity(context.mongodb_provider, req.query.key as string, req.body.object)
   }
 
   if(req?.body?.object?.object === "invoice") {
-    await paymentController.createInvoiceForSubscription(context.mongodb_provider, context.postgresql_provider, "STRIPE", req.body.object)
+    await paymentController.createInvoiceForSubscription(context.mongodb_provider, context.postgresql_provider, req.query.key as string, req.body.object)
+  }
+
+  if(req?.body?.object?.object === "charge" && req.body.object.refunded === true) {
+    const object = req.body.object;
+
+    if(object.refunds?.data?.length > 0 && object.refunds.data[0].status === "succeeded") {
+      const customerId = object.customer;
+      const createdTime = object.refunds.data[0].created;
+
+      await paymentController.processRefund(context.postgresql_provider, customerId, createdTime)
+    }
   }
 
   res.status( ResponseCode.OK ).send();

@@ -16,12 +16,10 @@ export class ReceiptController {
    static async getSuccessfulReceipts(
       postgresql_provider: PostgreSqlProvider,
       username: string,
-      product_id: string
   ) {
     const receiptRepository = new ReceiptRepository( postgresql_provider );
-    return receiptRepository.getSuccessfulReceiptsWithUsernameAndProductId(
-        username,
-        product_id
+    return receiptRepository.getSuccessfulReceiptsWithUsername(
+        username
     );
   }
 }

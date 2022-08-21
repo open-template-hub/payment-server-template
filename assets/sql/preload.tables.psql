@@ -9,5 +9,6 @@ CREATE TABLE IF NOT EXISTS receipts(
   created_time timestamp NOT NULL,
   total_amount NUMERIC(8,2) NOT NULL,
   currency_code text NOT NULL,
-  status text NOT NULL
+  status text NOT NULL,
+  priority_order int
 );

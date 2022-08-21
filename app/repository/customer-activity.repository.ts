@@ -40,19 +40,21 @@ export class CustomerActivityRepository {
         }
     }
 
-    async addOrUpdateSubscription(external_user_id: string, subscription: any) {
+    async addOrUpdateSubscription(payment_config_key: string, external_user_id: string, subscription: any) {
       try {
+        // todo: add payment config key control
+
         // if document exist
         let doc: any;
 
         doc = await this.dataModel.updateOne(
-          { external_user_id, "subscriptions.id": subscription.id },
+          { payment_config_key, external_user_id, "subscriptions.id": subscription.id },
           { $set: { "subscriptions.$.event": subscription } }
         )
 
         if(doc.matchedCount === 0) {
           return await this.dataModel.updateOne (
-            { external_user_id },
+            { payment_config_key, external_user_id },
             { $addToSet: { "subscriptions": { id: subscription.id, event: subscription } } },
             { upsert: true }
           )

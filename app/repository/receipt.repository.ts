@@ -41,15 +41,14 @@ export class ReceiptRepository {
    * @param product_id product id
    * @returns successful receipts
    */
-  getSuccessfulReceiptsWithUsernameAndProductId = async (
+  getSuccessfulReceiptsWithUsername = async (
       username: string,
-      product_id: string
   ) => {
     let res;
     try {
       res = await this.connection.query(
-          'SELECT * FROM receipts WHERE username = $1 and product_id = $2 and status = $3',
-          [ username, product_id, ReceiptStatus.SUCCESS ]
+          'SELECT * FROM receipts WHERE username = $1 and status = $2',
+          [ username, ReceiptStatus.SUCCESS ]
       );
     } catch ( error ) {
       console.error(
@@ -83,12 +82,13 @@ export class ReceiptRepository {
         currency_code: string,
         status: string,
         external_customer_id?: string,
-        expire_date?: string
+        expire_date?: string,
+        priority_order?: number
       }
   ) => {
     try {
       await this.connection.query(
-          'INSERT INTO receipts(username, external_transaction_id, product_id, payment_config_key, created_time, total_amount, currency_code, status, customer_id, expire_date) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+          'INSERT INTO receipts(username, external_transaction_id, product_id, payment_config_key, created_time, total_amount, currency_code, status, customer_id, expire_date, priority_order) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
           [
             receiptObject.username,
             receiptObject.external_transaction_id,
@@ -99,7 +99,8 @@ export class ReceiptRepository {
             receiptObject.currency_code,
             receiptObject.status,
             receiptObject.external_customer_id,
-            receiptObject.expire_date
+            receiptObject.expire_date,
+            receiptObject.priority_order
           ]
       );
     } catch ( error ) {
@@ -107,4 +108,20 @@ export class ReceiptRepository {
       throw error;
     }
   };
+
+  async changeStatusOfSubscriptionsWithExpireDates(customer_id: string, created_time: string, status: string) {
+    try {
+      await this.connection.query(
+        "UPDATE receipts set status = $1 where $2 = customer_id and $3 < expire_date",
+        [
+          status,
+          customer_id,
+          created_time
+        ]
+      )
+    } catch ( error ) {
+      console.error( '> changeStatusOfSubscriptionsWithExpireDates error: ', error );
+      throw error;
+    }
+  }
 }

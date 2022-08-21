@@ -21,7 +21,8 @@ export class ProductDataModel {
       },
       name: { type: String, required: true },
       description: { type: String, required: true },
-      payload: { type: Object },
+      priority_order: { type: Number },
+      payload: { type: Object }
     };
 
     this.dataSchema = new mongoose.Schema( schema );

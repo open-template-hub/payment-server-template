@@ -510,15 +510,15 @@ export class PaymentController {
     object: any
   ) {
 
-    if(object.lines.data.length > 0) {
+    if(object.lines.data.length > 0 && object.amount_paid > 0) {
       const customerId = object.customer;
-      const expireDate = object.lines.data[0].period.end as string;
-      const startDate = object.lines.data[0].period.start;
-      const externalProductId = object.lines.data[0].plan.product;
-      const totalAmount = object.lines.data[0].plan.amount;      
-      const currencyCode = object.lines.data[0].plan.currency;
+      const expireDate = object.lines.data[object.lines.data.length - 1].period.end as string;
+      const startDate = object.lines.data[object.lines.data.length - 1].period.start;
+      const externalProductId = object.lines.data[object.lines.data.length - 1].plan.product;
+      const totalAmount = object.amount_paid;  // change with amount paid    
+      const currencyCode = object.lines.data[object.lines.data.length - 1].plan.currency;
       const status = object.status === "paid" ? ReceiptStatus.SUCCESS : ReceiptStatus.OTHER;
-      const externalTransactionId = object.payment_intent
+      const externalTransactionId = object.payment_intent ?? "";
 
       // get product
       const productRepository = await new ProductRepository().initialize(
@@ -553,7 +553,8 @@ export class PaymentController {
           currency_code: currencyCode.toUpperCase(),
           status: status,
           external_customer_id: customerId,
-          expire_date: expireDate
+          expire_date: expireDate,
+          priority_order: product.priority_order
         }
       );
     }
@@ -561,6 +562,7 @@ export class PaymentController {
 
   async updateCustomerActivity(
     mongodb_provider: MongoDbProvider,
+    payment_config_key: string,
     object: any
   ) {
     const customerActivityRepository = await new CustomerActivityRepository().initialize(
@@ -569,9 +571,16 @@ export class PaymentController {
 
     const data = object.items.data as any[]
     if(data.length > 0) {
-      const externalProductId = data[0].plan.product;
-
-      customerActivityRepository.addOrUpdateSubscription(object.customer, externalProductId, object)
+      customerActivityRepository.addOrUpdateSubscription(payment_config_key, object.customer, object)
     }
+  }
+
+  async processRefund(
+    postgresql_provider: PostgreSqlProvider,
+    customerId: string,
+    createdTime: number
+  ) {
+      const receiptRepository = new ReceiptRepository( postgresql_provider );
+      receiptRepository.changeStatusOfSubscriptionsWithExpireDates(customerId, createdTime.toString(), ReceiptStatus.REFUND)
   }
 }
