@@ -6,6 +6,8 @@ import { ResponseCode } from '@open-template-hub/common';
 import { Request, Response } from 'express';
 import Router from 'express-promise-router';
 import { PaymentController } from '../controller/payment.controller';
+import express from "express";
+import bodyParser from 'body-parser';
 
 const subRoutes = {
   root: '/',
@@ -39,14 +41,15 @@ router.post( subRoutes.stripe, async ( req: Request, res: Response ) => {
   const paymentController = new PaymentController();
   const context = res.locals.ctx;
 
-  if (
-      req &&
-      req.body &&
-      req.body.data &&
-      req.body.data.object &&
-      req.body.data.object.object === 'payment_intent'
-  ) {
-    const external_transaction_id = req.body.data.object.id;
+  let event = (await paymentController.constructEvent(
+    context.mongodb_provider,
+    req.query.key as string,
+    req.body,
+    req.headers['stripe-signature']
+  )).data.object
+
+  if ( event?.object === 'payment_intent' ) {
+    const external_transaction_id = event.data.object.id;
 
     await paymentController.refreshTransactionHistory(
         context.mongodb_provider,
@@ -57,22 +60,21 @@ router.post( subRoutes.stripe, async ( req: Request, res: Response ) => {
     );
   }
 
-  if(req?.body?.object?.object === "subscription") {
-    await paymentController.updateCustomerActivity(context.mongodb_provider, req.query.key as string, req.body.object)
+  if(event?.object === "subscription") {
+    await paymentController.updateCustomerActivity(context.mongodb_provider, req.query.key as string, event)
   }
 
-  if(req?.body?.object?.object === "invoice") {
-    await paymentController.createInvoiceForSubscription(context.mongodb_provider, context.postgresql_provider, req.query.key as string, req.body.object)
+  if(event?.object === "invoice") {
+    await paymentController.createInvoiceForSubscription(context.mongodb_provider, context.postgresql_provider, req.query.key as string, event)
   }
 
-  if(req?.body?.object?.object === "charge" && req.body.object.refunded === true) {
-    const object = req.body.object;
+  if(event?.object === "charge" && event.refunded === true) {
 
-    if(object.refunds?.data?.length > 0 && object.refunds.data[0].status === "succeeded") {
-      const customerId = object.customer;
-      const createdTime = object.refunds.data[0].created;
+    if(event.refunds?.data?.length > 0 && event.refunds.data[0].status === "succeeded") {
+      const customerId = event.customer;
+      const createdTime = event.refunds.data[0].created;
 
-      await paymentController.processRefund(context.postgresql_provider, customerId, createdTime)
+      await paymentController.processRefund(context.postgresql_provider, req.query.key as string, customerId, createdTime)
     }
   }
 

@@ -15,6 +15,10 @@ import { PaymentMethodEnum } from '../wrapper/payment.wrapper';
 export class CoinbasePayment implements PaymentMethod {
   private readonly SUCCESS_STATUS = 'CONFIRMED';
 
+  constructEvent(paymentConfig: PaymentConfig, body: any, signature: any) {
+    throw new Error('Method not implemented.');
+  }
+
   init = async (
       dbConn: any,
       paymentConfig: PaymentConfig,

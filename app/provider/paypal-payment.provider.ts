@@ -17,6 +17,10 @@ const paypal = require( '@paypal/checkout-server-sdk' );
 export class PayPalPayment implements PaymentMethod {
   private readonly SUCCESS_STATUS = 'APPROVED';
 
+  constructEvent(paymentConfig: PaymentConfig, body: any, signature: any) {
+    throw new Error('Method not implemented.');
+  }
+
   /**
    * initializes paypal payment provider
    * @param dbConn db connection

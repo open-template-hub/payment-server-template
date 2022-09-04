@@ -10,6 +10,10 @@ import { Product } from '../interface/product.interface';
 export class GooglePayment implements PaymentMethod {
   private readonly SUCCESS_STATUS = 'succeeded';
 
+  constructEvent(paymentConfig: PaymentConfig, body: any, signature: any) {
+    throw new Error('Method not implemented.');
+  };
+
   init = async (
       dbConn: any,
       paymentConfig: PaymentConfig,

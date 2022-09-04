@@ -109,12 +109,13 @@ export class ReceiptRepository {
     }
   };
 
-  async changeStatusOfSubscriptionsWithExpireDates(customer_id: string, created_time: string, status: string) {
+  async changeStatusOfSubscriptionsWithExpireDates(payment_config_key: string, customer_id: string, created_time: string, status: string) {
     try {
       await this.connection.query(
-        "UPDATE receipts set status = $1 where $2 = customer_id and $3 < expire_date",
+        "UPDATE receipts set status = $1 where $2 = payment_config_key and $3 = customer_id and $4 < expire_date",
         [
           status,
+          payment_config_key,
           customer_id,
           created_time
         ]

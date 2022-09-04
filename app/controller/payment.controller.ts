@@ -577,10 +577,35 @@ export class PaymentController {
 
   async processRefund(
     postgresql_provider: PostgreSqlProvider,
+    payment_config_key: string,
     customerId: string,
     createdTime: number
   ) {
       const receiptRepository = new ReceiptRepository( postgresql_provider );
-      receiptRepository.changeStatusOfSubscriptionsWithExpireDates(customerId, createdTime.toString(), ReceiptStatus.REFUND)
+      receiptRepository.changeStatusOfSubscriptionsWithExpireDates(payment_config_key, customerId, createdTime.toString(), ReceiptStatus.REFUND)
+  }
+
+  async constructEvent(
+    mongodb_provider: MongoDbProvider,
+    payment_config_key: string,
+    body: any,
+    signature: any
+  ) {
+    // get paymentConfig
+    const paymentConfigRepository = await new PaymentConfigRepository().initialize(
+      mongodb_provider.getConnection()
+    );
+
+    let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
+        payment_config_key
+    );
+
+    const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
+
+    return paymentWrapper.constructEvent(
+      paymentConfig,
+      body,
+      signature
+    )
   }
 }

@@ -40,6 +40,16 @@ export class PaymentWrapper implements PaymentMethod {
     }
   }
 
+  constructEvent(paymentConfig: PaymentConfig, body: any, signature: any) {
+    if ( this.paymentMethod === undefined ) return null;
+
+    return this.paymentMethod.constructEvent(
+      paymentConfig,
+      body,
+      signature
+    );
+  }
+
   createPortalSession(paymentConfig: PaymentConfig, customerId: string, origin: string): any {
     if ( this.paymentMethod === undefined ) return null;
 

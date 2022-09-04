@@ -370,4 +370,30 @@ export class StripePayment implements PaymentMethod {
   getModeFromProduct(payload: any): string {
     return payload.stripe.mode
   }
+
+  constructEvent(
+    paymentConfig: PaymentConfig,
+    body: any,
+    signature: string
+  ): any {
+    let stripe = new Stripe(
+      paymentConfig.payload.secret,
+      paymentConfig.payload.config
+    );
+
+    let event: any;
+
+    if(paymentConfig.payload.webhook_secret) {
+      event = stripe.webhooks.constructEvent(
+        body,
+        signature,
+        paymentConfig.payload.webhook_secret
+      );
+    }
+    else {
+      event = body;
+    }
+
+    return event
+  }
 }

@@ -98,4 +98,10 @@ export interface PaymentMethod {
         customerId: string,
         origin: string
     ): any;
+
+    constructEvent(
+        paymentConfig: PaymentConfig,
+        body: any,
+        signature: any
+    ): any;
 }
