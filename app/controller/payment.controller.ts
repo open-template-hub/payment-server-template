@@ -513,7 +513,7 @@ export class PaymentController {
     if(object.lines.data.length > 0 && object.amount_paid > 0) {
       const customerId = object.customer;
       const expireDate = object.lines.data[object.lines.data.length - 1].period.end as string;
-      const startDate = object.lines.data[object.lines.data.length - 1].period.start;
+      const startDate = object.lines.data[object.lines.data.length - 1].period.start as string;
       const externalProductId = object.lines.data[object.lines.data.length - 1].plan.product;
       const totalAmount = object.amount_paid;  // change with amount paid    
       const currencyCode = object.lines.data[object.lines.data.length - 1].plan.currency;

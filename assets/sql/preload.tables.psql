@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS receipts(
   expire_date text,
   payment_config_key text NOT NULL,
   product_id text NOT NULL,
-  created_time timestamp NOT NULL,
+  created_time text,
   total_amount NUMERIC(8,2) NOT NULL,
   currency_code text NOT NULL,
   status text NOT NULL,

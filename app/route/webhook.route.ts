@@ -39,12 +39,14 @@ router.post( subRoutes.stripe, async ( req: Request, res: Response ) => {
   const paymentController = new PaymentController();
   const context = res.locals.ctx;
 
-  let event = (await paymentController.constructEvent(
+  let constructedEvent = (await paymentController.constructEvent(
     context.mongodb_provider,
     req.query.key as string,
     req.body,
     req.headers['stripe-signature']
-  )).data.object
+  ))
+
+  let event = constructedEvent.data.object
 
   if ( event?.object === 'payment_intent' ) {
     const external_transaction_id = event.data.object.id;
