@@ -185,7 +185,7 @@ export class CoinbasePayment implements PaymentMethod {
                 external_transaction_id,
                 product_id: updated_transaction_history.product_id,
                 payment_config_key: paymentConfig.key,
-                created_time: new Date(),
+                created_time: `${new Date().getTime()}`,
                 total_amount: amount,
                 currency_code,
                 status: success

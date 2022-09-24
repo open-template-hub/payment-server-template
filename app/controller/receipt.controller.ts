@@ -22,4 +22,32 @@ export class ReceiptController {
         username
     );
   }
+
+  static async getReceipts(
+    postgresql_provider: PostgreSqlProvider,
+    username: string,
+    payment_config_key: string,
+    offset: number,
+    limit: number,
+    isSubscription: boolean
+  ) {
+
+    if(limit > 100) {
+      limit = 100
+    }
+
+    let receiptRepository = new ReceiptRepository(
+      postgresql_provider
+    )
+
+    let receipts = await receiptRepository.getAllReceipts(
+                            username, 
+                            payment_config_key,
+                            offset,
+                            limit,
+                            isSubscription
+                          );
+
+    return { receipts: receipts.rows, offset, limit }
+  }
 }

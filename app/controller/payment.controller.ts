@@ -548,7 +548,7 @@ export class PaymentController {
           external_transaction_id: externalTransactionId,
           product_id: product.product_id,
           payment_config_key: payment_config_key,
-          created_time: new Date(startDate * 1000),
+          created_time: startDate,
           total_amount: totalAmount / 100,
           currency_code: currencyCode.toUpperCase(),
           status: status,

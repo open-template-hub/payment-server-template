@@ -1,3 +1,7 @@
 ## Get Receipt With Product Id
 GET http://localhost:4003/receipt?product_id=product_id
 Authorization: Bearer token
+
+## Get Receipt With Product Id
+GET http://localhost:4003/receipt/all?payment_config_key=STRIPE_LOCAL&offset=0&limit=20
+Authorization: Bearer token

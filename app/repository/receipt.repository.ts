@@ -77,7 +77,7 @@ export class ReceiptRepository {
         external_transaction_id: string,
         product_id: string,
         payment_config_key: string,
-        created_time: Date,
+        created_time: string,
         total_amount: number,
         currency_code: string,
         status: string,
@@ -123,6 +123,29 @@ export class ReceiptRepository {
     } catch ( error ) {
       console.error( '> changeStatusOfSubscriptionsWithExpireDates error: ', error );
       throw error;
+    }
+  }
+
+  async getAllReceipts(username: string, payment_config_key: string, offset: number, limit: number, onlySubscription: boolean) {
+    try {
+      let whereQuery = "username = $1 and payment_config_key = $2"
+
+      if(onlySubscription) {
+        whereQuery += " and customer_id IS NOT NULL"
+      }
+
+      return await this.connection.query(
+        `SELECT username, payment_config_key, product_id, created_time, total_amount, currency_code, status, expire_date, priority_order FROM receipts WHERE ${whereQuery} ORDER BY created_time DESC OFFSET $3 LIMIT $4`,
+        [
+          username,
+          payment_config_key,
+          offset,
+          limit
+        ]
+      )
+    } catch(error) {
+      console.error( '> getAllReceipts error: ', error );
+      throw error; 
     }
   }
 }

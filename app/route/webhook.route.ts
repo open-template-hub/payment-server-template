@@ -6,8 +6,6 @@ import { ResponseCode } from '@open-template-hub/common';
 import { Request, Response } from 'express';
 import Router from 'express-promise-router';
 import { PaymentController } from '../controller/payment.controller';
-import express from "express";
-import bodyParser from 'body-parser';
 
 const subRoutes = {
   root: '/',
