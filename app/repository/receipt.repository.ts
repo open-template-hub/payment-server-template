@@ -126,19 +126,48 @@ export class ReceiptRepository {
     }
   }
 
-  async getAllReceipts(username: string, payment_config_key: string, offset: number, limit: number, onlySubscription: boolean) {
+  async getAllReceipts(
+    username: string, 
+    payment_config_key: string, 
+    offset: number, 
+    limit: number, 
+    only_subscription: boolean,
+    start_date?: string,
+    end_date?: string,
+    product_id?: string) {
     try {
       let whereQuery = "username = $1 and payment_config_key = $2"
 
-      if(onlySubscription) {
+      if(only_subscription) {
         whereQuery += " and customer_id IS NOT NULL"
       }
 
+      let queryCounter = 3
+      let optionalQueryParams: string[] = []
+      if(start_date) {
+        whereQuery += ` and created_time >= $${queryCounter}`
+        optionalQueryParams.push(start_date)
+        queryCounter += 1
+      }
+
+      if(end_date) {
+        whereQuery += ` and expire_date <= $${queryCounter}`
+        optionalQueryParams.push(end_date)
+        queryCounter += 1
+      }
+
+      if(product_id) {
+        whereQuery += ` and product_id = $${queryCounter}`
+        optionalQueryParams.push(product_id)
+        queryCounter += 1
+      }
+
       return await this.connection.query(
-        `SELECT username, payment_config_key, product_id, created_time, total_amount, currency_code, status, expire_date, priority_order FROM receipts WHERE ${whereQuery} ORDER BY created_time DESC OFFSET $3 LIMIT $4`,
+        `SELECT username, payment_config_key, product_id, created_time, total_amount, currency_code, status, expire_date, priority_order FROM receipts WHERE ${whereQuery} ORDER BY created_time DESC OFFSET $${queryCounter} LIMIT $${queryCounter + 1}`,
         [
           username,
           payment_config_key,
+          ...optionalQueryParams,
           offset,
           limit
         ]

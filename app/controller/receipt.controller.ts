@@ -29,7 +29,10 @@ export class ReceiptController {
     payment_config_key: string,
     offset: number,
     limit: number,
-    isSubscription: boolean
+    is_subscription: boolean,
+    start_date?: string,
+    end_date?: string,
+    production_id?: string
   ) {
 
     if(limit > 100) {
@@ -45,7 +48,10 @@ export class ReceiptController {
                             payment_config_key,
                             offset,
                             limit,
-                            isSubscription
+                            is_subscription,
+                            start_date,
+                            end_date,
+                            production_id
                           );
 
     return { receipts: receipts.rows, offset, limit }

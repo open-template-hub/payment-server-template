@@ -48,7 +48,10 @@ router.get(
       req.query.payment_config_key as string,
       +(req.query.offset as string),
       +(req.query.limit as string),
-      (req.query.type as string) === "subscription"
+      (req.query.type as string) === "subscription",
+      req.query.start_date as string | undefined,
+      req.query.end_date as string | undefined,
+      req.query.product_id as string | undefined
     )
 
     res.status(ResponseCode.OK)
