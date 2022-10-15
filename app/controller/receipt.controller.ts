@@ -2,7 +2,8 @@
  * @description holds receipt controller
  */
 
-import { PostgreSqlProvider } from '@open-template-hub/common';
+import { MongoDbProvider, PostgreSqlProvider } from '@open-template-hub/common';
+import { ReceiptStatusRepository } from '../repository/receipt-status.repository';
 import { ReceiptRepository } from '../repository/receipt.repository';
 
 export class ReceiptController {
@@ -32,7 +33,8 @@ export class ReceiptController {
     is_subscription: boolean,
     start_date?: string,
     end_date?: string,
-    production_id?: string
+    production_id?: string,
+    status?: string
   ) {
 
     if(limit > 100) {
@@ -51,9 +53,20 @@ export class ReceiptController {
                             is_subscription,
                             start_date,
                             end_date,
-                            production_id
+                            production_id,
+                            status
                           );
 
     return { receipts: receipts.rows, offset, limit }
+  }
+
+  static async getStatusses(mongodb_provider: MongoDbProvider, language: string) {
+    const receiptStatusRepository = await new ReceiptStatusRepository().initialize(
+      mongodb_provider.getConnection()
+    );
+
+    const defaultLanguage = process.env.DEFAULT_LANGUAGE ?? 'en';
+    
+    return receiptStatusRepository.getStatusses(language, defaultLanguage);
   }
 }

@@ -134,7 +134,9 @@ export class ReceiptRepository {
     only_subscription: boolean,
     start_date?: string,
     end_date?: string,
-    product_id?: string) {
+    product_id?: string,
+    status?: string
+  ) {
     try {
       let whereQuery = "username = $1 and payment_config_key = $2"
 
@@ -159,6 +161,12 @@ export class ReceiptRepository {
       if(product_id) {
         whereQuery += ` and product_id = $${queryCounter}`
         optionalQueryParams.push(product_id)
+        queryCounter += 1
+      }
+
+      if(status) {
+        whereQuery += ` and status = $${queryCounter}`
+        optionalQueryParams.push(status)
         queryCounter += 1
       }
 

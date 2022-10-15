@@ -14,6 +14,7 @@ import { ReceiptController } from '../controller/receipt.controller';
 const subRoutes = {
   root: '/',
   all: '/all',
+  status: "/status"
 };
 
 export const router = Router();
@@ -51,11 +52,27 @@ router.get(
       (req.query.type as string) === "subscription",
       req.query.start_date as string | undefined,
       req.query.end_date as string | undefined,
-      req.query.product_id as string | undefined
+      req.query.product_id as string | undefined,
+      req.query.status as string | undefined
     )
 
     res.status(ResponseCode.OK)
     .json(receiptsResponse)
+  }
+)
+
+router.get(
+  subRoutes.status,
+  authorizedBy([UserRole.ADMIN, UserRole.DEFAULT]),
+  async(req: Request, res: Response) => {
+    const context = res.locals.ctx;
+
+    const statussesResponse = await ReceiptController.getStatusses(
+      context.mongodb_provider,
+      req.query.language as string
+    );
+
+    res.status(ResponseCode.OK).json(statussesResponse);
   }
 )
 

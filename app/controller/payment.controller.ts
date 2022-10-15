@@ -571,7 +571,7 @@ export class PaymentController {
 
     const data = object.items.data as any[]
     if(data.length > 0) {
-      customerActivityRepository.addOrUpdateSubscription(payment_config_key, object.customer, object)
+      customerActivityRepository.addOrUpdateSubscription(payment_config_key, object.customer, object);
     }
   }
 
