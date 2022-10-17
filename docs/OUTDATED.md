@@ -15,8 +15,8 @@ Following packages are not updated in the develop branch yet. So, if you want to
 
 | Package | Current | Wanted | Latest | Location |
 | --- | --- | --- | --- | --- |
-| axios | 0.27.2 | 0.27.2 | 1.1.2 | node_modules/axios |
-| stripe | 9.16.0 | 9.16.0 | 10.13.0 | node_modules/stripe |
+| axios | 0.27.2 | 0.27.2 | 1.1.3 | node_modules/axios |
+| stripe | 9.16.0 | 9.16.0 | 10.14.0 | node_modules/stripe |
 | uuid | 8.3.2 | 8.3.2 | 9.0.0 | node_modules/uuid |
 
 <table align="right"><tr><td><a href="https://opentemplatehub.com"><img src="https://raw.githubusercontent.com/open-template-hub/open-template-hub.github.io/master/assets/logo/brand-logo.png" width="50px" alt="oth"/></a></td><td><b>Open Template Hub © 2021</b></td></tr></table>
