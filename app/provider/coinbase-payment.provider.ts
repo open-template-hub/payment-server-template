@@ -240,7 +240,7 @@ export class CoinbasePayment implements PaymentMethod {
     throw new Error('Method not implemented.');
   }
 
-  getUsernameByExternalCustomerId(mongodb_provider: MongoDbProvider, externalCustomerId: string): Promise<string> {
+  getUsernameByExternalCustomerId(mongodb_provider: MongoDbProvider, payment_config_key: string, externalCustomerId: string): Promise<string> {
     throw new Error('Method not implemented.');
   }
 

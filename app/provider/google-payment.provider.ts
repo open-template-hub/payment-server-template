@@ -101,11 +101,11 @@ export class GooglePayment implements PaymentMethod {
     throw new Error('Method not implemented.');
   }
 
-  getModeFromProduct(payload: any): string {
+  getModeFromProduct(payload: any): string { 
     throw new Error('Method not implemented.');
   }
 
-  getUsernameByExternalCustomerId(mongodb_provider: MongoDbProvider, externalCustomerId: string): Promise<string> {
+  getUsernameByExternalCustomerId(mongodb_provider: MongoDbProvider, payment_config_key: string, externalCustomerId: string): Promise<string> {
     throw new Error('Method not implemented.');
   }
 

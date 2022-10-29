@@ -515,7 +515,7 @@ export class PaymentController {
       const expireDate = object.lines.data[object.lines.data.length - 1].period.end as string;
       const startDate = object.lines.data[object.lines.data.length - 1].period.start as string;
       const externalProductId = object.lines.data[object.lines.data.length - 1].plan.product;
-      const totalAmount = object.amount_paid;  // change with amount paid    
+      const totalAmount = object.amount_paid;
       const currencyCode = object.lines.data[object.lines.data.length - 1].plan.currency;
       const status = object.status === "paid" ? ReceiptStatus.SUCCESS : ReceiptStatus.OTHER;
       const externalTransactionId = object.payment_intent ?? "";
@@ -539,7 +539,11 @@ export class PaymentController {
         throw new Error( 'Payment method can not be found' );
       
       const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
-      const username = await paymentWrapper.getUsernameByExternalCustomerId(mongodb_provider, customerId);
+      const username = await paymentWrapper.getUsernameByExternalCustomerId(mongodb_provider, payment_config_key, customerId);
+      
+      if( !username ) {
+        throw new Error("Username can not be found")
+      }
       
       const receiptRepository = new ReceiptRepository( postgresql_provider );
       await receiptRepository.createReceipt(

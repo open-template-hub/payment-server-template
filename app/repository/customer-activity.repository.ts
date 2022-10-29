@@ -68,10 +68,10 @@ export class CustomerActivityRepository {
     }
 
     
-    async getCustomerActivityByExternalStripeCustomerId(external_user_id: string) {
+    async getCustomerActivityByExternalStripeCustomerId(payment_config_key: string, external_user_id: string) {
       try {
         return await this.dataModel.findOne(
-          {external_user_id}
+          {external_user_id, payment_config_key}
         )
       } catch(error) {
         console.error( '> getUsernameByExternalStripeCustomerId error: ', error );

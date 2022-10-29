@@ -194,10 +194,11 @@ export class PaymentWrapper implements PaymentMethod {
     )
   }
 
-  async getUsernameByExternalCustomerId(mongodb_provider: MongoDbProvider, externalCustomerId: string): Promise<string> {
+  async getUsernameByExternalCustomerId(mongodb_provider: MongoDbProvider, payment_config_key: string, externalCustomerId: string): Promise<string> {
     if(!this.paymentMethod) return "";
     return this.paymentMethod.getUsernameByExternalCustomerId(
       mongodb_provider,
+      payment_config_key,
       externalCustomerId
     )
   }

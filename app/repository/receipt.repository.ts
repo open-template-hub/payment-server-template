@@ -153,7 +153,7 @@ export class ReceiptRepository {
       }
 
       if(end_date) {
-        whereQuery += ` and expire_date <= $${queryCounter}`
+        whereQuery += ` and created_time <= $${queryCounter}`
         optionalQueryParams.push(end_date)
         queryCounter += 1
       }

@@ -260,11 +260,12 @@ export class StripePayment implements PaymentMethod {
     return '';
   };
 
-  async getUsernameByExternalCustomerId(mongodb_provider: MongoDbProvider, externalCustomerId: string): Promise<string> {
+  async getUsernameByExternalCustomerId(mongodb_provider: MongoDbProvider, payment_config_key: string, externalCustomerId: string): Promise<string> {
     const customerActivityRepository = await new CustomerActivityRepository().initialize(
       mongodb_provider.getConnection()
     );
     const customerActivity = await customerActivityRepository.getCustomerActivityByExternalStripeCustomerId(
+      payment_config_key,
       externalCustomerId
     );
 

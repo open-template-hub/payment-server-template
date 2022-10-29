@@ -90,6 +90,7 @@ export interface PaymentMethod {
 
     getUsernameByExternalCustomerId(
         mongodb_provider: MongoDbProvider,
+        payment_config_key: string,
         externalCustomerId: string
     ): Promise<string>;
 
