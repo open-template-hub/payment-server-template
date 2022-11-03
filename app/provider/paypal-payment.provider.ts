@@ -2,6 +2,7 @@
  * @description holds Paypal payment provider
  */
 
+import { MongoDbProvider } from '@open-template-hub/common';
 import { CurrencyCode, ReceiptStatus } from '../constant';
 import { PaymentConfig } from '../interface/payment-config.interface';
 import { PaymentMethod } from '../interface/payment-method.interface';
@@ -15,6 +16,10 @@ const paypal = require( '@paypal/checkout-server-sdk' );
 
 export class PayPalPayment implements PaymentMethod {
   private readonly SUCCESS_STATUS = 'APPROVED';
+
+  constructEvent(paymentConfig: PaymentConfig, body: any, signature: any) {
+    throw new Error('Method not implemented.');
+  }
 
   /**
    * initializes paypal payment provider
@@ -201,7 +206,7 @@ export class PayPalPayment implements PaymentMethod {
               external_transaction_id,
               product_id: updated_transaction_history.product_id,
               payment_config_key: paymentConfig.key,
-              created_time: new Date(),
+              created_time: `${new Date().getTime()}`,
               total_amount: amount,
               currency_code,
               status: success
@@ -264,5 +269,29 @@ export class PayPalPayment implements PaymentMethod {
 
   getSuccessStatus() {
     return this.SUCCESS_STATUS
+  }
+
+  initOneTimePayment(dbConn: any, paymentConfig: PaymentConfig, product: Product, quantity: number, transaction_id: string, origin: string): Promise<any> {
+    throw new Error('Method not implemented.');
+  }
+
+  createCustomer(paymentConfig: any, username: string) {
+    throw new Error('Method not implemented.');
+  }
+  
+  initSubscription(dbConn: any, paymentConfig: PaymentConfig, product: Product, customerId: string, origin: string) {
+    throw new Error('Method not implemented.');
+  }
+
+  getModeFromProduct(payload: any): string {
+    throw new Error('Method not implemented.');
+  }
+  
+  getUsernameByExternalCustomerId(mongodb_provider: MongoDbProvider, payment_config_key: string, externalCustomerId: string): Promise<string> {
+    throw new Error('Method not implemented.');
+  }
+
+  createPortalSession(paymentConfig: PaymentConfig, customerId: string, origin: string) {
+    throw new Error('Method not implemented.');
   }
 }

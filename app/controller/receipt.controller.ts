@@ -2,7 +2,8 @@
  * @description holds receipt controller
  */
 
-import { PostgreSqlProvider } from '@open-template-hub/common';
+import { MongoDbProvider, PostgreSqlProvider } from '@open-template-hub/common';
+import { ReceiptStatusRepository } from '../repository/receipt-status.repository';
 import { ReceiptRepository } from '../repository/receipt.repository';
 
 export class ReceiptController {
@@ -16,12 +17,56 @@ export class ReceiptController {
    static async getSuccessfulReceipts(
       postgresql_provider: PostgreSqlProvider,
       username: string,
-      product_id: string
   ) {
     const receiptRepository = new ReceiptRepository( postgresql_provider );
-    return receiptRepository.getSuccessfulReceiptsWithUsernameAndProductId(
-        username,
-        product_id
+    return receiptRepository.getSuccessfulReceiptsWithUsername(
+        username
     );
+  }
+
+  static async getReceipts(
+    postgresql_provider: PostgreSqlProvider,
+    username: string,
+    payment_config_key: string,
+    offset: number,
+    limit: number,
+    is_subscription: boolean,
+    start_date?: string,
+    end_date?: string,
+    production_id?: string,
+    status?: string
+  ) {
+
+    if(limit > 100) {
+      limit = 100
+    }
+
+    let receiptRepository = new ReceiptRepository(
+      postgresql_provider
+    )
+
+    let receipts = await receiptRepository.getAllReceipts(
+                            username, 
+                            payment_config_key,
+                            offset,
+                            limit,
+                            is_subscription,
+                            start_date,
+                            end_date,
+                            production_id,
+                            status
+                          );
+
+    return { receipts: receipts.rows, offset, limit }
+  }
+
+  static async getStatusses(mongodb_provider: MongoDbProvider, language: string) {
+    const receiptStatusRepository = await new ReceiptStatusRepository().initialize(
+      mongodb_provider.getConnection()
+    );
+
+    const defaultLanguage = process.env.DEFAULT_LANGUAGE ?? 'en';
+    
+    return receiptStatusRepository.getStatusses(language, defaultLanguage);
   }
 }

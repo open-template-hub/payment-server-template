@@ -1,3 +1,5 @@
+
+
 ## Get Receipt With Product Id
-GET http://localhost:4003/receipt?product_id=product_id
+GET http://localhost:4003/receipt/all?payment_config_key=STRIPE_DEVELOPMENT&offset=0&limit=20&start_date=1664058836&end_date=1666650752&product_id=0276d8d1-0945-412b-92d1-084a6e3f7557
 Authorization: Bearer token

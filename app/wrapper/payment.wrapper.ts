@@ -2,6 +2,7 @@
  * @description holds payment wrapper
  */
 
+import { MongoDbProvider } from '@open-template-hub/common';
 import { PaymentConfig } from '../interface/payment-config.interface';
 import { PaymentMethod } from '../interface/payment-method.interface';
 import { Product } from '../interface/product.interface';
@@ -39,6 +40,26 @@ export class PaymentWrapper implements PaymentMethod {
     }
   }
 
+  constructEvent(paymentConfig: PaymentConfig, body: any, signature: any) {
+    if ( this.paymentMethod === undefined ) return null;
+
+    return this.paymentMethod.constructEvent(
+      paymentConfig,
+      body,
+      signature
+    );
+  }
+
+  createPortalSession(paymentConfig: PaymentConfig, customerId: string, origin: string): any {
+    if ( this.paymentMethod === undefined ) return null;
+
+    return this.paymentMethod.createPortalSession(
+      paymentConfig,
+      customerId,
+      origin
+    )
+  }
+
   /**
    * initializes payment method
    * @param dbConn db connection
@@ -46,20 +67,22 @@ export class PaymentWrapper implements PaymentMethod {
    * @param product product
    * @param quantity quantity
    */
-  init = async (
+   initOneTimePayment = async (
       dbConn: any,
       paymentConfig: PaymentConfig,
       product: Product,
       quantity: number,
-      transaction_id: string
+      transaction_id: string,
+      origin: string
   ) => {
     if ( this.paymentMethod === undefined ) return null;
-    return this.paymentMethod.init(
+    return this.paymentMethod.initOneTimePayment(
         dbConn,
         paymentConfig,
         product,
         quantity,
-        transaction_id
+        transaction_id,
+        origin
     );
   };
 
@@ -70,7 +93,7 @@ export class PaymentWrapper implements PaymentMethod {
    */
   build = async (
       paymentConfig: PaymentConfig,
-      external_transaction: string
+      external_transaction: any
   ) => {
     if ( this.paymentMethod === undefined ) return null;
     return this.paymentMethod.build( paymentConfig, external_transaction );
@@ -146,5 +169,37 @@ export class PaymentWrapper implements PaymentMethod {
   getSuccessStatus(): string {
     if ( this.paymentMethod === undefined ) return '';
     return this.paymentMethod.getSuccessStatus()
+  }
+
+  createCustomer(paymentConfig: any, username: string) {
+      if(!this.paymentMethod) return "";
+      return this.paymentMethod.createCustomer(paymentConfig, username);
+  }
+
+  initSubscription(dbConn: any, paymentConfig: PaymentConfig, product: Product, customerId: string, origin: string) {
+      if(!this.paymentMethod) return ""; 
+      return this.paymentMethod.initSubscription(
+        dbConn,
+        paymentConfig,
+        product,
+        customerId,
+        origin
+      )
+  }
+
+  getModeFromProduct(payload: any): string {
+    if(!this.paymentMethod) return "";
+    return this.paymentMethod.getModeFromProduct(
+      payload
+    )
+  }
+
+  async getUsernameByExternalCustomerId(mongodb_provider: MongoDbProvider, payment_config_key: string, externalCustomerId: string): Promise<string> {
+    if(!this.paymentMethod) return "";
+    return this.paymentMethod.getUsernameByExternalCustomerId(
+      mongodb_provider,
+      payment_config_key,
+      externalCustomerId
+    )
   }
 }

@@ -36,17 +36,20 @@ router.post( subRoutes.coinbase, async ( req: Request, res: Response ) => {
 
 router.post( subRoutes.stripe, async ( req: Request, res: Response ) => {
   // refreshes Stripe transaction history
-  if (
-      req &&
-      req.body &&
-      req.body.data &&
-      req.body.data.object &&
-      req.body.data.object.object === 'payment_intent'
-  ) {
-    const external_transaction_id = req.body.data.object.id;
-    const context = res.locals.ctx;
+  const paymentController = new PaymentController();
+  const context = res.locals.ctx;
 
-    const paymentController = new PaymentController();
+  let constructedEvent = (await paymentController.constructEvent(
+    context.mongodb_provider,
+    req.query.key as string,
+    req.body,
+    req.headers['stripe-signature']
+  ))
+
+  let event = constructedEvent.data.object
+
+  if ( event?.object === 'payment_intent' ) {
+    const external_transaction_id = event.data.object.id;
 
     await paymentController.refreshTransactionHistory(
         context.mongodb_provider,
@@ -55,6 +58,24 @@ router.post( subRoutes.stripe, async ( req: Request, res: Response ) => {
         req.query.key as string,
         external_transaction_id
     );
+  }
+
+  if(event?.object === "subscription") {
+    await paymentController.updateCustomerActivity(context.mongodb_provider, req.query.key as string, event)
+  }
+
+  if(event?.object === "invoice") {
+    await paymentController.createInvoiceForSubscription(context.mongodb_provider, context.postgresql_provider, req.query.key as string, event)
+  }
+
+  if(event?.object === "charge" && event.refunded === true) {
+
+    if(event.refunds?.data?.length > 0 && event.refunds.data[0].status === "succeeded") {
+      const customerId = event.customer;
+      const createdTime = event.refunds.data[0].created;
+
+      await paymentController.processRefund(context.postgresql_provider, req.query.key as string, customerId, createdTime)
+    }
   }
 
   res.status( ResponseCode.OK ).send();

@@ -2,6 +2,7 @@
  * @description holds Google payment provider
  */
 
+import { MongoDbProvider } from '@open-template-hub/common';
 import { PaymentConfig } from '../interface/payment-config.interface';
 import { PaymentMethod } from '../interface/payment-method.interface';
 import { Product } from '../interface/product.interface';
@@ -9,12 +10,16 @@ import { Product } from '../interface/product.interface';
 export class GooglePayment implements PaymentMethod {
   private readonly SUCCESS_STATUS = 'succeeded';
 
+  constructEvent(paymentConfig: PaymentConfig, body: any, signature: any) {
+    throw new Error('Method not implemented.');
+  };
+
   init = async (
       dbConn: any,
       paymentConfig: PaymentConfig,
       product: Product,
       quantity: number,
-      transaction_id: string
+      transaction_id: string,
   ) => {
     return null;
   };
@@ -82,5 +87,29 @@ export class GooglePayment implements PaymentMethod {
 
   getSuccessStatus() {
     return this.SUCCESS_STATUS
+  }
+
+  initOneTimePayment(dbConn: any, paymentConfig: PaymentConfig, product: Product, quantity: number, transaction_id: string, origin: string): Promise<any> {
+    throw new Error('Method not implemented.');
+  }
+  
+  createCustomer(paymentConfig: any, username: string) {
+    throw new Error('Method not implemented.');
+  }
+
+  initSubscription(dbConn: any, paymentConfig: PaymentConfig, product: Product, customerId: string, origin: string) {
+    throw new Error('Method not implemented.');
+  }
+
+  getModeFromProduct(payload: any): string { 
+    throw new Error('Method not implemented.');
+  }
+
+  getUsernameByExternalCustomerId(mongodb_provider: MongoDbProvider, payment_config_key: string, externalCustomerId: string): Promise<string> {
+    throw new Error('Method not implemented.');
+  }
+
+  createPortalSession(paymentConfig: PaymentConfig, customerId: string, origin: string): any {
+    throw new Error('Method not implemented.');
   }
 }

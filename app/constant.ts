@@ -5,6 +5,7 @@
 export const ReceiptStatus = {
   SUCCESS: 'SUCCESS',
   REFUND: 'REFUND',
+  OTHER: 'OTHER'
 };
 
 export const CurrencyCode = {

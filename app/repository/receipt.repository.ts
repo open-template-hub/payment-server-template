@@ -41,15 +41,14 @@ export class ReceiptRepository {
    * @param product_id product id
    * @returns successful receipts
    */
-  getSuccessfulReceiptsWithUsernameAndProductId = async (
+  getSuccessfulReceiptsWithUsername = async (
       username: string,
-      product_id: string
   ) => {
     let res;
     try {
       res = await this.connection.query(
-          'SELECT * FROM receipts WHERE username = $1 and product_id = $2 and status = $3',
-          [ username, product_id, ReceiptStatus.SUCCESS ]
+          'SELECT * FROM receipts WHERE username = $1 and status = $2',
+          [ username, ReceiptStatus.SUCCESS ]
       );
     } catch ( error ) {
       console.error(
@@ -78,15 +77,18 @@ export class ReceiptRepository {
         external_transaction_id: string,
         product_id: string,
         payment_config_key: string,
-        created_time: Date,
+        created_time: string,
         total_amount: number,
         currency_code: string,
-        status: string
+        status: string,
+        external_customer_id?: string,
+        expire_date?: string,
+        priority_order?: number
       }
   ) => {
     try {
       await this.connection.query(
-          'INSERT INTO receipts(username, external_transaction_id, product_id, payment_config_key, created_time, total_amount, currency_code, status) VALUES($1, $2, $3, $4, $5, $6, $7, $8)',
+          'INSERT INTO receipts(username, external_transaction_id, product_id, payment_config_key, created_time, total_amount, currency_code, status, customer_id, expire_date, priority_order) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
           [
             receiptObject.username,
             receiptObject.external_transaction_id,
@@ -95,7 +97,10 @@ export class ReceiptRepository {
             receiptObject.created_time,
             receiptObject.total_amount,
             receiptObject.currency_code,
-            receiptObject.status
+            receiptObject.status,
+            receiptObject.external_customer_id,
+            receiptObject.expire_date,
+            receiptObject.priority_order
           ]
       );
     } catch ( error ) {
@@ -103,4 +108,81 @@ export class ReceiptRepository {
       throw error;
     }
   };
+
+  async changeStatusOfSubscriptionsWithExpireDates(payment_config_key: string, customer_id: string, created_time: string, status: string) {
+    try {
+      await this.connection.query(
+        "UPDATE receipts set status = $1 where $2 = payment_config_key and $3 = customer_id and $4 < expire_date",
+        [
+          status,
+          payment_config_key,
+          customer_id,
+          created_time
+        ]
+      )
+    } catch ( error ) {
+      console.error( '> changeStatusOfSubscriptionsWithExpireDates error: ', error );
+      throw error;
+    }
+  }
+
+  async getAllReceipts(
+    username: string, 
+    payment_config_key: string, 
+    offset: number, 
+    limit: number, 
+    only_subscription: boolean,
+    start_date?: string,
+    end_date?: string,
+    product_id?: string,
+    status?: string
+  ) {
+    try {
+      let whereQuery = "username = $1 and payment_config_key = $2"
+
+      if(only_subscription) {
+        whereQuery += " and customer_id IS NOT NULL"
+      }
+
+      let queryCounter = 3
+      let optionalQueryParams: string[] = []
+      if(start_date) {
+        whereQuery += ` and created_time >= $${queryCounter}`
+        optionalQueryParams.push(start_date)
+        queryCounter += 1
+      }
+
+      if(end_date) {
+        whereQuery += ` and created_time <= $${queryCounter}`
+        optionalQueryParams.push(end_date)
+        queryCounter += 1
+      }
+
+      if(product_id) {
+        whereQuery += ` and product_id = $${queryCounter}`
+        optionalQueryParams.push(product_id)
+        queryCounter += 1
+      }
+
+      if(status) {
+        whereQuery += ` and status = $${queryCounter}`
+        optionalQueryParams.push(status)
+        queryCounter += 1
+      }
+
+      return await this.connection.query(
+        `SELECT username, payment_config_key, product_id, created_time, total_amount, currency_code, status, expire_date, priority_order FROM receipts WHERE ${whereQuery} ORDER BY created_time DESC OFFSET $${queryCounter} LIMIT $${queryCounter + 1}`,
+        [
+          username,
+          payment_config_key,
+          ...optionalQueryParams,
+          offset,
+          limit
+        ]
+      )
+    } catch(error) {
+      console.error( '> getAllReceipts error: ', error );
+      throw error; 
+    }
+  }
 }

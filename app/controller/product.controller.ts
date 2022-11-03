@@ -2,7 +2,8 @@
  * @description holds product controller
  */
 
-import { MongoDbProvider, PostgreSqlProvider, ResponseCode } from '@open-template-hub/common';
+import { MongoDbProvider, PostgreSqlProvider } from '@open-template-hub/common';
+import { ReceiptStatus } from '../constant';
 import { ProductRepository } from '../repository/product.repository';
 import { PaymentMethodEnum, PaymentWrapper } from '../wrapper/payment.wrapper';
 import { ReceiptController } from './receipt.controller';
@@ -80,48 +81,44 @@ export class ProductController {
   };
 
   getProduct = async (
-    mongodb_provider: MongoDbProvider,
     postgresql_provider: PostgreSqlProvider,
-    product_id: string,
     username: string
   ) => {
     try {
-      const receiptData = await ReceiptController.getSuccessfulReceipts(postgresql_provider, username, product_id);
-      
-      let hasAccess = false;
+      const receiptDatas = await ReceiptController.getSuccessfulReceipts(postgresql_provider, username);
 
-      if(receiptData?.successful_receipts?.length > 0) {
-        receiptData.successful_receipts.array.forEach((receipt: any) => {
-          if(receipt.status === 'SUCCESS') {
-            hasAccess = true;
+      let subscriptionDatas: any[] = [];
+      let premiumDatas: any[] = [];
+
+      receiptDatas.forEach( (subscriptionObject: any) => {
+        if(subscriptionObject.status !== ReceiptStatus.SUCCESS) {
+          return
+        }
+
+        if(subscriptionObject.priority_order !== null && subscriptionObject.expire_date !== null) {
+          const expireDate = new Date(subscriptionObject.expire_date * 1000)
+          if(expireDate > new Date()) {
+            subscriptionDatas.push(subscriptionObject);
+          }
+        }
+        else {
+          premiumDatas.push(subscriptionObject);
+        }
+      })
+
+      if(subscriptionDatas.length > 0) {
+        let currentSubscriptionObject = subscriptionDatas[0];
+
+        subscriptionDatas.forEach((subscriptionObject: any) => {
+          if(subscriptionObject.priority_order > currentSubscriptionObject.priority_order) {
+            currentSubscriptionObject = subscriptionObject;
           }
         });
+
+        premiumDatas.push(currentSubscriptionObject);
       }
 
-      if(hasAccess) {
-        const productRepository = await new ProductRepository().initialize(
-          mongodb_provider.getConnection()
-        );
-        const productData = await productRepository.getProductByProductId(product_id);
-
-        return {
-          status: ResponseCode.OK,
-          data: {
-            product_id: productData.product_id,
-            name: productData.name,
-            description: productData.description,
-            payload: productData.payload,
-          },
-        }
-      }
-      
-      return {
-        status: ResponseCode.OK,
-        data: {
-          product_id: product_id
-        }
-      }
-
+      return premiumDatas;
     } catch(error) {
       console.error( '> getProductDocument error: ', error );
       throw error;
