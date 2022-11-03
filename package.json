@@ -1,7 +1,7 @@
 {
   "name": "payment-server-template",
   "description": "Payment Server Template is a generic open-source payment server that has a simple yet powerful design to connect your business with third-party payment solution provider companies (like Stripe or Coinbase).",
-  "version": "4.0.3",
+  "version": "4.1.0",
   "license": "MIT",
   "main": "payment-server.main.ts",
   "scripts": {
