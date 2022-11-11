@@ -1,11 +1,4 @@
-import {
-  ContextArgs,
-  MountArgs,
-  MountAssets,
-  Route,
-  RouteArgs,
-  mount as mountApp,
-} from '@open-template-hub/common';
+import { ContextArgs, mount as mountApp, MountArgs, MountAssets, Route, RouteArgs, } from '@open-template-hub/common';
 import { Environment } from '../../environment';
 import { PaymentQueueConsumer } from '../consumer/payment-queue.consumer';
 import { router as monitorRouter } from './monitor.route';
@@ -26,7 +19,7 @@ const subRoutes = {
 };
 
 export namespace Routes {
-  export function mount(app: any) {
+  export function mount( app: any ) {
     const envArgs = new Environment().args();
 
     const ctxArgs = {
@@ -46,12 +39,12 @@ export namespace Routes {
 
     const routes: Array<Route> = [];
 
-    routes.push({ name: subRoutes.monitor, router: monitorRouter });
-    routes.push({ name: subRoutes.payment, router: paymentRouter });
-    routes.push({ name: subRoutes.product, router: productRouter });
-    routes.push({ name: subRoutes.webhook, router: webhookRouter });
-    routes.push({ name: subRoutes.receipt, router: receiptRouter });
-    routes.push({ name: subRoutes.subscription, router: subscriptionRouter });
+    routes.push( { name: subRoutes.monitor, router: monitorRouter } );
+    routes.push( { name: subRoutes.payment, router: paymentRouter } );
+    routes.push( { name: subRoutes.product, router: productRouter } );
+    routes.push( { name: subRoutes.webhook, router: webhookRouter } );
+    routes.push( { name: subRoutes.receipt, router: receiptRouter } );
+    routes.push( { name: subRoutes.subscription, router: subscriptionRouter } );
 
     const routeArgs = { routes } as RouteArgs;
 
@@ -62,6 +55,6 @@ export namespace Routes {
       assets,
     } as MountArgs;
 
-    mountApp(args);
+    mountApp( args );
   }
 }

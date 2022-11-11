@@ -40,24 +40,24 @@ export class PaymentWrapper implements PaymentMethod {
     }
   }
 
-  constructEvent(paymentConfig: PaymentConfig, body: any, signature: any) {
+  constructEvent( paymentConfig: PaymentConfig, body: any, signature: any ) {
     if ( this.paymentMethod === undefined ) return null;
 
     return this.paymentMethod.constructEvent(
-      paymentConfig,
-      body,
-      signature
+        paymentConfig,
+        body,
+        signature
     );
   }
 
-  createPortalSession(paymentConfig: PaymentConfig, customerId: string, origin: string): any {
+  createPortalSession( paymentConfig: PaymentConfig, customerId: string, origin: string ): any {
     if ( this.paymentMethod === undefined ) return null;
 
     return this.paymentMethod.createPortalSession(
-      paymentConfig,
-      customerId,
-      origin
-    )
+        paymentConfig,
+        customerId,
+        origin
+    );
   }
 
   /**
@@ -67,7 +67,7 @@ export class PaymentWrapper implements PaymentMethod {
    * @param product product
    * @param quantity quantity
    */
-   initOneTimePayment = async (
+  initOneTimePayment = async (
       dbConn: any,
       paymentConfig: PaymentConfig,
       product: Product,
@@ -168,38 +168,38 @@ export class PaymentWrapper implements PaymentMethod {
 
   getSuccessStatus(): string {
     if ( this.paymentMethod === undefined ) return '';
-    return this.paymentMethod.getSuccessStatus()
+    return this.paymentMethod.getSuccessStatus();
   }
 
-  createCustomer(paymentConfig: any, username: string) {
-      if(!this.paymentMethod) return "";
-      return this.paymentMethod.createCustomer(paymentConfig, username);
+  createCustomer( paymentConfig: any, username: string ) {
+    if ( !this.paymentMethod ) return '';
+    return this.paymentMethod.createCustomer( paymentConfig, username );
   }
 
-  initSubscription(dbConn: any, paymentConfig: PaymentConfig, product: Product, customerId: string, origin: string) {
-      if(!this.paymentMethod) return ""; 
-      return this.paymentMethod.initSubscription(
+  initSubscription( dbConn: any, paymentConfig: PaymentConfig, product: Product, customerId: string, origin: string ) {
+    if ( !this.paymentMethod ) return '';
+    return this.paymentMethod.initSubscription(
         dbConn,
         paymentConfig,
         product,
         customerId,
         origin
-      )
+    );
   }
 
-  getModeFromProduct(payload: any): string {
-    if(!this.paymentMethod) return "";
+  getModeFromProduct( payload: any ): string {
+    if ( !this.paymentMethod ) return '';
     return this.paymentMethod.getModeFromProduct(
-      payload
-    )
+        payload
+    );
   }
 
-  async getUsernameByExternalCustomerId(mongodb_provider: MongoDbProvider, payment_config_key: string, externalCustomerId: string): Promise<string> {
-    if(!this.paymentMethod) return "";
+  async getUsernameByExternalCustomerId( mongodb_provider: MongoDbProvider, payment_config_key: string, externalCustomerId: string ): Promise<string> {
+    if ( !this.paymentMethod ) return '';
     return this.paymentMethod.getUsernameByExternalCustomerId(
-      mongodb_provider,
-      payment_config_key,
-      externalCustomerId
-    )
+        mongodb_provider,
+        payment_config_key,
+        externalCustomerId
+    );
   }
 }

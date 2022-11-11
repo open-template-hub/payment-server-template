@@ -81,94 +81,93 @@ export class ProductController {
   };
 
   getProduct = async (
-    postgresql_provider: PostgreSqlProvider,
-    username: string
+      postgresql_provider: PostgreSqlProvider,
+      username: string
   ) => {
     try {
-      const receiptDatas = await ReceiptController.getSuccessfulReceipts(postgresql_provider, username);
+      const receiptDatas = await ReceiptController.getSuccessfulReceipts( postgresql_provider, username );
 
       let subscriptionDatas: any[] = [];
       let premiumDatas: any[] = [];
 
-      receiptDatas.forEach( (subscriptionObject: any) => {
-        if(subscriptionObject.status !== ReceiptStatus.SUCCESS) {
-          return
+      receiptDatas.forEach( ( subscriptionObject: any ) => {
+        if ( subscriptionObject.status !== ReceiptStatus.SUCCESS ) {
+          return;
         }
 
-        if(subscriptionObject.priority_order !== null && subscriptionObject.expire_date !== null) {
-          const expireDate = new Date(subscriptionObject.expire_date * 1000)
-          if(expireDate > new Date()) {
-            subscriptionDatas.push(subscriptionObject);
+        if ( subscriptionObject.priority_order !== null && subscriptionObject.expire_date !== null ) {
+          const expireDate = new Date( subscriptionObject.expire_date * 1000 );
+          if ( expireDate > new Date() ) {
+            subscriptionDatas.push( subscriptionObject );
           }
+        } else {
+          premiumDatas.push( subscriptionObject );
         }
-        else {
-          premiumDatas.push(subscriptionObject);
-        }
-      })
+      } );
 
-      if(subscriptionDatas.length > 0) {
-        let currentSubscriptionObject = subscriptionDatas[0];
+      if ( subscriptionDatas.length > 0 ) {
+        let currentSubscriptionObject = subscriptionDatas[ 0 ];
 
-        subscriptionDatas.forEach((subscriptionObject: any) => {
-          if(subscriptionObject.priority_order > currentSubscriptionObject.priority_order) {
+        subscriptionDatas.forEach( ( subscriptionObject: any ) => {
+          if ( subscriptionObject.priority_order > currentSubscriptionObject.priority_order ) {
             currentSubscriptionObject = subscriptionObject;
           }
-        });
+        } );
 
-        premiumDatas.push(currentSubscriptionObject);
+        premiumDatas.push( currentSubscriptionObject );
       }
 
       return premiumDatas;
-    } catch(error) {
+    } catch ( error ) {
       console.error( '> getProductDocument error: ', error );
       throw error;
     }
-  }
+  };
 
   getAllProducts = async (
-    mongodb_provider: MongoDbProvider,
-    name?: string,
-    offset?: number,
-    limit?: number
+      mongodb_provider: MongoDbProvider,
+      name?: string,
+      offset?: number,
+      limit?: number
   ) => {
 
-    if(!offset) {
+    if ( !offset ) {
       offset = 0;
     }
 
-    if(!limit) {
+    if ( !limit ) {
       limit = 20;
     }
 
     try {
       const productRepository = await new ProductRepository().initialize(
-        mongodb_provider.getConnection()
+          mongodb_provider.getConnection()
       );
 
       let productsResponse = await productRepository.getAllProducts( name ?? '', offset, limit );
 
-      productsResponse.meta = productsResponse.meta[0];
+      productsResponse.meta = productsResponse.meta[ 0 ];
 
-      productsResponse.meta.offset = offset
+      productsResponse.meta.offset = offset;
       productsResponse.meta.limit = limit;
 
-      return productsResponse
-    } catch(error) {
+      return productsResponse;
+    } catch ( error ) {
       console.error( '> getAllProducts error: ', error );
       throw error;
     }
-  }
+  };
 
   async updateProduct(
-    mongodb_provider: MongoDbProvider,
-    productId: string,
-    name: string,
-    description: string
+      mongodb_provider: MongoDbProvider,
+      productId: string,
+      name: string,
+      description: string
   ) {
     const productRepository = await new ProductRepository().initialize(
-      mongodb_provider.getConnection()
-    ); 
+        mongodb_provider.getConnection()
+    );
 
-    await productRepository.updateProduct(productId, name, description);
+    await productRepository.updateProduct( productId, name, description );
   }
 }

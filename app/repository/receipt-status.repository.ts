@@ -1,57 +1,59 @@
-import { ReceiptStatusDataModel } from "../data/receipt-status.data";
+import { ReceiptStatusDataModel } from '../data/receipt-status.data';
 
 export class ReceiptStatusRepository {
-    private dataModel: any = null;
+  private dataModel: any = null;
 
-    initialize = async(connection: any) => {
-        this.dataModel = await new ReceiptStatusDataModel().getDataModel(
-            connection
-        );
-        return this;
-    }
+  initialize = async ( connection: any ) => {
+    this.dataModel = await new ReceiptStatusDataModel().getDataModel(
+        connection
+    );
+    return this;
+  };
 
-    async getStatusses(language: string, defaultLanguage: string) {
-        try {
-            let dataModel = await this.dataModel.aggregate([
-                { $match: { } },
-                { $project: {
-                    status: 1,
-                    messages: {
-                        $filter: {
-                            input: "$messages",
-                            as: "item",
-                            cond: {
-                                $or: [
-                                    { $eq: ["$$item.language", language]},
-                                    { $eq: ["$$item.language", defaultLanguage]}
-                                ]
-                            }
-                        }
-                    }
-                }}
-            ]);
-
-            
-            for(let i = 0; i < dataModel.length; i++) {
-                let newMessagesArray: string[] = [];
-              if( dataModel[i].messages?.length > 1 ) {
-                for(let j = 0; j < dataModel[i].messages.length; j++ ) {
-                  if( dataModel[i].messages[j].language === language ) {
-                    newMessagesArray.push( dataModel[i].messages[j] );
-                  }
-                }
-        
-                if( newMessagesArray.length > 0 ) {
-                  dataModel[i].messages = newMessagesArray;
+  async getStatuses( language: string, defaultLanguage: string ) {
+    try {
+      let dataModel = await this.dataModel.aggregate( [
+        { $match: {} },
+        {
+          $project: {
+            status: 1,
+            messages: {
+              $filter: {
+                input: '$messages',
+                as: 'item',
+                cond: {
+                  $or: [
+                    { $eq: [ '$$item.language', language ] },
+                    { $eq: [ '$$item.language', defaultLanguage ] }
+                  ]
                 }
               }
             }
-
-            return dataModel;
-
-        } catch(error) {
-            console.error( '> getStatusses error: ', error );
-            throw error;
+          }
         }
+      ] );
+
+      for ( const element of dataModel ) {
+        let newMessagesArray: string[] = [];
+        if ( element.messages?.length > 1 ) {
+          const messages = element.messages;
+          for ( const message of messages ) {
+            if ( message.language === language ) {
+              newMessagesArray.push( message );
+            }
+          }
+
+          if ( newMessagesArray.length > 0 ) {
+            element.messages = newMessagesArray;
+          }
+        }
+      }
+
+      return dataModel;
+
+    } catch ( error ) {
+      console.error( '> getStatuses error: ', error );
+      throw error;
     }
+  }
 }

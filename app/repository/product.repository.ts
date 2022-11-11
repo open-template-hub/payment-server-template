@@ -73,11 +73,11 @@ export class ProductRepository {
   };
 
   async getProductByExternalStripeProductId(
-    externalProductId: string
+      externalProductId: string
   ) {
     try {
-      return await this.dataModel.findOne( { "payload.stripe.external_product_id": externalProductId } );
-    } catch(error) {
+      return await this.dataModel.findOne( { 'payload.stripe.external_product_id': externalProductId } );
+    } catch ( error ) {
       console.error( '> getProductByExternalStripeProductId error: ', error );
     }
   }
@@ -108,55 +108,55 @@ export class ProductRepository {
     }
   };
 
-  getAllProducts = async (name: string, skip: number, limit: number) => {
+  getAllProducts = async ( name: string, skip: number, limit: number ) => {
     try {
-      let matchObject: any = { }
+      let matchObject: any = {};
 
-      if(name !== '') {
+      if ( name !== '' ) {
         matchObject = {
           $or: [
-            {name: {$regex : `^${name}`, $options: 'i' } },
-            {product_id: {$regex : `^${name}`, $options: 'i' }}
+            { name: { $regex: `^${ name }`, $options: 'i' } },
+            { product_id: { $regex: `^${ name }`, $options: 'i' } }
           ]
-        }
+        };
       }
 
-      const response = await this.dataModel.aggregate([
+      const response = await this.dataModel.aggregate( [
         {
           $facet: {
             products: [
               { $match: matchObject },
-              { $skip: skip },
-              { $limit: limit } 
+              { $skip: skip },
+              { $limit: limit }
             ],
             meta: [
-              { $count: "count" }
+              { $count: 'count' }
             ]
           }
         }
-      ]);
+      ] );
 
-      return response[0];
+      return response[ 0 ];
     } catch ( error ) {
       console.error( '> getAllProducts error: ', error );
       throw error;
     }
-  }
+  };
 
-  async updateProduct(productId: string, name: string, description: string) {
+  async updateProduct( productId: string, name: string, description: string ) {
     try {
       await this.dataModel.updateOne(
-        { product_id: productId },
-        {
-          $set: {
-            name: name,
-            description: description
+          { product_id: productId },
+          {
+            $set: {
+              name: name,
+              description: description
+            }
           }
-        }
-      )
-    } catch(error) {
+      );
+    } catch ( error ) {
       console.error( '> updateProductError: ', error );
-      throw error; 
+      throw error;
     }
   }
 }
