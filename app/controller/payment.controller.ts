@@ -58,7 +58,7 @@ export class PaymentController {
     }
 
     const paymentConfigRepository = await new PaymentConfigRepository().initialize(
-      mongodb_provider.getConnection()
+        mongodb_provider.getConnection()
     );
 
     let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
@@ -70,41 +70,41 @@ export class PaymentController {
     }
 
     const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
-    
-    const mode = paymentWrapper.getModeFromProduct(product.payload);
 
-    if(mode === "payment") {
+    const mode = paymentWrapper.getModeFromProduct( product.payload );
+
+    if ( mode === 'payment' ) {
       return this.initOneTimePayment(
-        mongodb_provider,
-        payment_config_key,
-        username,
-        product,
-        quantity,
-        origin
+          mongodb_provider,
+          payment_config_key,
+          username,
+          product,
+          quantity,
+          origin
       );
-    } else if(mode === "subscription") {
+    } else if ( mode === 'subscription' ) {
       return this.initSubscription(
-        mongodb_provider,
-        payment_config_key,
-        username,
-        product,
-        origin
+          mongodb_provider,
+          payment_config_key,
+          username,
+          product,
+          origin
       );
     } else {
-      throw new Error("Unhandled mode");
+      throw new Error( 'Unhandled mode' );
     }
   };
 
   private async initOneTimePayment(
-    mongodb_provider: MongoDbProvider,
-    payment_config_key: string,
-    username: string,
-    product: any,
-    quantity: number,
-    origin: string
+      mongodb_provider: MongoDbProvider,
+      payment_config_key: string,
+      username: string,
+      product: any,
+      quantity: number,
+      origin: string
   ) {
     const paymentConfigRepository = await new PaymentConfigRepository().initialize(
-      mongodb_provider.getConnection()
+        mongodb_provider.getConnection()
     );
 
     let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
@@ -122,18 +122,18 @@ export class PaymentController {
     );
 
     let transaction_history = await transactionHistoryRepository.createTransactionHistory(
-      payment_config_key,
-      username,
-      product.product_id
+        payment_config_key,
+        username,
+        product.product_id
     );
 
     let external_transaction = await paymentWrapper.initOneTimePayment(
-      mongodb_provider.getConnection(),
-      paymentConfig,
-      product,
-      quantity,
-      transaction_history._id,
-      origin
+        mongodb_provider.getConnection(),
+        paymentConfig,
+        product,
+        quantity,
+        transaction_history._id,
+        origin
     );
 
     if ( external_transaction === null ) {
@@ -141,9 +141,9 @@ export class PaymentController {
     }
 
     await transactionHistoryRepository.updateTransactionHistoryWithId(
-      transaction_history._id,
-      external_transaction.id,
-      external_transaction.history
+        transaction_history._id,
+        external_transaction.id,
+        external_transaction.history
     );
 
     /** build method is important because other providers might have special build
@@ -157,14 +157,14 @@ export class PaymentController {
   }
 
   private async initSubscription(
-    mongodb_provider: MongoDbProvider,
-    payment_config_key: string,
-    username: string,
-    product: any,
-    origin: string
+      mongodb_provider: MongoDbProvider,
+      payment_config_key: string,
+      username: string,
+      product: any,
+      origin: string
   ) {
     const paymentConfigRepository = await new PaymentConfigRepository().initialize(
-      mongodb_provider.getConnection()
+        mongodb_provider.getConnection()
     );
 
     let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
@@ -178,55 +178,55 @@ export class PaymentController {
     const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
 
     const customerActivityRepository = await new CustomerActivityRepository().initialize(
-      mongodb_provider.getConnection()
+        mongodb_provider.getConnection()
     );
 
-    let customerActivity = await this.getCustomerActivityWithUsername(mongodb_provider, username);
+    let customerActivity = await this.getCustomerActivityWithUsername( mongodb_provider, username );
 
     let externalUserId;
 
-    if(!customerActivity) {
-      const customer = await paymentWrapper.createCustomer(paymentConfig, username);
+    if ( !customerActivity ) {
+      const customer = await paymentWrapper.createCustomer( paymentConfig, username );
 
       externalUserId = customer.id;
 
       customerActivityRepository.createCustomerActivity(
-        payment_config_key,
-        username,
-        customer.id,
-        {}
+          payment_config_key,
+          username,
+          customer.id,
+          {}
       );
     } else {
       externalUserId = customerActivity.external_user_id;
     }
 
     const session = await paymentWrapper.initSubscription(
-      mongodb_provider.getConnection(),
-      paymentConfig,
-      product,
-      externalUserId,
-      origin
-    )
+        mongodb_provider.getConnection(),
+        paymentConfig,
+        product,
+        externalUserId,
+        origin
+    );
 
     /** build method is important because other providers might have special build
      * rather than returning session from init
      * that's why build is attached
-    */
+     */
     return paymentWrapper.build(
-      paymentConfig,
-      { session_id: session.session_id }
+        paymentConfig,
+        { session_id: session.session_id }
     );
   }
 
   async createPortalSession(
-    mongodb_provider: MongoDbProvider,
-    username: string,
-    payment_config_key: string,
-    product_id: string,
-    origin: string
+      mongodb_provider: MongoDbProvider,
+      username: string,
+      payment_config_key: string,
+      product_id: string,
+      origin: string
   ) {
     const paymentConfigRepository = await new PaymentConfigRepository().initialize(
-      mongodb_provider.getConnection()
+        mongodb_provider.getConnection()
     );
 
     let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
@@ -239,9 +239,9 @@ export class PaymentController {
 
     const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
 
-    let customerActivity = await this.getCustomerActivityWithUsername(mongodb_provider, username);
+    let customerActivity = await this.getCustomerActivityWithUsername( mongodb_provider, username );
 
-    return paymentWrapper.createPortalSession(paymentConfig, customerActivity.external_user_id, origin);
+    return paymentWrapper.createPortalSession( paymentConfig, customerActivity.external_user_id, origin );
   }
 
   /**
@@ -335,12 +335,12 @@ export class PaymentController {
     }
   };
 
-  async getCustomerActivityWithUsername(mongodb_provider: MongoDbProvider, username: string) {
+  async getCustomerActivityWithUsername( mongodb_provider: MongoDbProvider, username: string ) {
     const customerActivityRepository = await new CustomerActivityRepository().initialize(
-      mongodb_provider.getConnection()
+        mongodb_provider.getConnection()
     );
 
-    return customerActivityRepository.getCustomerActivityWithUsername(username);
+    return customerActivityRepository.getCustomerActivityWithUsername( username );
   }
 
   /**
@@ -504,25 +504,25 @@ export class PaymentController {
   }
 
   async createInvoiceForSubscription(
-    mongodb_provider: MongoDbProvider,
-    postgresql_provider: PostgreSqlProvider,
-    payment_config_key: string,
-    object: any
+      mongodb_provider: MongoDbProvider,
+      postgresql_provider: PostgreSqlProvider,
+      payment_config_key: string,
+      object: any
   ) {
 
-    if(object.lines.data.length > 0 && object.amount_paid > 0) {
+    if ( object.lines.data.length > 0 && object.amount_paid > 0 ) {
       const customerId = object.customer;
-      const expireDate = object.lines.data[object.lines.data.length - 1].period.end as string;
-      const startDate = object.lines.data[object.lines.data.length - 1].period.start as string;
-      const externalProductId = object.lines.data[object.lines.data.length - 1].plan.product;
+      const expireDate = object.lines.data[ object.lines.data.length - 1 ].period.end as string;
+      const startDate = object.lines.data[ object.lines.data.length - 1 ].period.start as string;
+      const externalProductId = object.lines.data[ object.lines.data.length - 1 ].plan.product;
       const totalAmount = object.amount_paid;
-      const currencyCode = object.lines.data[object.lines.data.length - 1].plan.currency;
-      const status = object.status === "paid" ? ReceiptStatus.SUCCESS : ReceiptStatus.OTHER;
-      const externalTransactionId = object.payment_intent ?? "";
+      const currencyCode = object.lines.data[ object.lines.data.length - 1 ].plan.currency;
+      const status = object.status === 'paid' ? ReceiptStatus.SUCCESS : ReceiptStatus.OTHER;
+      const externalTransactionId = object.payment_intent ?? '';
 
       // get product
       const productRepository = await new ProductRepository().initialize(
-        mongodb_provider.getConnection()
+          mongodb_provider.getConnection()
       );
       let product: any = await productRepository.getProductByExternalStripeProductId(
           externalProductId
@@ -530,74 +530,74 @@ export class PaymentController {
 
       // get paymentConfig
       const paymentConfigRepository = await new PaymentConfigRepository().initialize(
-        mongodb_provider.getConnection()
+          mongodb_provider.getConnection()
       );
       let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
           payment_config_key
       );
       if ( paymentConfig === null )
         throw new Error( 'Payment method can not be found' );
-      
+
       const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
-      const username = await paymentWrapper.getUsernameByExternalCustomerId(mongodb_provider, payment_config_key, customerId);
-      
-      if( !username ) {
-        throw new Error("Username can not be found")
+      const username = await paymentWrapper.getUsernameByExternalCustomerId( mongodb_provider, payment_config_key, customerId );
+
+      if ( !username ) {
+        throw new Error( 'Username can not be found' );
       }
-      
+
       const receiptRepository = new ReceiptRepository( postgresql_provider );
       await receiptRepository.createReceipt(
-        {
-          username: username,
-          external_transaction_id: externalTransactionId,
-          product_id: product.product_id,
-          payment_config_key: payment_config_key,
-          created_time: startDate,
-          total_amount: totalAmount / 100,
-          currency_code: currencyCode.toUpperCase(),
-          status: status,
-          external_customer_id: customerId,
-          expire_date: expireDate,
-          priority_order: product.priority_order
-        }
+          {
+            username: username,
+            external_transaction_id: externalTransactionId,
+            product_id: product.product_id,
+            payment_config_key: payment_config_key,
+            created_time: startDate,
+            total_amount: totalAmount / 100,
+            currency_code: currencyCode.toUpperCase(),
+            status: status,
+            external_customer_id: customerId,
+            expire_date: expireDate,
+            priority_order: product.priority_order
+          }
       );
     }
   }
 
   async updateCustomerActivity(
-    mongodb_provider: MongoDbProvider,
-    payment_config_key: string,
-    object: any
+      mongodb_provider: MongoDbProvider,
+      payment_config_key: string,
+      object: any
   ) {
     const customerActivityRepository = await new CustomerActivityRepository().initialize(
-      mongodb_provider.getConnection()
+        mongodb_provider.getConnection()
     );
 
-    const data = object.items.data as any[]
-    if(data.length > 0) {
-      customerActivityRepository.addOrUpdateSubscription(payment_config_key, object.customer, object);
+    const data = object.items.data as any[];
+    if ( data.length > 0 ) {
+      customerActivityRepository.addOrUpdateSubscription( payment_config_key, object.customer, object );
     }
   }
 
   async processRefund(
-    postgresql_provider: PostgreSqlProvider,
-    payment_config_key: string,
-    customerId: string,
-    createdTime: number
+      postgresql_provider: PostgreSqlProvider,
+      payment_config_key: string,
+      customerId: string,
+      createdTime: number
   ) {
-      const receiptRepository = new ReceiptRepository( postgresql_provider );
-      receiptRepository.changeStatusOfSubscriptionsWithExpireDates(payment_config_key, customerId, createdTime.toString(), ReceiptStatus.REFUND)
+    const receiptRepository = new ReceiptRepository( postgresql_provider );
+    receiptRepository.changeStatusOfSubscriptionsWithExpireDates( payment_config_key, customerId, createdTime.toString(), ReceiptStatus.REFUND );
   }
 
   async constructEvent(
-    mongodb_provider: MongoDbProvider,
-    payment_config_key: string,
-    body: any,
-    signature: any
+      mongodb_provider: MongoDbProvider,
+      payment_config_key: string,
+      body: any,
+      signature: any
   ) {
     // get paymentConfig
     const paymentConfigRepository = await new PaymentConfigRepository().initialize(
-      mongodb_provider.getConnection()
+        mongodb_provider.getConnection()
     );
 
     let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
@@ -607,9 +607,9 @@ export class PaymentController {
     const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
 
     return paymentWrapper.constructEvent(
-      paymentConfig,
-      body,
-      signature
-    )
+        paymentConfig,
+        body,
+        signature
+    );
   }
 }

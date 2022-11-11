@@ -2,7 +2,7 @@
  * @description holds receipt controller
  */
 
-import { MongoDbProvider, PostgreSqlProvider } from '@open-template-hub/common';
+import { MongoDbProvider, PostgreSqlProvider, QueryFilters } from '@open-template-hub/common';
 import { ReceiptStatusRepository } from '../repository/receipt-status.repository';
 import { ReceiptRepository } from '../repository/receipt.repository';
 
@@ -11,10 +11,9 @@ export class ReceiptController {
    * gets successful receipts for user
    * @param postgresql_provider postgresql provider
    * @param username username
-   * @param product_id product id
    * @returns successful receipts
    */
-   static async getSuccessfulReceipts(
+  static async getSuccessfulReceipts(
       postgresql_provider: PostgreSqlProvider,
       username: string,
   ) {
@@ -25,48 +24,55 @@ export class ReceiptController {
   }
 
   static async getReceipts(
-    postgresql_provider: PostgreSqlProvider,
-    username: string,
-    payment_config_key: string,
-    offset: number,
-    limit: number,
-    is_subscription: boolean,
-    start_date?: string,
-    end_date?: string,
-    production_id?: string,
-    status?: string
+      postgresql_provider: PostgreSqlProvider,
+      username: string,
+      payment_config_key: string,
+      is_subscription: boolean,
+      start_date?: string,
+      end_date?: string,
+      production_id?: string,
+      status?: string,
+      filters?: QueryFilters
   ) {
 
-    if(limit > 100) {
-      limit = 100
+    let offset = 0;
+    let limit = 100;
+
+    if ( filters ) {
+      if ( filters.limit && filters.limit < 100 ) {
+        limit = filters.limit;
+      }
+
+      if ( filters.offset ) {
+        offset = filters.offset;
+      }
     }
 
     let receiptRepository = new ReceiptRepository(
-      postgresql_provider
-    )
+        postgresql_provider
+    );
 
     let receipts = await receiptRepository.getAllReceipts(
-                            username, 
-                            payment_config_key,
-                            offset,
-                            limit,
-                            is_subscription,
-                            start_date,
-                            end_date,
-                            production_id,
-                            status
-                          );
+        username,
+        payment_config_key,
+        is_subscription,
+        { offset, limit },
+        start_date,
+        end_date,
+        production_id,
+        status,
+    );
 
-    return { receipts: receipts.rows, offset, limit }
+    return { receipts: receipts.rows, offset, limit };
   }
 
-  static async getStatusses(mongodb_provider: MongoDbProvider, language: string) {
+  static async getStatusses( mongodb_provider: MongoDbProvider, language: string ) {
     const receiptStatusRepository = await new ReceiptStatusRepository().initialize(
-      mongodb_provider.getConnection()
+        mongodb_provider.getConnection()
     );
 
     const defaultLanguage = process.env.DEFAULT_LANGUAGE ?? 'en';
-    
-    return receiptStatusRepository.getStatusses(language, defaultLanguage);
+
+    return receiptStatusRepository.getStatuses( language, defaultLanguage );
   }
 }

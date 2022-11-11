@@ -2,6 +2,7 @@
  * @description holds Receipt repository
  */
 
+import { QueryFilters } from '@open-template-hub/common';
 import { ReceiptStatus } from '../constant';
 
 export class ReceiptRepository {
@@ -109,17 +110,17 @@ export class ReceiptRepository {
     }
   };
 
-  async changeStatusOfSubscriptionsWithExpireDates(payment_config_key: string, customer_id: string, created_time: string, status: string) {
+  async changeStatusOfSubscriptionsWithExpireDates( payment_config_key: string, customer_id: string, created_time: string, status: string ) {
     try {
       await this.connection.query(
-        "UPDATE receipts set status = $1 where $2 = payment_config_key and $3 = customer_id and $4 < expire_date",
-        [
-          status,
-          payment_config_key,
-          customer_id,
-          created_time
-        ]
-      )
+          'UPDATE receipts set status = $1 where $2 = payment_config_key and $3 = customer_id and $4 < expire_date',
+          [
+            status,
+            payment_config_key,
+            customer_id,
+            created_time
+          ]
+      );
     } catch ( error ) {
       console.error( '> changeStatusOfSubscriptionsWithExpireDates error: ', error );
       throw error;
@@ -127,62 +128,61 @@ export class ReceiptRepository {
   }
 
   async getAllReceipts(
-    username: string, 
-    payment_config_key: string, 
-    offset: number, 
-    limit: number, 
-    only_subscription: boolean,
-    start_date?: string,
-    end_date?: string,
-    product_id?: string,
-    status?: string
+      username: string,
+      payment_config_key: string,
+      only_subscription: boolean,
+      filters: QueryFilters,
+      start_date?: string,
+      end_date?: string,
+      product_id?: string,
+      status?: string,
   ) {
     try {
-      let whereQuery = "username = $1 and payment_config_key = $2"
+      let whereQuery = 'username = $1 and payment_config_key = $2';
 
-      if(only_subscription) {
-        whereQuery += " and customer_id IS NOT NULL"
+      if ( only_subscription ) {
+        whereQuery += ' and customer_id IS NOT NULL';
       }
 
-      let queryCounter = 3
-      let optionalQueryParams: string[] = []
-      if(start_date) {
-        whereQuery += ` and created_time >= $${queryCounter}`
-        optionalQueryParams.push(start_date)
-        queryCounter += 1
+      let queryCounter = 3;
+      let optionalQueryParams: string[] = [];
+      if ( start_date ) {
+        whereQuery += ` and created_time >= $${ queryCounter }`;
+        optionalQueryParams.push( start_date );
+        queryCounter += 1;
       }
 
-      if(end_date) {
-        whereQuery += ` and created_time <= $${queryCounter}`
-        optionalQueryParams.push(end_date)
-        queryCounter += 1
+      if ( end_date ) {
+        whereQuery += ` and created_time <= $${ queryCounter }`;
+        optionalQueryParams.push( end_date );
+        queryCounter += 1;
       }
 
-      if(product_id) {
-        whereQuery += ` and product_id = $${queryCounter}`
-        optionalQueryParams.push(product_id)
-        queryCounter += 1
+      if ( product_id ) {
+        whereQuery += ` and product_id = $${ queryCounter }`;
+        optionalQueryParams.push( product_id );
+        queryCounter += 1;
       }
 
-      if(status) {
-        whereQuery += ` and status = $${queryCounter}`
-        optionalQueryParams.push(status)
-        queryCounter += 1
+      if ( status ) {
+        whereQuery += ` and status = $${ queryCounter }`;
+        optionalQueryParams.push( status );
+        queryCounter += 1;
       }
 
       return await this.connection.query(
-        `SELECT username, payment_config_key, product_id, created_time, total_amount, currency_code, status, expire_date, priority_order FROM receipts WHERE ${whereQuery} ORDER BY created_time DESC OFFSET $${queryCounter} LIMIT $${queryCounter + 1}`,
-        [
-          username,
-          payment_config_key,
-          ...optionalQueryParams,
-          offset,
-          limit
-        ]
-      )
-    } catch(error) {
+          `SELECT username, payment_config_key, product_id, created_time, total_amount, currency_code, status, expire_date, priority_order FROM receipts WHERE ${ whereQuery } ORDER BY created_time DESC OFFSET $${ queryCounter } LIMIT $${ queryCounter + 1 }`,
+          [
+            username,
+            payment_config_key,
+            ...optionalQueryParams,
+            filters.offset,
+            filters.limit
+          ]
+      );
+    } catch ( error ) {
       console.error( '> getAllReceipts error: ', error );
-      throw error; 
+      throw error;
     }
   }
 }

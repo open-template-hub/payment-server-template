@@ -24,7 +24,7 @@ app.use( bodyParser.urlencoded( { extended: false } ) );
 // parse application/json
 app.use( bodyParser.urlencoded( { extended: false } ) );
 
-app.use('/webhook', bodyParser.raw({type: "*/*"}))
+app.use( '/webhook', bodyParser.raw( { type: '*/*' } ) );
 app.use( bodyParser.json() );
 app.use( cors() );
 

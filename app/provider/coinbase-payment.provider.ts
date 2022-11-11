@@ -15,8 +15,8 @@ import { PaymentMethodEnum } from '../wrapper/payment.wrapper';
 export class CoinbasePayment implements PaymentMethod {
   private readonly SUCCESS_STATUS = 'CONFIRMED';
 
-  constructEvent(paymentConfig: PaymentConfig, body: any, signature: any) {
-    throw new Error('Method not implemented.');
+  constructEvent( paymentConfig: PaymentConfig, body: any, signature: any ) {
+    throw new Error( 'Method not implemented.' );
   }
 
   init = async (
@@ -185,7 +185,7 @@ export class CoinbasePayment implements PaymentMethod {
                 external_transaction_id,
                 product_id: updated_transaction_history.product_id,
                 payment_config_key: paymentConfig.key,
-                created_time: `${new Date().getTime()}`,
+                created_time: `${ new Date().getTime() }`,
                 total_amount: amount,
                 currency_code,
                 status: success
@@ -221,30 +221,30 @@ export class CoinbasePayment implements PaymentMethod {
   };
 
   getSuccessStatus() {
-    return this.SUCCESS_STATUS
+    return this.SUCCESS_STATUS;
   }
 
-  initOneTimePayment(dbConn: any, paymentConfig: PaymentConfig, product: Product, quantity: number, transaction_id: string, origin: string): Promise<any> {
-    throw new Error('Method not implemented.');
+  initOneTimePayment( dbConn: any, paymentConfig: PaymentConfig, product: Product, quantity: number, transaction_id: string, origin: string ): Promise<any> {
+    throw new Error( 'Method not implemented.' );
   }
 
-  createCustomer(paymentConfig: any, username: string) {
-    throw new Error('Method not implemented.');
+  createCustomer( paymentConfig: any, username: string ) {
+    throw new Error( 'Method not implemented.' );
   }
 
-  initSubscription(dbConn: any, paymentConfig: PaymentConfig, product: Product, customerId: string, origin: string) {
-    throw new Error('Method not implemented.');
+  initSubscription( dbConn: any, paymentConfig: PaymentConfig, product: Product, customerId: string, origin: string ) {
+    throw new Error( 'Method not implemented.' );
   }
 
-  getModeFromProduct(payload: any): string {
-    throw new Error('Method not implemented.');
+  getModeFromProduct( payload: any ): string {
+    throw new Error( 'Method not implemented.' );
   }
 
-  getUsernameByExternalCustomerId(mongodb_provider: MongoDbProvider, payment_config_key: string, externalCustomerId: string): Promise<string> {
-    throw new Error('Method not implemented.');
+  getUsernameByExternalCustomerId( mongodb_provider: MongoDbProvider, payment_config_key: string, externalCustomerId: string ): Promise<string> {
+    throw new Error( 'Method not implemented.' );
   }
 
-  createPortalSession(paymentConfig: PaymentConfig, customerId: string, origin: string) {
-    throw new Error('Method not implemented.');
+  createPortalSession( paymentConfig: PaymentConfig, customerId: string, origin: string ) {
+    throw new Error( 'Method not implemented.' );
   }
 }
