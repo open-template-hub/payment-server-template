@@ -55,8 +55,7 @@ export class CustomerActivityRepository {
       if ( doc.matchedCount === 0 ) {
         return await this.dataModel.updateOne(
             { payment_config_key, external_user_id },
-            { $addToSet: { 'subscriptions': { id: subscription.id, event: subscription } } },
-            { upsert: true }
+            { $addToSet: { 'subscriptions': { id: subscription.id, event: subscription } } }
         );
       }
 
