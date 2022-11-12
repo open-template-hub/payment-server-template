@@ -171,7 +171,7 @@ export class ReceiptRepository {
       }
 
       return await this.connection.query(
-          `SELECT username, payment_config_key, product_id, created_time, total_amount, currency_code, status, expire_date, priority_order FROM receipts WHERE ${ whereQuery } ORDER BY created_time DESC OFFSET $${ queryCounter } LIMIT $${ queryCounter + 1 }`,
+          `SELECT username, payment_config_key, product_id, created_time, total_amount, currency_code, status, expire_date, priority_order, count(*) OVER() as count FROM receipts WHERE ${ whereQuery } ORDER BY created_time DESC OFFSET $${ queryCounter } LIMIT $${ queryCounter + 1 }`,
           [
             username,
             payment_config_key,
