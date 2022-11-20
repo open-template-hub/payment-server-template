@@ -43,13 +43,14 @@ export class ReceiptRepository {
    * @returns successful receipts
    */
   getSuccessfulReceiptsWithUsername = async (
-      username: string,
+      payment_config_key: string,
+      username: string
   ) => {
     let res;
     try {
       res = await this.connection.query(
-          'SELECT * FROM receipts WHERE username = $1 and status = $2',
-          [ username, ReceiptStatus.SUCCESS ]
+          'SELECT * FROM receipts WHERE username = $1 and payment_config_key = $2 and status = $3',
+          [ username, payment_config_key, ReceiptStatus.SUCCESS ]
       );
     } catch ( error ) {
       console.error(

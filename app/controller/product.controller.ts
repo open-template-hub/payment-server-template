@@ -82,10 +82,11 @@ export class ProductController {
 
   getProduct = async (
       postgresql_provider: PostgreSqlProvider,
+      payment_config_key: string,
       username: string
   ) => {
     try {
-      const receiptDatas = await ReceiptController.getSuccessfulReceipts( postgresql_provider, username );
+      const receiptDatas = await ReceiptController.getSuccessfulReceipts( postgresql_provider, payment_config_key, username );
 
       let subscriptionDatas: any[] = [];
       let premiumDatas: any[] = [];

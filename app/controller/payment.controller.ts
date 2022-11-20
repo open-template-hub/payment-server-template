@@ -181,7 +181,7 @@ export class PaymentController {
         mongodb_provider.getConnection()
     );
 
-    let customerActivity = await this.getCustomerActivityWithUsername( mongodb_provider, username );
+    let customerActivity = await this.getCustomerActivityWithUsername( mongodb_provider, payment_config_key, username );
 
     let externalUserId;
 
@@ -239,7 +239,7 @@ export class PaymentController {
 
     const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
 
-    let customerActivity = await this.getCustomerActivityWithUsername( mongodb_provider, username );
+    let customerActivity = await this.getCustomerActivityWithUsername( mongodb_provider, payment_config_key, username );
 
     return paymentWrapper.createPortalSession( paymentConfig, customerActivity.external_user_id, origin );
   }
@@ -335,12 +335,12 @@ export class PaymentController {
     }
   };
 
-  async getCustomerActivityWithUsername( mongodb_provider: MongoDbProvider, username: string ) {
+  async getCustomerActivityWithUsername( mongodb_provider: MongoDbProvider, payment_config_key: string, username: string ) {
     const customerActivityRepository = await new CustomerActivityRepository().initialize(
         mongodb_provider.getConnection()
     );
 
-    return customerActivityRepository.getCustomerActivityWithUsername( username );
+    return customerActivityRepository.getCustomerActivityWithUsername( payment_config_key, username );
   }
 
   /**
@@ -540,7 +540,7 @@ export class PaymentController {
 
       const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
       const username = await paymentWrapper.getUsernameByExternalCustomerId( mongodb_provider, payment_config_key, customerId );
-
+ 
       if ( !username ) {
         throw new Error( 'Username can not be found' );
       }

@@ -29,10 +29,11 @@ export class CustomerActivityRepository {
     }
   };
 
-  async getCustomerActivityWithUsername( username: string ) {
+  async getCustomerActivityWithUsername( payment_config_key: string, username: string ) {
     try {
       return await this.dataModel.findOne( {
-        username
+        username,
+        payment_config_key
       } );
     } catch ( error ) {
       console.error( '> getCustomerActivityWithUsername error: ', error );
