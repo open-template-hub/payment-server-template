@@ -27,6 +27,8 @@ if [ ! -f .env ]; then
 
     echo "DEFAULT_LANGUAGE=en"
 
+    echo "SUCCESS_URL_WHITELIST="http://localhost:4203""
+
   } >>.env
 else
   echo ".env file already exists. Nothing to do..."

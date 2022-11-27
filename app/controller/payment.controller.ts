@@ -46,6 +46,12 @@ export class PaymentController {
       quantity: number,
       origin: string
   ) => {
+    // check success whitelist url
+    const whiteListArray = process.env.SUCCESS_URL_WHITELIST?.split(" ");
+    if(!whiteListArray || !whiteListArray!.includes(origin)) {
+      throw new Error("Success URL Whitelist does not include origin")
+    }
+
     const productRepository = await new ProductRepository().initialize(
         mongodb_provider.getConnection()
     );
