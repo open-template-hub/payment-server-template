@@ -27,7 +27,7 @@ if [ ! -f .env ]; then
 
     echo "DEFAULT_LANGUAGE=en"
 
-    echo "SUCCESS_URL_WHITELIST="http://localhost:4203""
+    echo "SUCCESS_URL_WHITELIST={Success URL Whitelist}
 
   } >>.env
 else
