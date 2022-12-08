@@ -516,6 +516,7 @@ export class PaymentController {
   async createInvoiceForSubscription(
       mongodb_provider: MongoDbProvider,
       postgresql_provider: PostgreSqlProvider,
+      message_queue_provider: MessageQueueProvider,
       payment_config_key: string,
       object: any
   ) {
@@ -571,6 +572,16 @@ export class PaymentController {
             priority_order: product.priority_order
           }
       );
+
+      if ( status && ReceiptStatus.SUCCESS === status ) {
+        await this.sendPaymentSuccessNotificationToQueue( message_queue_provider, {
+          timestamp: new Date().getTime(),
+          username: username,
+          message: 'Payment is successfully processed',
+          sender: 'System',
+          category: 'Payment'
+        } );
+      }
     }
   }
 
