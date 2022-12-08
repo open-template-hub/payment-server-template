@@ -327,7 +327,9 @@ export class PaymentController {
         await this.sendPaymentSuccessNotificationToQueue( message_queue_provider, {
           timestamp: new Date().getTime(),
           username: updated_transaction_history.username,
-          message: 'Product paid successfully'
+          message: 'Payment is successfully processed',
+          sender: 'System',
+          category: 'Payment'
         } );
       }
 
@@ -439,7 +441,9 @@ export class PaymentController {
         await this.sendPaymentSuccessNotificationToQueue( message_queue_provider, {
           timestamp: new Date().getTime(),
           username: updated_transaction_history.username,
-          message: 'Product paid successfully'
+          message: 'Payment is successfully processed',
+          sender: 'System',
+          category: 'Payment'
         } );
       }
 
