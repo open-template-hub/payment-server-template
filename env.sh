@@ -26,9 +26,6 @@ if [ ! -f .env ]; then
     echo "RESPONSE_ENCRYPTION_SECRET={Response Encryption Secret}"
 
     echo "DEFAULT_LANGUAGE=en"
-
-    echo "SUCCESS_URL_WHITELIST={Success URL Whitelist}
-
   } >>.env
 else
   echo ".env file already exists. Nothing to do..."

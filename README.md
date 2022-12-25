@@ -75,8 +75,6 @@ ORCHESTRATION_SERVER_QUEUE_CHANNEL=oth_orchestration_queue
 
 ACCESS_TOKEN_SECRET={Access Token Secret}
 RESPONSE_ENCRYPTION_SECRET={Response Encryption Secret}
-
-SUCCESS_URL_WHITELIST={Success URL Whitelist}
 ```
 
 ### Example Product:
