@@ -16,7 +16,7 @@ Following packages are not updated in the develop branch yet. So, if you want to
 | Package | Current | Wanted | Latest | Location |
 | --- | --- | --- | --- | --- |
 | @types/uuid | 8.3.4 | 8.3.4 | 9.0.0 | node_modules/@types/uuid |
-| stripe | 10.17.0 | 10.17.0 | 11.5.0 | node_modules/stripe |
+| stripe | 10.17.0 | 10.17.0 | 11.6.0 | node_modules/stripe |
 
 <table align="right"><tr><td><a href="https://opentemplatehub.com"><img src="https://raw.githubusercontent.com/open-template-hub/open-template-hub.github.io/master/assets/logo/brand-logo.png" width="50px" alt="oth"/></a></td><td><b>Open Template Hub © 2021</b></td></tr></table>
 
