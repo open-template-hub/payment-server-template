@@ -15,10 +15,12 @@ export class ReceiptController {
    */
   static async getSuccessfulReceipts(
       postgresql_provider: PostgreSqlProvider,
+      payment_config_key: string,
       username: string,
   ) {
     const receiptRepository = new ReceiptRepository( postgresql_provider );
     return receiptRepository.getSuccessfulReceiptsWithUsername(
+        payment_config_key,
         username
     );
   }
@@ -63,7 +65,12 @@ export class ReceiptController {
         status,
     );
 
-    return { receipts: receipts.rows, offset, limit };
+    let count = 0;
+    if ( receipts?.rows.length > 0 ) {
+      count = receipts.rows[ 0 ].count;
+    }
+
+    return { receipts: receipts.rows, offset, limit, count };
   }
 
   static async getStatusses( mongodb_provider: MongoDbProvider, language: string ) {

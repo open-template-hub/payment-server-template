@@ -24,6 +24,7 @@ router.get(
 
       const successful_receipts = await ReceiptController.getSuccessfulReceipts(
           context.postgresql_provider,
+          req.query.payment_config_key as string,
           context.username
       );
 

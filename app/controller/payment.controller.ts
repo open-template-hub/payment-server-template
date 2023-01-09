@@ -95,129 +95,6 @@ export class PaymentController {
     }
   };
 
-  private async initOneTimePayment(
-      mongodb_provider: MongoDbProvider,
-      payment_config_key: string,
-      username: string,
-      product: any,
-      quantity: number,
-      origin: string
-  ) {
-    const paymentConfigRepository = await new PaymentConfigRepository().initialize(
-        mongodb_provider.getConnection()
-    );
-
-    let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
-        payment_config_key
-    );
-
-    if ( paymentConfig === null ) {
-      throw new Error( 'Payment method can not be found' );
-    }
-
-    const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
-
-    const transactionHistoryRepository = await new TransactionHistoryRepository().initialize(
-        mongodb_provider.getConnection()
-    );
-
-    let transaction_history = await transactionHistoryRepository.createTransactionHistory(
-        payment_config_key,
-        username,
-        product.product_id
-    );
-
-    let external_transaction = await paymentWrapper.initOneTimePayment(
-        mongodb_provider.getConnection(),
-        paymentConfig,
-        product,
-        quantity,
-        transaction_history._id,
-        origin
-    );
-
-    if ( external_transaction === null ) {
-      throw new Error( 'Payment can not be initiated' );
-    }
-
-    await transactionHistoryRepository.updateTransactionHistoryWithId(
-        transaction_history._id,
-        external_transaction.id,
-        external_transaction.history
-    );
-
-    /** build method is important because other providers might have special build
-     * rather than returning session from init
-     * that's why build is attached
-     */
-    return paymentWrapper.build(
-        paymentConfig,
-        external_transaction
-    );
-  }
-
-  private async initSubscription(
-      mongodb_provider: MongoDbProvider,
-      payment_config_key: string,
-      username: string,
-      product: any,
-      origin: string
-  ) {
-    const paymentConfigRepository = await new PaymentConfigRepository().initialize(
-        mongodb_provider.getConnection()
-    );
-
-    let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
-        payment_config_key
-    );
-
-    if ( paymentConfig === null ) {
-      throw new Error( 'Payment method can not be found' );
-    }
-
-    const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
-
-    const customerActivityRepository = await new CustomerActivityRepository().initialize(
-        mongodb_provider.getConnection()
-    );
-
-    let customerActivity = await this.getCustomerActivityWithUsername( mongodb_provider, username );
-
-    let externalUserId;
-
-    if ( !customerActivity ) {
-      const customer = await paymentWrapper.createCustomer( paymentConfig, username );
-
-      externalUserId = customer.id;
-
-      customerActivityRepository.createCustomerActivity(
-          payment_config_key,
-          username,
-          customer.id,
-          {}
-      );
-    } else {
-      externalUserId = customerActivity.external_user_id;
-    }
-
-    const session = await paymentWrapper.initSubscription(
-        mongodb_provider.getConnection(),
-        paymentConfig,
-        product,
-        externalUserId,
-        origin
-    );
-
-    /** build method is important because other providers might have special build
-     * rather than returning session from init
-     * that's why build is attached
-     */
-    return paymentWrapper.build(
-        paymentConfig,
-        { session_id: session.session_id }
-    );
-  }
-
   async createPortalSession(
       mongodb_provider: MongoDbProvider,
       username: string,
@@ -239,7 +116,7 @@ export class PaymentController {
 
     const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
 
-    let customerActivity = await this.getCustomerActivityWithUsername( mongodb_provider, username );
+    let customerActivity = await this.getCustomerActivityWithUsername( mongodb_provider, payment_config_key, username );
 
     return paymentWrapper.createPortalSession( paymentConfig, customerActivity.external_user_id, origin );
   }
@@ -321,7 +198,9 @@ export class PaymentController {
         await this.sendPaymentSuccessNotificationToQueue( message_queue_provider, {
           timestamp: new Date().getTime(),
           username: updated_transaction_history.username,
-          message: 'Product paid successfully'
+          message: 'Payment is successfully processed',
+          sender: 'System',
+          category: 'Payment'
         } );
       }
 
@@ -335,12 +214,12 @@ export class PaymentController {
     }
   };
 
-  async getCustomerActivityWithUsername( mongodb_provider: MongoDbProvider, username: string ) {
+  async getCustomerActivityWithUsername( mongodb_provider: MongoDbProvider, payment_config_key: string, username: string ) {
     const customerActivityRepository = await new CustomerActivityRepository().initialize(
         mongodb_provider.getConnection()
     );
 
-    return customerActivityRepository.getCustomerActivityWithUsername( username );
+    return customerActivityRepository.getCustomerActivityWithUsername( payment_config_key, username );
   }
 
   /**
@@ -433,7 +312,9 @@ export class PaymentController {
         await this.sendPaymentSuccessNotificationToQueue( message_queue_provider, {
           timestamp: new Date().getTime(),
           username: updated_transaction_history.username,
-          message: 'Product paid successfully'
+          message: 'Payment is successfully processed',
+          sender: 'System',
+          category: 'Payment'
         } );
       }
 
@@ -481,31 +362,10 @@ export class PaymentController {
     }
   };
 
-  private async sendPaymentSuccessNotificationToQueue(
-      messageQueueProvider: MessageQueueProvider,
-      notificationParams: NotificationParams
-  ) {
-    const orchestrationChannelTag = this.environment.args().mqArgs?.orchestrationServerMessageQueueChannel;
-
-    const message = {
-      sender: MessageQueueChannelType.PAYMENT,
-      receiver: MessageQueueChannelType.BUSINESS_LOGIC,
-      message: {
-        notification: {
-          params: notificationParams
-        }
-      } as BusinessLogicActionType,
-    } as QueueMessage;
-
-    await messageQueueProvider.publish(
-        message,
-        orchestrationChannelTag as string
-    );
-  }
-
   async createInvoiceForSubscription(
       mongodb_provider: MongoDbProvider,
       postgresql_provider: PostgreSqlProvider,
+      message_queue_provider: MessageQueueProvider,
       payment_config_key: string,
       object: any
   ) {
@@ -561,6 +421,16 @@ export class PaymentController {
             priority_order: product.priority_order
           }
       );
+
+      if ( status && ReceiptStatus.SUCCESS === status ) {
+        await this.sendPaymentSuccessNotificationToQueue( message_queue_provider, {
+          timestamp: new Date().getTime(),
+          username: username,
+          message: 'Payment is successfully processed',
+          sender: 'System',
+          category: 'Payment'
+        } );
+      }
     }
   }
 
@@ -610,6 +480,151 @@ export class PaymentController {
         paymentConfig,
         body,
         signature
+    );
+  }
+
+  private async initOneTimePayment(
+      mongodb_provider: MongoDbProvider,
+      payment_config_key: string,
+      username: string,
+      product: any,
+      quantity: number,
+      origin: string
+  ) {
+    const paymentConfigRepository = await new PaymentConfigRepository().initialize(
+        mongodb_provider.getConnection()
+    );
+
+    let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
+        payment_config_key
+    );
+
+    if ( paymentConfig === null ) {
+      throw new Error( 'Payment method can not be found' );
+    }
+
+    const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
+
+    const transactionHistoryRepository = await new TransactionHistoryRepository().initialize(
+        mongodb_provider.getConnection()
+    );
+
+    let transaction_history = await transactionHistoryRepository.createTransactionHistory(
+        payment_config_key,
+        username,
+        product.product_id
+    );
+
+    let external_transaction = await paymentWrapper.initOneTimePayment(
+        mongodb_provider.getConnection(),
+        paymentConfig,
+        product,
+        quantity,
+        transaction_history._id,
+        origin
+    );
+
+    if ( external_transaction === null ) {
+      throw new Error( 'Payment can not be initiated' );
+    }
+
+    await transactionHistoryRepository.updateTransactionHistoryWithId(
+        transaction_history._id,
+        external_transaction.id,
+        external_transaction.history
+    );
+
+    /** build method is important because other providers might have special build
+     * rather than returning session from init
+     * that's why build is attached
+     */
+    return paymentWrapper.build(
+        paymentConfig,
+        external_transaction
+    );
+  }
+
+  private async initSubscription(
+      mongodb_provider: MongoDbProvider,
+      payment_config_key: string,
+      username: string,
+      product: any,
+      origin: string
+  ) {
+    const paymentConfigRepository = await new PaymentConfigRepository().initialize(
+        mongodb_provider.getConnection()
+    );
+
+    let paymentConfig: any = await paymentConfigRepository.getPaymentConfigByKey(
+        payment_config_key
+    );
+
+    if ( paymentConfig === null ) {
+      throw new Error( 'Payment method can not be found' );
+    }
+
+    const paymentWrapper = new PaymentWrapper( paymentConfig.payload.method );
+
+    const customerActivityRepository = await new CustomerActivityRepository().initialize(
+        mongodb_provider.getConnection()
+    );
+
+    let customerActivity = await this.getCustomerActivityWithUsername( mongodb_provider, payment_config_key, username );
+
+    let externalUserId;
+
+    if ( !customerActivity ) {
+      const customer = await paymentWrapper.createCustomer( paymentConfig, username );
+
+      externalUserId = customer.id;
+
+      customerActivityRepository.createCustomerActivity(
+          payment_config_key,
+          username,
+          customer.id,
+          {}
+      );
+    } else {
+      externalUserId = customerActivity.external_user_id;
+    }
+
+    const session = await paymentWrapper.initSubscription(
+        mongodb_provider.getConnection(),
+        paymentConfig,
+        product,
+        externalUserId,
+        origin
+    );
+
+    /** build method is important because other providers might have special build
+     * rather than returning session from init
+     * that's why build is attached
+     */
+    return paymentWrapper.build(
+        paymentConfig,
+        { session_id: session.session_id }
+    );
+  }
+
+  private async sendPaymentSuccessNotificationToQueue(
+      messageQueueProvider: MessageQueueProvider,
+      notificationParams: NotificationParams
+  ) {
+    const orchestrationChannelTag = this.environment.args().mqArgs?.orchestrationServerMessageQueueChannel;
+
+    const message = {
+      sender: MessageQueueChannelType.PAYMENT,
+      receiver: MessageQueueChannelType.BUSINESS_LOGIC,
+      message: {
+        notification: {
+          params: notificationParams
+        }
+      } as BusinessLogicActionType,
+    } as QueueMessage;
+
+    await messageQueueProvider.publish(
+        message,
+        orchestrationChannelTag as string
     );
   }
 }

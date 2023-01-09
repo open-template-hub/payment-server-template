@@ -43,13 +43,14 @@ export class ReceiptRepository {
    * @returns successful receipts
    */
   getSuccessfulReceiptsWithUsername = async (
-      username: string,
+      payment_config_key: string,
+      username: string
   ) => {
     let res;
     try {
       res = await this.connection.query(
-          'SELECT * FROM receipts WHERE username = $1 and status = $2',
-          [ username, ReceiptStatus.SUCCESS ]
+          'SELECT * FROM receipts WHERE username = $1 and payment_config_key = $2 and status = $3',
+          [ username, payment_config_key, ReceiptStatus.SUCCESS ]
       );
     } catch ( error ) {
       console.error(
@@ -171,7 +172,7 @@ export class ReceiptRepository {
       }
 
       return await this.connection.query(
-          `SELECT username, payment_config_key, product_id, created_time, total_amount, currency_code, status, expire_date, priority_order FROM receipts WHERE ${ whereQuery } ORDER BY created_time DESC OFFSET $${ queryCounter } LIMIT $${ queryCounter + 1 }`,
+          `SELECT username, payment_config_key, product_id, created_time, total_amount, currency_code, status, expire_date, priority_order, count(*) OVER() as count FROM receipts WHERE ${ whereQuery } ORDER BY created_time DESC OFFSET $${ queryCounter } LIMIT $${ queryCounter + 1 }`,
           [
             username,
             payment_config_key,

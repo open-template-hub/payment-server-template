@@ -32,7 +32,7 @@ router.post(
           req.body.payment_config_key,
           req.body.product_id,
           req.body.quantity,
-          req.body.origin
+          req.query.origin as string
       );
       res.status( ResponseCode.CREATED ).json( paymentSession );
     }
@@ -112,7 +112,7 @@ router.post(
           context.username,
           req.body.payment_config_key,
           req.body.product_id,
-          req.body.origin
+          req.query.origin as string
       );
 
       res.status( ResponseCode.CREATED ).json( portalSession );

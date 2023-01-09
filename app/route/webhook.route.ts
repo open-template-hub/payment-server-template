@@ -65,7 +65,7 @@ router.post( subRoutes.stripe, async ( req: Request, res: Response ) => {
   }
 
   if ( event?.object === 'invoice' ) {
-    await paymentController.createInvoiceForSubscription( context.mongodb_provider, context.postgresql_provider, req.query.key as string, event );
+    await paymentController.createInvoiceForSubscription( context.mongodb_provider, context.postgresql_provider, context.message_queue_provider, req.query.key as string, event );
   }
 
   if ( event?.object === 'charge' && event.refunded === true ) {

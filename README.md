@@ -5,7 +5,7 @@
 </p>
 
 <h1 align="center">
-Open Template Hub - Payment Server Template v4
+Open Template Hub - Payment Server Template v5
 </h1>
 
 [![License](https://img.shields.io/github/license/open-template-hub/payment-server-template?color=43b043&style=for-the-badge)](LICENSE)
@@ -81,24 +81,24 @@ RESPONSE_ENCRYPTION_SECRET={Response Encryption Secret}
 
 ```json
     {
-        "product_id" : "0276d8d1-0945-412b-92d1-084a6e3f7554",
-        "name" : "Premium",
-        "description" : "full access to premium features!",
-        "payload" : {
-            "stripe" : {
-                "amount" : 1999,
-                "currency" : "usd"
-            },
-            "coinbase" : {
-                "amount" : 19.99,
-                "currency" : "usd"
-            },
-            "paypal" : {
-                "amount" : 19.99,
-                "currency" : "usd"
-            }
-        }
+  "product_id": "0276d8d1-0945-412b-92d1-084a6e3f7554",
+  "name": "Premium",
+  "description": "full access to premium features!",
+  "payload": {
+    "stripe": {
+      "amount": 1999,
+      "currency": "usd"
+    },
+    "coinbase": {
+      "amount": 19.99,
+      "currency": "usd"
+    },
+    "paypal": {
+      "amount": 19.99,
+      "currency": "usd"
     }
+  }
+}
 ```
 
 ### Payment Configurations
@@ -107,18 +107,18 @@ RESPONSE_ENCRYPTION_SECRET={Response Encryption Secret}
 
 ```json
   {
-        "key": "STRIPE",
-        "payload": {
-            "method": "stripe",
-            "secret": "{Your Payment Secret on Stripe}",
-            "payment_method_types": [
-                "card"
-            ],
-            "mode": "payment",
-            "success_url": "https://localhost:4000/success?session_id={CHECKOUT_SESSION_ID}",
-            "cancel_url": "https://localhost:4000/cancel"
-        }
+  "key": "STRIPE",
+  "payload": {
+    "method": "stripe",
+    "secret": "{Your Payment Secret on Stripe}",
+    "payment_method_types": [
+      "card"
+    ],
+    "mode": "payment",
+    "success_url": "https://localhost:4000/success?session_id={CHECKOUT_SESSION_ID}",
+    "cancel_url": "https://localhost:4000/cancel"
   }
+}
 ```
 
 #### Coinbase Payment Config:

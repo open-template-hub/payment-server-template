@@ -23,6 +23,7 @@ router.get(
       const context = res.locals.ctx;
       const product = await productController.getProduct(
           context.postgresql_provider,
+          req.query.payment_config_key as string,
           context.username
       );
 

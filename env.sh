@@ -26,7 +26,6 @@ if [ ! -f .env ]; then
     echo "RESPONSE_ENCRYPTION_SECRET={Response Encryption Secret}"
 
     echo "DEFAULT_LANGUAGE=en"
-
   } >>.env
 else
   echo ".env file already exists. Nothing to do..."
