@@ -1,4 +1,4 @@
-import mongoose, { SchemaType } from 'mongoose';
+import mongoose from 'mongoose';
 
 export class CustomerActivityDataModel {
   private readonly collectionName: string = 'customer_activity';
@@ -13,7 +13,7 @@ export class CustomerActivityDataModel {
     };
 
     const mongooseSchema = new mongoose.Schema( schema );
-    mongooseSchema.index({ payment_config_key: 1, username: 1 }, { unique: true });
+    mongooseSchema.index( { payment_config_key: 1, username: 1 }, { unique: true } );
 
     this.dataSchema = mongooseSchema;
   }

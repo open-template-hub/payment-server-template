@@ -66,8 +66,8 @@ export class ReceiptController {
     );
 
     let count = 0;
-    if(receipts?.rows.length > 0) {
-      count = receipts.rows[0].count
+    if ( receipts?.rows.length > 0 ) {
+      count = receipts.rows[ 0 ].count;
     }
 
     return { receipts: receipts.rows, offset, limit, count };
