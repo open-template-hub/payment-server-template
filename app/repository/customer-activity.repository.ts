@@ -43,8 +43,6 @@ export class CustomerActivityRepository {
 
   async addOrUpdateSubscription( payment_config_key: string, external_user_id: string, subscription: any ) {
     try {
-      // todo: add payment config key control
-
       // if document exist
       let doc: any;
 
