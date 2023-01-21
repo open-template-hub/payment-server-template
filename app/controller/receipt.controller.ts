@@ -2,11 +2,7 @@
  * @description holds receipt controller
  */
 
-import {
-  MongoDbProvider,
-  PostgreSqlProvider,
-  QueryFilters,
-} from '@open-template-hub/common';
+import { MongoDbProvider, PostgreSqlProvider } from '@open-template-hub/common';
 import { ReceiptParams } from '../interface/receipt-params.interface';
 import { ReceiptStatusRepository } from '../repository/receipt-status.repository';
 import { ReceiptRepository } from '../repository/receipt.repository';

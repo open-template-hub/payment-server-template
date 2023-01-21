@@ -2,7 +2,6 @@
  * @description holds Receipt repository
  */
 
-import { QueryFilters } from '@open-template-hub/common';
 import { ReceiptStatus } from '../constant';
 import { ReceiptParams } from '../interface/receipt-params.interface';
 
