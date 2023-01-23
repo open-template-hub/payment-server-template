@@ -38,7 +38,7 @@ export class ReceiptRepository {
   /**
    * get user's successful receipts by product id and username
    * @param username username
-   * @param product_id product id
+   * @param payment_config_key payment_config_key id
    * @returns successful receipts
    */
   getSuccessfulReceiptsWithUsername = async (
@@ -157,9 +157,9 @@ export class ReceiptRepository {
         queryCounter += 1;
       }
 
-      if (status) {
+      if ( receiptParams.status) {
         whereQuery += ` and status = $${queryCounter}`;
-        optionalQueryParams.push(status);
+        optionalQueryParams.push( receiptParams.status);
         queryCounter += 1;
       }
 
