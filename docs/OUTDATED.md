@@ -16,7 +16,7 @@ Following packages are not updated in the develop branch yet. So, if you want to
 | Package | Current | Wanted | Latest | Location |
 | --- | --- | --- | --- | --- |
 | mongoose | 6.10.4 | 6.10.4 | 7.0.3 | node_modules/mongoose |
-| typescript | 4.9.5 | 4.9.5 | 5.0.2 | node_modules/typescript |
+| typescript | 4.9.5 | 4.9.5 | 5.0.3 | node_modules/typescript |
 
 <table align="right"><tr><td><a href="https://opentemplatehub.com"><img src="https://raw.githubusercontent.com/open-template-hub/open-template-hub.github.io/master/assets/logo/brand-logo.png" width="50px" alt="oth"/></a></td><td><b>Open Template Hub © 2023</b></td></tr></table>
 
