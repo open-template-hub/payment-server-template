@@ -15,7 +15,7 @@ Following packages are not updated in the develop branch yet. So, if you want to
 
 | Package | Current | Wanted | Latest | Location |
 | --- | --- | --- | --- | --- |
-| mongoose | 6.12.3 | 6.12.3 | 8.0.3 | node_modules/mongoose |
+| mongoose | 6.12.4 | 6.12.4 | 8.0.3 | node_modules/mongoose |
 | nodemon | 2.0.22 | 2.0.22 | 3.0.2 | node_modules/nodemon |
 | stripe | 11.18.0 | 11.18.0 | 14.10.0 | node_modules/stripe |
 | typescript | 4.9.5 | 4.9.5 | 5.3.3 | node_modules/typescript |
