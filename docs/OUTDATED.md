@@ -15,9 +15,9 @@ Following packages are not updated in the develop branch yet. So, if you want to
 
 | Package | Current | Wanted | Latest | Location |
 | --- | --- | --- | --- | --- |
-| mongoose | 6.12.5 | 6.12.5 | 8.0.3 | node_modules/mongoose |
+| mongoose | 6.12.5 | 6.12.5 | 8.0.4 | node_modules/mongoose |
 | nodemon | 2.0.22 | 2.0.22 | 3.0.2 | node_modules/nodemon |
-| stripe | 11.18.0 | 11.18.0 | 14.11.0 | node_modules/stripe |
+| stripe | 11.18.0 | 11.18.0 | 14.12.0 | node_modules/stripe |
 | typescript | 4.9.5 | 4.9.5 | 5.3.3 | node_modules/typescript |
 
 <table align="right"><tr><td><a href="https://opentemplatehub.com"><img src="https://raw.githubusercontent.com/open-template-hub/open-template-hub.github.io/master/assets/logo/brand-logo.png" width="50px" alt="oth"/></a></td><td><b>Open Template Hub © 2023</b></td></tr></table>
