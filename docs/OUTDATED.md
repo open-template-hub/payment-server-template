@@ -16,7 +16,7 @@ Following packages are not updated in the develop branch yet. So, if you want to
 | Package | Current | Wanted | Latest | Location |
 | --- | --- | --- | --- | --- |
 | @types/uuid | 9.0.8 | 9.0.8 | 10.0.0 | node_modules/@types/uuid |
-| mongoose | 6.13.0 | 6.13.0 | 8.4.5 | node_modules/mongoose |
+| mongoose | 6.13.0 | 6.13.0 | 8.5.1 | node_modules/mongoose |
 | nodemon | 2.0.22 | 2.0.22 | 3.1.4 | node_modules/nodemon |
 | stripe | 11.18.0 | 11.18.0 | 16.2.0 | node_modules/stripe |
 | typescript | 4.9.5 | 4.9.5 | 5.5.3 | node_modules/typescript |
