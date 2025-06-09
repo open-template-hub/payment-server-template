@@ -15,13 +15,13 @@ Following packages are not updated in the develop branch yet. So, if you want to
 
 | Package | Current | Wanted | Latest | Location |
 | --- | --- | --- | --- | --- |
-| @types/express | 4.17.22 | 4.17.22 | 5.0.2 | node_modules/@types/express |
+| @types/express | 4.17.23 | 4.17.23 | 5.0.3 | node_modules/@types/express |
 | @types/uuid | 9.0.8 | 9.0.8 | 10.0.0 | node_modules/@types/uuid |
 | body-parser | 1.20.3 | 1.20.3 | 2.2.0 | node_modules/body-parser |
 | express | 4.21.2 | 4.21.2 | 5.1.0 | node_modules/express |
 | mongoose | 6.13.8 | 6.13.8 | 8.15.1 | node_modules/mongoose |
 | nodemon | 2.0.22 | 2.0.22 | 3.1.10 | node_modules/nodemon |
-| stripe | 11.18.0 | 11.18.0 | 18.2.0 | node_modules/stripe |
+| stripe | 11.18.0 | 11.18.0 | 18.2.1 | node_modules/stripe |
 | typescript | 4.9.5 | 4.9.5 | 5.8.3 | node_modules/typescript |
 | uuid | 9.0.1 | 9.0.1 | 11.1.0 | node_modules/uuid |
 
