@@ -16,7 +16,7 @@ Following packages are not updated in the develop branch yet. So, if you want to
 | Package | Current | Wanted | Latest | Location |
 | --- | --- | --- | --- | --- |
 | @types/express | 4.17.23 | 4.17.23 | 5.0.3 | node_modules/@types/express |
-| @types/uuid | 9.0.8 | 9.0.8 | 10.0.0 | node_modules/@types/uuid |
+| @types/uuid | 9.0.8 | 9.0.8 | 11.0.0 | node_modules/@types/uuid |
 | body-parser | 1.20.3 | 1.20.3 | 2.2.0 | node_modules/body-parser |
 | dotenv | 16.6.1 | 16.6.1 | 17.2.2 | node_modules/dotenv |
 | express | 4.21.2 | 4.21.2 | 5.1.0 | node_modules/express |
