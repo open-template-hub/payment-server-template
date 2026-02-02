@@ -22,7 +22,7 @@ Following packages are not updated in the develop branch yet. So, if you want to
 | express | 4.22.1 | 4.22.1 | 5.2.1 | node_modules/express |
 | mongoose | 6.13.8 | 6.13.8 | 9.1.5 | node_modules/mongoose |
 | nodemon | 2.0.22 | 2.0.22 | 3.1.11 | node_modules/nodemon |
-| stripe | 11.18.0 | 11.18.0 | 20.2.0 | node_modules/stripe |
+| stripe | 11.18.0 | 11.18.0 | 20.3.0 | node_modules/stripe |
 | typescript | 4.9.5 | 4.9.5 | 5.9.3 | node_modules/typescript |
 | uuid | 9.0.1 | 9.0.1 | 13.0.0 | node_modules/uuid |
 
