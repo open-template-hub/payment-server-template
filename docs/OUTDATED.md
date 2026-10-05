@@ -18,11 +18,11 @@ Following packages are not updated in the develop branch yet. So, if you want to
 | @types/express | 4.17.25 | 4.17.25 | 5.0.6 | node_modules/@types/express |
 | @types/uuid | 9.0.8 | 9.0.8 | 11.0.0 | node_modules/@types/uuid |
 | body-parser | 1.20.8 | 1.20.8 | 2.3.0 | node_modules/body-parser |
-| dotenv | 16.6.1 | 16.6.1 | 18.0.4 | node_modules/dotenv |
+| dotenv | 16.6.1 | 16.6.1 | 18.0.5 | node_modules/dotenv |
 | express | 4.22.3 | 4.22.3 | 5.2.1 | node_modules/express |
-| mongoose | 6.13.11 | 6.13.11 | 9.10.2 | node_modules/mongoose |
+| mongoose | 6.13.11 | 6.13.11 | 9.10.4 | node_modules/mongoose |
 | nodemon | 2.0.22 | 2.0.22 | 3.1.14 | node_modules/nodemon |
-| stripe | 11.18.0 | 11.18.0 | 22.6.2 | node_modules/stripe |
+| stripe | 11.18.0 | 11.18.0 | 23.0.0 | node_modules/stripe |
 | typescript | 4.9.5 | 4.9.5 | 7.0.2 | node_modules/typescript |
 | uuid | 9.0.1 | 9.0.1 | 14.0.2 | node_modules/uuid |
 
